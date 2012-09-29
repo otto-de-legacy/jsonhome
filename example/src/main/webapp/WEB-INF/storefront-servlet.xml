@@ -22,7 +22,7 @@
     </util:properties>
     <context:property-placeholder properties-ref="exampleProperties" ignore-resource-not-found="true"/>
 
-    <context:component-scan base-package="de.steinacker" />
+    <context:component-scan base-package="de.otto" />
 
     <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPath" value="/WEB-INF/freemarker/"/>
