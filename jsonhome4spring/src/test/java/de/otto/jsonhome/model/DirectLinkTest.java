@@ -27,10 +27,9 @@ public class DirectLinkTest {
         // when
         final Map<String,?> json = storefrontLink.toJson();
         // then
-        final Map linkAttributes = (Map) json.get(RESOURCELINK_SHOP_STOREFRONT.toString());
-        assertNotNull(linkAttributes);
-        assertEquals(linkAttributes.get("href"), ABS_STOREFRONT_HREF.toString());
-        final Map hints = (Map) linkAttributes.get("hints");
+        assertNotNull(json);
+        assertEquals(json.get("href"), ABS_STOREFRONT_HREF.toString());
+        final Map hints = (Map) json.get("hints");
         assertNotNull(hints);
         assertEquals(hints.get("allow"), Arrays.asList("GET"));
         assertEquals(hints.get("representations"), Arrays.asList("text/html", "application/json"));

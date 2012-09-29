@@ -92,9 +92,9 @@ public final class TemplatedLink implements ResourceLink {
 
     @Override
     public Map<String, ?> toJson() {
-        final List<Map<String, ?>> jsonHrefVars = new ArrayList<Map<String, ?>>(hrefVars.size());
+        final Map<String,String> jsonHrefVars = new LinkedHashMap<String, String>(hrefVars.size());
         for (final HrefVar hrefVar : hrefVars) {
-            jsonHrefVars.add(hrefVar.toJson());
+            jsonHrefVars.put(hrefVar.getVar(), hrefVar.getVarType().toString());
         }
         final Map<String, Object> jsonHints = new HashMap<String, Object>();
         jsonHints.put("allow", allows);
