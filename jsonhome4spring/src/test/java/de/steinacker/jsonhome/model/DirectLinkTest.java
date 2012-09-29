@@ -1,17 +1,12 @@
 package de.steinacker.jsonhome.model;
 
-import de.steinacker.jsonhome.fixtures.ControllerFixtures;
 import de.steinacker.jsonhome.fixtures.LinkFixtures;
 import org.testng.annotations.Test;
 
-import java.net.URI;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Map;
 
-import static de.steinacker.jsonhome.fixtures.ControllerFixtures.ControllerWithRequestMethodsAtTypeAndMethodLevel;
 import static de.steinacker.jsonhome.fixtures.LinkFixtures.*;
-import static de.steinacker.jsonhome.generator.JsonHomeGenerator.jsonHomeFor;
 import static de.steinacker.jsonhome.model.DirectLink.directLink;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;

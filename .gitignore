@@ -1,5 +1,5 @@
 .gradle
 build
-jsonhome4spring.iml
-jsonhome4spring.ipr
-jsonhome4spring.iws
+*.iml
+*.ipr
+*.iws
