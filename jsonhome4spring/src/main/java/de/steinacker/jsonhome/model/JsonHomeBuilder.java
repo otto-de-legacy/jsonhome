@@ -5,7 +5,7 @@ import java.util.List;
 
 public final class JsonHomeBuilder {
 
-    private final List<ResourceLink> resources = new ArrayList<>();
+    private final List<ResourceLink> resources = new ArrayList<ResourceLink>();
 
     private JsonHomeBuilder() {
     }

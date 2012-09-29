@@ -53,7 +53,7 @@ public class JsonHomeGenerator {
     }
 
     public JsonHome with(final Collection<Class<?>> controller) {
-        List<ResourceLink> resources = new ArrayList<>();
+        List<ResourceLink> resources = new ArrayList<ResourceLink>();
         for (final Class<?> controllerClass : controller) {
             if (isSpringController(controllerClass)) {
                 resources = mergeResources(resources, resourceLinksFor(controllerClass));
@@ -78,10 +78,10 @@ public class JsonHomeGenerator {
     }
 
     private List<ResourceLink> mergeResources(final List<ResourceLink> resourceLinks, final List<ResourceLink> other) {
-        final List<ResourceLink> allCandidates = new ArrayList<>(resourceLinks.size() + other.size());
+        final List<ResourceLink> allCandidates = new ArrayList<ResourceLink>(resourceLinks.size() + other.size());
         allCandidates.addAll(resourceLinks);
         allCandidates.addAll(other);
-        final Map<URI, ResourceLink> resourceLinkCandidates = new LinkedHashMap<>();
+        final Map<URI, ResourceLink> resourceLinkCandidates = new LinkedHashMap<URI, ResourceLink>();
         for (final ResourceLink candidate : allCandidates) {
             final URI linkRelationType = candidate.getLinkRelationType();
             final ResourceLink existingCandidate = resourceLinkCandidates.get(linkRelationType);
@@ -92,13 +92,13 @@ public class JsonHomeGenerator {
                 resourceLinkCandidates.put(linkRelationType, candidate);
             }
         }
-        return new ArrayList<>(resourceLinkCandidates.values());
+        return new ArrayList<ResourceLink>(resourceLinkCandidates.values());
     }
 
     private List<ResourceLink> resourceLinksForMethod(final Class<?> controller,
                                            final Method method,
                                            final List<String> resourcePathPrefixes) {
-        final List<ResourceLink> resourceLinks = new ArrayList<>();
+        final List<ResourceLink> resourceLinks = new ArrayList<ResourceLink>();
         final RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
         if (methodRequestMapping != null) {
             final List<String> representations = supportedRepresentationsOf(methodRequestMapping);
@@ -149,7 +149,7 @@ public class JsonHomeGenerator {
     }
 
     private List<String> listOfStringsFrom(Object[] array) {
-        final List<String> result = new ArrayList<>(array.length);
+        final List<String> result = new ArrayList<String>(array.length);
         for (Object o : array) {
             result.add(o.toString());
         }
@@ -157,7 +157,7 @@ public class JsonHomeGenerator {
     }
 
     private List<HrefVar> hrefVarsFor(final Method method) {
-        final List<HrefVar> varBuilder = new ArrayList<>();
+        final List<HrefVar> varBuilder = new ArrayList<HrefVar>();
         final VarTypes varTypes = method.getAnnotation(VarTypes.class);
         if (varTypes != null) {
             for (final VarType varType : varTypes.value()) {
@@ -181,7 +181,7 @@ public class JsonHomeGenerator {
     }
 
     private List<String> supportedRepresentationsOf(final RequestMapping methodRequestMapping) {
-        final LinkedHashSet<String> representations = new LinkedHashSet<>();
+        final LinkedHashSet<String> representations = new LinkedHashSet<String>();
         final String[] produces = methodRequestMapping.produces();
         if (produces != null) {
             representations.addAll(asList(produces));
@@ -199,7 +199,7 @@ public class JsonHomeGenerator {
         if (representations.isEmpty()) {
             representations.add("text/html");
         }
-        return new ArrayList<>(representations);
+        return new ArrayList<String>(representations);
     }
 
     private String relationTypeFrom(final Class<?> controller, final Method method) {

@@ -14,7 +14,7 @@ public final class JsonHome {
     private final List<ResourceLink> resources;
 
     private JsonHome(final List<ResourceLink> resources) {
-        this.resources = unmodifiableList(new ArrayList<>(resources));
+        this.resources = unmodifiableList(new ArrayList<ResourceLink>(resources));
     }
 
     public static JsonHome emptyJsonHome() {
@@ -31,7 +31,7 @@ public final class JsonHome {
     }
 
     public Map<String, ?> toJson() {
-        final Map<String, Map<String, ?>> jsonResources = new HashMap<>();
+        final Map<String, Map<String, ?>> jsonResources = new HashMap<String, Map<String, ?>>();
         for (final ResourceLink resource : this.resources) {
             jsonResources.put(resource.getLinkRelationType().toString(), resource.toJson());
         }

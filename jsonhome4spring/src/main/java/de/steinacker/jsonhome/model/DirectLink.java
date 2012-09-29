@@ -24,7 +24,7 @@ public final class DirectLink implements ResourceLink {
         this.relationType = relationType;
         this.href = href;
         this.allows = unmodifiableList(new ArrayList<String>(allows));
-        this.representations = unmodifiableList(new ArrayList<>(representations));
+        this.representations = unmodifiableList(new ArrayList<String>(representations));
     }
 
     public static DirectLink directLink(final URI relationType,
@@ -66,9 +66,9 @@ public final class DirectLink implements ResourceLink {
         if (!href.equals(otherDirectLink.getHref())) {
             throw new IllegalArgumentException("Resource links with different hrefs can not be merged.");
         }
-        final Set<String> allows = new LinkedHashSet<>(this.allows);
+        final Set<String> allows = new LinkedHashSet<String>(this.allows);
         allows.addAll(otherDirectLink.getAllows());
-        final Set<String> representations = new LinkedHashSet<>(this.representations);
+        final Set<String> representations = new LinkedHashSet<String>(this.representations);
         representations.addAll(otherDirectLink.getRepresentations());
         return new DirectLink(
                 relationType,
@@ -85,16 +85,13 @@ public final class DirectLink implements ResourceLink {
 
     @Override
     public Map<String, ?> toJson() {
-        final Map<String, Object> hints = new HashMap<>();
+        final Map<String, Object> hints = new HashMap<String, Object>();
         hints.put("allow", allows);
         hints.put("representations", representations);
-        final Map<String, Object> map = new HashMap<>();
+        final Map<String, Object> map = new HashMap<String, Object>();
         map.put("href", href.toString());
         map.put("hints", hints);
-        return singletonMap(
-                relationType.toString(),
-                map
-        );
+        return map;
     }
 
     @Override

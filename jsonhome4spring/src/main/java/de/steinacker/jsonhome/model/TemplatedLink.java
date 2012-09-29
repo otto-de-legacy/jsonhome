@@ -25,9 +25,9 @@ public final class TemplatedLink implements ResourceLink {
                           final Collection<String> representations) {
         this.relationType = relationType;
         this.hrefTemplate = hrefTemplate;
-        this.hrefVars = unmodifiableList(new ArrayList<>(hrefVars));
-        this.allows = unmodifiableList(new ArrayList<>(allows));
-        this.representations = unmodifiableList(new ArrayList<>(representations));
+        this.hrefVars = unmodifiableList(new ArrayList<HrefVar>(hrefVars));
+        this.allows = unmodifiableList(new ArrayList<String>(allows));
+        this.representations = unmodifiableList(new ArrayList<String>(representations));
     }
 
     public static TemplatedLink templatedLink(final URI relationType,
@@ -75,9 +75,9 @@ public final class TemplatedLink implements ResourceLink {
         }
         final TemplatedLink otherTemplatedLink = (TemplatedLink)other;
         if (hrefTemplate.equals(otherTemplatedLink.getHrefTemplate())) {
-            final Set<String> allows = new LinkedHashSet<>(this.allows);
+            final Set<String> allows = new LinkedHashSet<String>(this.allows);
             allows.addAll(otherTemplatedLink.getAllows());
-            final Set<String> representations = new LinkedHashSet<>(this.representations);
+            final Set<String> representations = new LinkedHashSet<String>(this.representations);
             representations.addAll(otherTemplatedLink.getRepresentations());
             return new TemplatedLink(
                     relationType,
@@ -93,21 +93,18 @@ public final class TemplatedLink implements ResourceLink {
 
     @Override
     public Map<String, ?> toJson() {
-        final List<Map<String, ?>> jsonHrefVars = new ArrayList<>(hrefVars.size());
+        final List<Map<String, ?>> jsonHrefVars = new ArrayList<Map<String, ?>>(hrefVars.size());
         for (final HrefVar hrefVar : hrefVars) {
             jsonHrefVars.add(hrefVar.toJson());
         }
-        final Map<String, Object> jsonHints = new HashMap<>();
+        final Map<String, Object> jsonHints = new HashMap<String, Object>();
         jsonHints.put("allow", allows);
         jsonHints.put("representations", representations);
-        final Map<String, Object> jsonTemplateVars = new HashMap<>();
+        final Map<String, Object> jsonTemplateVars = new HashMap<String, Object>();
         jsonTemplateVars.put("href-template", hrefTemplate);
         jsonTemplateVars.put("href-vars", jsonHrefVars);
         jsonTemplateVars.put("hints", jsonHints);
-        return singletonMap(
-                relationType.toString(),
-                jsonTemplateVars
-        );
+        return jsonTemplateVars;
     }
 
     @Override

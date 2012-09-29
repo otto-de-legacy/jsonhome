@@ -5,6 +5,7 @@ import de.steinacker.jsonhome.model.JsonHome;
 import de.steinacker.jsonhome.model.ResourceLink;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static de.steinacker.jsonhome.fixtures.ControllerFixtures.*;

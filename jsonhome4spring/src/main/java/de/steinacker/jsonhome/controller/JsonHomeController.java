@@ -40,7 +40,7 @@ public class JsonHomeController {
     @Resource
     public void setApplicationContext(final ApplicationContext applicationContext) {
         Map<String, Object> controllerBeans = applicationContext.getBeansWithAnnotation(Controller.class);
-        controllerTypes = new HashSet<>();
+        controllerTypes = new HashSet<Class<?>>();
         for (Object o : controllerBeans.values()) {
             controllerTypes.add(o.getClass());
         }

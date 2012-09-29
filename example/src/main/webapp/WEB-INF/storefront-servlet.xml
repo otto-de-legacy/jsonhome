@@ -18,7 +18,7 @@
     </mvc:annotation-driven>
 
     <util:properties id="exampleProperties">
-        <prop key="rootUri">http://example.org</prop>
+        <prop key="rootUri">http://localhost:8080/example</prop>
     </util:properties>
     <context:property-placeholder properties-ref="exampleProperties" ignore-resource-not-found="true"/>
 
