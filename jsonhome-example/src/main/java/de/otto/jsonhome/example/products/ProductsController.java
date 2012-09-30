@@ -11,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-import static com.google.common.collect.ImmutableMap.of;
 import static java.util.Collections.singletonMap;
 
 
