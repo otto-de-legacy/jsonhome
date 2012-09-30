@@ -5,22 +5,22 @@ package de.otto.jsonhome.example.products;
  * @since 29.09.12
  */
 public final class Product {
-    private final String link;
+    private final long id;
     private final String title;
     private final String price;
 
-    public Product(final String link, final String title, final String price) {
-        this.link = link;
+    public Product(final long id, final String title, final String price) {
+        this.id = id;
         this.title = title;
         this.price = price;
     }
 
-    public String getId() {
-        return link.substring(link.lastIndexOf("/")+1);
+    public long getId() {
+        return id;
     }
 
     public String getLink() {
-        return link;
+        return "products/" + id;
     }
 
     public String getTitle() {
