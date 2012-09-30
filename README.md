@@ -12,6 +12,7 @@ of the application will become navigable.
 
 An example from the draft specification:
 
+```
    GET / HTTP/1.1
    Host: example.org
    Accept: application/json-home
@@ -41,6 +42,7 @@ An example from the draft specification:
        }
      }
    }
+```
 
 MORE FEATURES
 =============
