@@ -6,6 +6,7 @@ import de.otto.jsonhome.model.JsonHome;
 import de.otto.jsonhome.model.ResourceLink;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static de.otto.jsonhome.fixtures.ControllerFixtures.*;
@@ -16,7 +17,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
 /**
  * @author Guido Steinacker
@@ -170,9 +170,12 @@ public class LinkRelationTypeTest {
     @Test
     public void mustNotHaveMultipleResourceLinksIfResourceIsImplementedInDifferentControllers() {
         // given
-        final JsonHome foo = jsonHomeFor(create("http://example.org")).with(asList(
+        @SuppressWarnings("unchecked")
+        final List<Class<?>> controller = Arrays.asList(
                 ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class,
-                AnotherControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class));
+                AnotherControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class
+        );
+        final JsonHome foo = jsonHomeFor(create("http://example.org")).with(controller);
         // when
         final List<ResourceLink> resourceLinks = foo.getResourceLinks();
         // then
@@ -180,14 +183,18 @@ public class LinkRelationTypeTest {
         assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(asList("GET", "PUT")));
     }
 
-    @Test(enabled = false)
+    @Test
     public void shouldHaveAcceptPostHintIfPostSupportsDifferentMediaTypeThanGet() {
-        // TODO: not yet implemented
-    }
-
-    @Test(enabled = false)
-    public void shouldHaveAcceptPutHintIfPutSupportsDifferentMediaTypeThanGet() {
-        // TODO: not yet implemented
+        // given
+        final JsonHome foo = jsonHomeFor(create("http://example.org")).with(ControllerWithAcceptPutAndAcceptPost.class);
+        // when
+        final List<ResourceLink> resourceLinks = foo.getResourceLinks();
+        // then
+        assertEquals(resourceLinks.size(), 1);
+        assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(asList("GET", "PUT", "POST")));
+        assertEquals(resourceLinks.get(0).getHints().getRepresentations(), asList("text/plain"));
+        assertEquals(resourceLinks.get(0).getHints().getAcceptPost(), asList("foo/bar"));
+        assertEquals(resourceLinks.get(0).getHints().getAcceptPut(), asList("bar/foo"));
     }
 
     @Test(enabled = false)

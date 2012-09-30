@@ -1,18 +1,32 @@
 package de.otto.jsonhome.generator;
 
 import de.otto.jsonhome.model.Hints;
+import de.otto.jsonhome.model.HintsBuilder;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static de.otto.jsonhome.model.HintsBuilder.hints;
+
 public class HintsGenerator {
 
     public Hints hintsOf(final Method method) {
-        return new Hints(
-                allowedHttpMethodsOf(method),
-                supportedRepresentationsOf(method)
-        );
+        final List<String> allows = allowedHttpMethodsOf(method);
+        final HintsBuilder hintsBuilder = hints().allowing(allows);
+        final List<String> supportedRepresentations = supportedRepresentationsOf(method);
+        if (allows.contains("PUT")) {
+            hintsBuilder.acceptingForPut(supportedRepresentations);
+        }
+        if (allows.contains("POST")) {
+            hintsBuilder.acceptingForPost(supportedRepresentations);
+        }
+        if (allows.contains("GET") || allows.contains("HEAD")) {
+            hintsBuilder.representedAs(supportedRepresentations);
+        }
+        // TODO: PATCH
+
+        return hintsBuilder.build();
     }
 
     /**
@@ -52,7 +66,8 @@ public class HintsGenerator {
             representations.addAll(Arrays.asList(produces));
         }
         final String[] consumes = methodRequestMapping.consumes();
-        if (consumes != null) {
+        if (consumes != null && consumes.length > 0) {
+
             // preserve order from methodRequestMapping:
             for (final String consumesRepresentation : consumes) {
                 if (!representations.contains(consumesRepresentation)) {

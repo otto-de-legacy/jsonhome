@@ -73,4 +73,9 @@ public class ControllerFixtures {
         public @RequestMapping(value = "/foo") @LinkRelationType("/rel/bar") void bar() {}
     }
 
+    public static @Controller @LinkRelationType("/rel/foo") class ControllerWithAcceptPutAndAcceptPost {
+        public @RequestMapping(value = "/foo", method = RequestMethod.GET, produces = "text/plain")  void getIt() {}
+        public @RequestMapping(value = "/foo", method = RequestMethod.POST, consumes = "foo/bar")  void postIt() {}
+        public @RequestMapping(value = "/foo", method = RequestMethod.PUT, consumes = "bar/foo") void putIt() {}
+    }
 }
