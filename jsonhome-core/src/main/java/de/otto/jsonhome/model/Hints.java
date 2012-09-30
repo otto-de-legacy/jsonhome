@@ -2,6 +2,7 @@ package de.otto.jsonhome.model;
 
 import java.util.*;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
 /**
@@ -14,10 +15,27 @@ public final class Hints {
 
     private final List<String> allows;
     private final List<String> representations;
+    private final List<String> acceptPut;
+    private final List<String> acceptPost;
 
-    public Hints(Collection<String> allows, Collection<String> representations) {
+    public Hints(final Collection<String> allows, final List<String> representations) {
+        this(allows, representations, Collections.<String>emptyList(), Collections.<String>emptyList());
+    }
+
+    public Hints(final Collection<String> allows,
+                 final List<String> representations,
+                 final List<String> acceptPut,
+                 final List<String> acceptPost) {
+        if (!acceptPost.isEmpty() && !allows.contains("POST")) {
+            throw new IllegalArgumentException("POST is not allowed but accept-post is provided.");
+        }
+        if (!acceptPut.isEmpty() && !allows.contains("PUT")) {
+            throw new IllegalArgumentException("PUT is not allowed but accept-put is provided.");
+        }
         this.allows = unmodifiableList(new ArrayList<String>(allows));
         this.representations = unmodifiableList(new ArrayList<String>(representations));
+        this.acceptPut = acceptPut;
+        this.acceptPost = acceptPost;
     }
 
     /**
@@ -37,6 +55,20 @@ public final class Hints {
     }
 
     /**
+     * @return the accept-put hint.
+     */
+    public List<String> getAcceptPut() {
+        return acceptPut;
+    }
+
+    /**
+     * @return the accept-post hint.
+     */
+    public List<String> getAcceptPost() {
+        return acceptPost;
+    }
+
+    /**
      * Merges the hints of two resource links..
      *
      * @param other the hints of the other resource link
@@ -47,7 +79,11 @@ public final class Hints {
         allows.addAll(other.getAllows());
         final Set<String> representations = new LinkedHashSet<String>(this.representations);
         representations.addAll(other.getRepresentations());
-        return new Hints(allows, representations);
+        final Set<String> acceptPut = new LinkedHashSet<String>(this.acceptPut);
+        acceptPut.addAll(other.getAcceptPut());
+        final Set<String> acceptPost = new LinkedHashSet<String>(this.acceptPost);
+        acceptPost.addAll(other.getAcceptPost());
+        return new Hints(allows, new ArrayList<String>(representations), new ArrayList<String>(acceptPut), new ArrayList<String>(acceptPost));
     }
 
     /**
@@ -57,6 +93,12 @@ public final class Hints {
         final Map<String, Object> jsonHints = new HashMap<String, Object>();
         jsonHints.put("allow", allows);
         jsonHints.put("representations", representations);
+        if (!acceptPut.isEmpty()) {
+            jsonHints.put("accept-put", acceptPut);
+        }
+        if (!acceptPost.isEmpty()) {
+            jsonHints.put("accept-post", acceptPost);
+        }
         return jsonHints;
     }
 
