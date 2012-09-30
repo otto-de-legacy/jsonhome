@@ -17,27 +17,23 @@ public final class TemplatedLink implements ResourceLink {
     private final URI relationType;
     private final String hrefTemplate;
     private final List<HrefVar> hrefVars;
-    private final List<String> allows;
-    private final List<String> representations;
+    private final Hints hints;
 
     private TemplatedLink(final URI relationType,
                           final String hrefTemplate,
                           final Collection<HrefVar> hrefVars,
-                          final Collection<String> allows,
-                          final Collection<String> representations) {
+                          final Hints hints) {
         this.relationType = relationType;
         this.hrefTemplate = hrefTemplate;
         this.hrefVars = unmodifiableList(new ArrayList<HrefVar>(hrefVars));
-        this.allows = unmodifiableList(new ArrayList<String>(allows));
-        this.representations = unmodifiableList(new ArrayList<String>(representations));
+        this.hints = hints;
     }
 
     public static TemplatedLink templatedLink(final URI relationType,
                                               final String hrefTemplate,
-                                              final List<HrefVar> hrefVar,
-                                              final List<String> allows,
-                                              final List<String> representations) {
-        return new TemplatedLink(relationType, hrefTemplate, hrefVar, allows, representations);
+                                              final List<HrefVar> hrefVars,
+                                              final Hints hints) {
+        return new TemplatedLink(relationType, hrefTemplate, hrefVars, hints);
     }
 
     public URI getLinkRelationType() {
@@ -53,18 +49,12 @@ public final class TemplatedLink implements ResourceLink {
     }
 
     @Override
-    public List<String> getAllows() {
-        return allows;
-    }
-
-    @Override
-    public List<String> getRepresentations() {
-        return representations;
-    }
-
-    @Override
     public boolean isDirectLink() {
         return false;
+    }
+
+    public Hints getHints() {
+        return hints;
     }
 
     @Override
@@ -77,16 +67,11 @@ public final class TemplatedLink implements ResourceLink {
         }
         final TemplatedLink otherTemplatedLink = (TemplatedLink)other;
         if (hrefTemplate.equals(otherTemplatedLink.getHrefTemplate())) {
-            final Set<String> allows = new LinkedHashSet<String>(this.allows);
-            allows.addAll(otherTemplatedLink.getAllows());
-            final Set<String> representations = new LinkedHashSet<String>(this.representations);
-            representations.addAll(otherTemplatedLink.getRepresentations());
             return new TemplatedLink(
                     relationType,
                     hrefTemplate,
                     hrefVars,
-                    allows,
-                    representations
+                    hints.mergeWith(other.getHints())
             );
         } else {
             throw new IllegalArgumentException("Templated resource-links with different uri templates can not be merged.");
@@ -99,13 +84,10 @@ public final class TemplatedLink implements ResourceLink {
         for (final HrefVar hrefVar : hrefVars) {
             jsonHrefVars.put(hrefVar.getVar(), hrefVar.getVarType().toString());
         }
-        final Map<String, Object> jsonHints = new HashMap<String, Object>();
-        jsonHints.put("allow", allows);
-        jsonHints.put("representations", representations);
         final Map<String, Object> jsonTemplateVars = new HashMap<String, Object>();
         jsonTemplateVars.put("href-template", hrefTemplate);
         jsonTemplateVars.put("href-vars", jsonHrefVars);
-        jsonTemplateVars.put("hints", jsonHints);
+        jsonTemplateVars.put("hints", hints.toJson());
         return jsonTemplateVars;
     }
 
@@ -116,12 +98,10 @@ public final class TemplatedLink implements ResourceLink {
 
         TemplatedLink that = (TemplatedLink) o;
 
-        if (allows != null ? !allows.equals(that.allows) : that.allows != null) return false;
+        if (hints != null ? !hints.equals(that.hints) : that.hints != null) return false;
         if (hrefTemplate != null ? !hrefTemplate.equals(that.hrefTemplate) : that.hrefTemplate != null) return false;
         if (hrefVars != null ? !hrefVars.equals(that.hrefVars) : that.hrefVars != null) return false;
         if (relationType != null ? !relationType.equals(that.relationType) : that.relationType != null) return false;
-        if (representations != null ? !representations.equals(that.representations) : that.representations != null)
-            return false;
 
         return true;
     }
@@ -131,8 +111,7 @@ public final class TemplatedLink implements ResourceLink {
         int result = relationType != null ? relationType.hashCode() : 0;
         result = 31 * result + (hrefTemplate != null ? hrefTemplate.hashCode() : 0);
         result = 31 * result + (hrefVars != null ? hrefVars.hashCode() : 0);
-        result = 31 * result + (allows != null ? allows.hashCode() : 0);
-        result = 31 * result + (representations != null ? representations.hashCode() : 0);
+        result = 31 * result + (hints != null ? hints.hashCode() : 0);
         return result;
     }
 
@@ -142,8 +121,7 @@ public final class TemplatedLink implements ResourceLink {
                 "relationType=" + relationType +
                 ", hrefTemplate='" + hrefTemplate + '\'' +
                 ", hrefVars=" + hrefVars +
-                ", allows=" + allows +
-                ", representations=" + representations +
+                ", hints=" + hints +
                 '}';
     }
 }

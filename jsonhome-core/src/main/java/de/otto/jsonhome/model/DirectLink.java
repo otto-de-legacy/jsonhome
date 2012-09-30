@@ -3,8 +3,6 @@ package de.otto.jsonhome.model;
 import java.net.URI;
 import java.util.*;
 
-import static java.util.Collections.unmodifiableList;
-
 /**
  * A direct resource link.
  *
@@ -16,24 +14,20 @@ public final class DirectLink implements ResourceLink {
 
     private final URI relationType;
     private final URI href;
-    private final List<String> allows;
-    private final List<String> representations;
+    private final Hints hints;
 
     private DirectLink(final URI relationType,
                        final URI href,
-                       final Collection<String> allows,
-                       final Collection<String> representations) {
+                       final Hints hints) {
         this.relationType = relationType;
         this.href = href;
-        this.allows = unmodifiableList(new ArrayList<String>(allows));
-        this.representations = unmodifiableList(new ArrayList<String>(representations));
+        this.hints = hints;
     }
 
     public static DirectLink directLink(final URI relationType,
                                         final URI href,
-                                        final List<String> allows,
-                                        final List<String> representations) {
-        return new DirectLink(relationType, href, allows, representations);
+                                        final Hints hints) {
+        return new DirectLink(relationType, href, hints);
     }
 
     public URI getLinkRelationType() {
@@ -44,14 +38,8 @@ public final class DirectLink implements ResourceLink {
         return href;
     }
 
-    @Override
-    public List<String> getAllows() {
-        return allows;
-    }
-
-    @Override
-    public List<String> getRepresentations() {
-        return representations;
+    public Hints getHints() {
+        return hints;
     }
 
     @Override
@@ -68,15 +56,10 @@ public final class DirectLink implements ResourceLink {
         if (!href.equals(otherDirectLink.getHref())) {
             throw new IllegalArgumentException("Resource links with different hrefs can not be merged.");
         }
-        final Set<String> allows = new LinkedHashSet<String>(this.allows);
-        allows.addAll(otherDirectLink.getAllows());
-        final Set<String> representations = new LinkedHashSet<String>(this.representations);
-        representations.addAll(otherDirectLink.getRepresentations());
         return new DirectLink(
                 relationType,
                 href,
-                allows,
-                representations
+                hints.mergeWith(other.getHints())
         );
     }
 
@@ -87,12 +70,9 @@ public final class DirectLink implements ResourceLink {
 
     @Override
     public Map<String, ?> toJson() {
-        final Map<String, Object> hints = new HashMap<String, Object>();
-        hints.put("allow", allows);
-        hints.put("representations", representations);
         final Map<String, Object> map = new HashMap<String, Object>();
         map.put("href", href.toString());
-        map.put("hints", hints);
+        map.put("hints", hints.toJson());
         return map;
     }
 
@@ -103,11 +83,9 @@ public final class DirectLink implements ResourceLink {
 
         DirectLink that = (DirectLink) o;
 
-        if (allows != null ? !allows.equals(that.allows) : that.allows != null) return false;
+        if (hints != null ? !hints.equals(that.hints) : that.hints != null) return false;
         if (href != null ? !href.equals(that.href) : that.href != null) return false;
         if (relationType != null ? !relationType.equals(that.relationType) : that.relationType != null) return false;
-        if (representations != null ? !representations.equals(that.representations) : that.representations != null)
-            return false;
 
         return true;
     }
@@ -116,8 +94,7 @@ public final class DirectLink implements ResourceLink {
     public int hashCode() {
         int result = relationType != null ? relationType.hashCode() : 0;
         result = 31 * result + (href != null ? href.hashCode() : 0);
-        result = 31 * result + (allows != null ? allows.hashCode() : 0);
-        result = 31 * result + (representations != null ? representations.hashCode() : 0);
+        result = 31 * result + (hints != null ? hints.hashCode() : 0);
         return result;
     }
 
@@ -126,8 +103,7 @@ public final class DirectLink implements ResourceLink {
         return "DirectLink{" +
                 "relationType=" + relationType +
                 ", href=" + href +
-                ", allow=" + allows +
-                ", representations=" + representations +
+                ", hints=" + hints +
                 '}';
     }
 }

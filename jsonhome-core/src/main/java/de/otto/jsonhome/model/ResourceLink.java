@@ -25,16 +25,12 @@ public interface ResourceLink {
     public boolean isDirectLink();
 
     /**
-     * @return the list of allowed HTTP methods.
-     * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#section-5.1">http://tools.ietf.org/html/draft-nottingham-json-home-02#section-5.1</a>
+     * Returns the hints of a ResourceLink object.
+     *
+     * @return hints
+     * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#section-5">http://tools.ietf.org/html/draft-nottingham-json-home-02#section-5</a>
      */
-    public List<String> getAllows();
-
-    /**
-     * @return the list of representations supported for this resource link.
-     * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#section-5.2">http://tools.ietf.org/html/draft-nottingham-json-home-02#section-5.2</a>
-     */
-    public List<String> getRepresentations();
+    public Hints getHints();
 
     /**
      * Merges this resource link with another one and returns a new instance.

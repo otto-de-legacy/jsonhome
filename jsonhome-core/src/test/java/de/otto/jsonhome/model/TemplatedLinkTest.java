@@ -23,7 +23,7 @@ public class TemplatedLinkTest {
         // given
         final TemplatedLink aboutPageLink = ABOUTPAGE_LINK;
         // when
-        final Map<String,?> json = aboutPageLink.toJson();
+        final Map<String, ?> json = aboutPageLink.toJson();
         // then
         assertNotNull(json);
         assertNull(json.get("href"));
@@ -44,8 +44,10 @@ public class TemplatedLinkTest {
                 RESOURCELINK_SHOP_STOREFRONT,
                 REL_PAGE_HREF,
                 asList(new HrefVar("pageId", VAR_TYPE_PAGEID, "")),
-                asList("GET"),
-                asList("text/html"));
+                new Hints(
+                        asList("GET"),
+                        asList("text/html")
+                ));
         // when
         aboutPageLink.mergeWith(otherTemplatedLink);
         // then an exception is thrown
@@ -59,8 +61,10 @@ public class TemplatedLinkTest {
                 RESOURCELINK_SHOP_PAGE,
                 "/foo/{fooId}",
                 asList(new HrefVar("fooId", VAR_TYPE_PAGEID, "")),
-                asList("GET"),
-                asList("text/html"));
+                new Hints(
+                        asList("GET"),
+                        asList("text/html")
+                ));
         // when
         aboutPageLink.mergeWith(otherTemplatedLink);
         // then an exception is thrown
@@ -74,13 +78,15 @@ public class TemplatedLinkTest {
                 RESOURCELINK_SHOP_PAGE,
                 REL_PAGE_HREF,
                 asList(new HrefVar("pageId", VAR_TYPE_PAGEID, "")),
-                asList("PUT"),
-                asList("text/html", "application/json")
+                new Hints(
+                        asList("PUT"),
+                        asList("text/html", "application/json")
+                )
         );
         // when
         final ResourceLink resourceLink = aboutPageLink.mergeWith(otherTemplatedLink);
         // then
-        assertEquals(resourceLink.getAllows(), asList("GET", "PUT"));
+        assertEquals(resourceLink.getHints().getAllows(), asList("GET", "PUT"));
     }
 
     @Test
@@ -91,13 +97,15 @@ public class TemplatedLinkTest {
                 RESOURCELINK_SHOP_PAGE,
                 REL_PAGE_HREF,
                 asList(new HrefVar("pageId", VAR_TYPE_PAGEID, "")),
-                asList("GET"),
-                asList("text/html", "application/foo")
+                new Hints(
+                        asList("GET"),
+                        asList("text/html", "application/foo")
+                )
         );
         // when
         final ResourceLink resourceLink = aboutPageLink.mergeWith(otherTemplatedLink);
         // then
-        assertEquals(resourceLink.getRepresentations(), asList("text/html", "application/json", "application/foo"));
+        assertEquals(resourceLink.getHints().getRepresentations(), asList("text/html", "application/json", "application/foo"));
     }
 
     /**
@@ -114,8 +122,10 @@ public class TemplatedLinkTest {
                 RESOURCELINK_SHOP_PAGE,
                 "pages/foo/{pageId}",
                 asList(new HrefVar("pageId", VAR_TYPE_PAGEID, "")),
-                asList("GET"),
-                asList("text/html", "application/json")
+                new Hints(
+                        asList("GET"),
+                        asList("text/html", "application/json")
+                )
         );
         // when
         aboutPageLink.mergeWith(otherTemplatedLink);
@@ -130,8 +140,10 @@ public class TemplatedLinkTest {
                 RESOURCELINK_SHOP_PAGE,
                 "pages/{pageId}",
                 asList(new HrefVar("foo", VAR_TYPE_PAGEID, "")),
-                asList("GET"),
-                asList("text/html", "application/json")
+                new Hints(
+                        asList("GET"),
+                        asList("text/html", "application/json")
+                )
         );
         // when
         aboutPageLink.mergeWith(otherTemplatedLink);
@@ -166,4 +178,5 @@ public class TemplatedLinkTest {
         final ResourceLink mergedLink = aboutLink.mergeWith(aboutLink);
         // then
         assertEquals(aboutLink, mergedLink);
-    }}
+    }
+}

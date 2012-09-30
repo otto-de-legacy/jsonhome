@@ -1,6 +1,7 @@
 package de.otto.jsonhome.generator;
 
 import de.otto.jsonhome.annotation.LinkRelationType;
+import de.otto.jsonhome.model.Hints;
 import de.otto.jsonhome.model.JsonHome;
 import de.otto.jsonhome.model.ResourceLink;
 import org.springframework.stereotype.Controller;
@@ -102,15 +103,13 @@ public class JsonHomeGenerator {
                                     relationType,
                                     resourcePath,
                                     hrefVarsGenerator.hrefVarsFor(method),
-                                    allows,
-                                    representations
+                                    new Hints(allows, representations)
                             ));
                         } else {
                             resourceLinks.add(directLink(
                                     relationType,
                                     URI.create(resourcePath),
-                                    allows,
-                                    representations
+                                    new Hints(allows, representations)
                             ));
                         }
                     }

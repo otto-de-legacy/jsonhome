@@ -1,6 +1,7 @@
 package de.otto.jsonhome.generator;
 
 import de.otto.jsonhome.model.DirectLink;
+import de.otto.jsonhome.model.Hints;
 import de.otto.jsonhome.model.JsonHome;
 import de.otto.jsonhome.model.ResourceLink;
 import org.testng.annotations.Test;
@@ -68,7 +69,7 @@ public class LinkRelationTypeTest {
         // then
         assertEquals(resourceLinks.size(), 1);
         final List<String> expected = asList("application/foo", "text/html", "text/plain", "application/json", "application/bar");
-        assertTrue(resourceLinks.get(0).getRepresentations().containsAll(expected));
+        assertTrue(resourceLinks.get(0).getHints().getRepresentations().containsAll(expected));
     }
 
     @Test
@@ -79,7 +80,7 @@ public class LinkRelationTypeTest {
         final List<ResourceLink> resourceLinks = jsonHome.getResourceLinks();
         // then
         assertEquals(resourceLinks.size(), 1);
-        assertTrue(resourceLinks.get(0).getAllows().containsAll(asList("GET", "PUT", "POST", "DELETE")));
+        assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(asList("GET", "PUT", "POST", "DELETE")));
     }
 
     @Test
@@ -90,7 +91,7 @@ public class LinkRelationTypeTest {
         final List<ResourceLink> resourceLinks = jsonHome.getResourceLinks();
         // then
         assertEquals(resourceLinks.size(), 1);
-        assertTrue(resourceLinks.get(0).getAllows().containsAll(asList("GET", "PUT", "POST", "DELETE", "HEAD")));
+        assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(asList("GET", "PUT", "POST", "DELETE", "HEAD")));
     }
 
     @Test
@@ -161,8 +162,8 @@ public class LinkRelationTypeTest {
         // then
         assertEquals(resourceLinks.size(), 2);
         assertTrue(resourceLinks.containsAll(asList(
-                directLink(create("http://example.org/rel/foo"), create("http://example.org/foo"), singletonList("GET"), singletonList("text/html")),
-                directLink(create("http://example.org/rel/bar"), create("http://example.org/foo"), singletonList("GET"), singletonList("text/html"))
+                directLink(create("http://example.org/rel/foo"), create("http://example.org/foo"), new Hints(singletonList("GET"), singletonList("text/html"))),
+                directLink(create("http://example.org/rel/bar"), create("http://example.org/foo"), new Hints(singletonList("GET"), singletonList("text/html")))
         )));
     }
 
@@ -176,7 +177,7 @@ public class LinkRelationTypeTest {
         final List<ResourceLink> resourceLinks = foo.getResourceLinks();
         // then
         assertEquals(resourceLinks.size(), 1);
-        assertTrue(resourceLinks.get(0).getAllows().containsAll(asList("GET", "PUT")));
+        assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(asList("GET", "PUT")));
     }
 
     @Test(enabled = false)
