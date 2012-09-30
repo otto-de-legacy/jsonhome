@@ -1,10 +1,8 @@
-JSONHOME4SPRING
-===============
+# JSONHOME4SPRING
 
 A json-home generator for RESTful web applications.
 
-JSON-HOME???
-============
+## Json-Home???
 
 Think of an machine-readable alternative to an index.html in json format, describing the REST resources of an
 application. If the caller knows the format, no URIs must be constructed using string-magic. The resources
@@ -44,8 +42,7 @@ An example from the draft specification:
    }
 ```
 
-MORE FEATURES
-=============
+## More Features
 
 The json-home format is nice for automatic discovery of RESTful services. Generating this format directly from source
 code is nice, because it will always be consistent with your application. Being consistent is also important for≤
@@ -59,8 +56,7 @@ request.
 
 In order to consume json-home documents, a client-side library is needed. This will be implemented in the future.
 
-THIS IS WORK IN PROGRESS!
-=========================
+## Work in Progress!
 
 * The project is in an very early state. Everything will change in the next weeks, most of it in an incompatible way.
 * The json-home specification is still a draft, it will possibly change itself in the next months.
@@ -71,20 +67,17 @@ too verbose.
 * But: it is already working. You can use it to easily generate json-home documents for your RESTful Spring application.
 The library is actively used (and developed) at otto.
 
-LICENSE
-=======
+## Licensing
 
 Well - we have to think about it. If you care about licenses, please come back in a few weeks. In the meantime, feel
 free to evaluate (and use) the code. It will definitly remain open source. Currently, the full code-base is still owned
 by me, so no evil company lawyer will be able to do any harm.
 
-FEEDBACK + HELP WANTED
-======================
+## Feedback + Help Wanted
 
 Every kind of feedback - also negative - is appreciated. Even more appreciated are contributions to the code base.
 
-LINKS & DOCUMENTATION
-=====================
+## Links and Documentation
 
 You can find information about json-home in the draft specification:
 Json-Home: http://tools.ietf.org/html/draft-nottingham-json-home-02
