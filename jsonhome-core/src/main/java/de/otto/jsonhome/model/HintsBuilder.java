@@ -47,7 +47,7 @@ public class HintsBuilder {
         return this;
     }
 
-    public HintsBuilder representedAs(final Collection<String> representations) {
+    public HintsBuilder representedAs(final List<String> representations) {
         this.representations.addAll(representations);
         return this;
     }
