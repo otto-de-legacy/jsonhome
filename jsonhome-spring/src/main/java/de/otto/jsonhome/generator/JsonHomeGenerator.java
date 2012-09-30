@@ -1,9 +1,6 @@
 package de.otto.jsonhome.generator;
 
 import de.otto.jsonhome.annotation.LinkRelationType;
-import de.otto.jsonhome.annotation.VarType;
-import de.otto.jsonhome.annotation.VarTypes;
-import de.otto.jsonhome.model.HrefVar;
 import de.otto.jsonhome.model.JsonHome;
 import de.otto.jsonhome.model.ResourceLink;
 import org.springframework.stereotype.Controller;
@@ -34,6 +31,7 @@ import static java.util.Collections.singletonList;
 public class JsonHomeGenerator {
 
     private final URI rootUri;
+    private final HrefVarsGenerator hrefVarsGenerator = new HrefVarsGenerator();
 
     private JsonHomeGenerator(final URI rootUri) {
         if (rootUri == null) {
@@ -87,8 +85,8 @@ public class JsonHomeGenerator {
         final List<ResourceLink> resourceLinks = new ArrayList<ResourceLink>();
         final RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
         if (methodRequestMapping != null) {
-            final List<String> representations = supportedRepresentationsOf(methodRequestMapping);
-            final List<String> allows = supportedRequestMethodsOf(controller, methodRequestMapping);
+            final List<String> representations = supportedRepresentationsOf(method);
+            final List<String> allows = allowedHttpMethodsOf(method);
             for (String resourcePathPrefix : resourcePathPrefixes) {
                 final String[] resourcePathSuffixes = methodRequestMapping.value().length > 0
                         ? methodRequestMapping.value()
@@ -101,7 +99,7 @@ public class JsonHomeGenerator {
                             resourceLinks.add(templatedLink(
                                     URI.create(relationType),
                                     resourcePath,
-                                    hrefVarsFor(method),
+                                    hrefVarsGenerator.hrefVarsFor(method),
                                     allows,
                                     representations
                             ));
@@ -120,53 +118,37 @@ public class JsonHomeGenerator {
         return resourceLinks;
     }
 
-    private List<String> supportedRequestMethodsOf(final Class<?> controller, final RequestMapping methodRequestMapping) {
-        List<String> allows = listOfStringsFrom(methodRequestMapping.method());
+    /**
+     * Analyses the method with a RequestMapping and returns a list of allowed http methods (GET, PUT, etc.).
+     *
+     * If the RequestMapping does not specify the allowed HTTP methods, "GET" is returned in a singleton list.
+     *
+     * @return list of allowed HTTP methods.
+     * @throws NullPointerException if method is not annotated with @RequestMapping.
+     */
+    private List<String> allowedHttpMethodsOf(final Method method) {
+        final RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
+        final List<String> allows = listOfStringsFrom(methodRequestMapping.method());
         if (allows.isEmpty()) {
-            final RequestMapping controllerRequestMapping = controller.getAnnotation(RequestMapping.class);
-            if (controllerRequestMapping != null) {
-                allows = listOfStringsFrom(controllerRequestMapping.method());
-            }
-        }
-        if (allows.isEmpty()) {
-            allows = singletonList("GET");
-        }
-        return allows;
-    }
-
-    private List<String> listOfStringsFrom(Object[] array) {
-        final List<String> result = new ArrayList<String>(array.length);
-        for (Object o : array) {
-            result.add(o.toString());
-        }
-        return result;
-    }
-
-    private List<HrefVar> hrefVarsFor(final Method method) {
-        final List<HrefVar> varBuilder = new ArrayList<HrefVar>();
-        final VarTypes varTypes = method.getAnnotation(VarTypes.class);
-        if (varTypes != null) {
-            for (final VarType varType : varTypes.value()) {
-                varBuilder.add(new HrefVar(
-                        varType.value(),
-                        URI.create(varType.reference()),
-                        varType.description())
-                );
-            }
+            return singletonList("GET");
         } else {
-            final VarType varType = method.getAnnotation(VarType.class);
-            if (varType != null) {
-                varBuilder.add(new HrefVar(
-                        varType.value(),
-                        URI.create(varType.reference()),
-                        varType.description())
-                );
-            }
+            return allows;
         }
-        return varBuilder;
     }
 
-    private List<String> supportedRepresentationsOf(final RequestMapping methodRequestMapping) {
+    /**
+     * Analyses the method with a RequestMapping and returns a list of supported representations.
+     *
+     * If the RequestMapping does not specify the produced or consumed representations,
+     * "text/html" is returned in a singleton list.
+     *
+     * TODO: in case of a POST, text/html is not correct.
+     *
+     * @return list of allowed HTTP methods.
+     * @throws NullPointerException if method is not annotated with @RequestMapping.
+     */
+    private List<String> supportedRepresentationsOf(final Method method) {
+        final RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
         final LinkedHashSet<String> representations = new LinkedHashSet<String>();
         final String[] produces = methodRequestMapping.produces();
         if (produces != null) {
@@ -186,6 +168,14 @@ public class JsonHomeGenerator {
             representations.add("text/html");
         }
         return new ArrayList<String>(representations);
+    }
+
+    private List<String> listOfStringsFrom(Object[] array) {
+        final List<String> result = new ArrayList<String>(array.length);
+        for (Object o : array) {
+            result.add(o.toString());
+        }
+        return result;
     }
 
     private String relationTypeFrom(final Class<?> controller, final Method method) {

@@ -56,14 +56,6 @@ public class ControllerFixtures {
         public @RequestMapping(method = {POST, DELETE}) void htmlAndJson() {}
     }
 
-    public static @Controller @RequestMapping(value = "/foo", method = {GET, PUT}) @LinkRelationType("http://example.org/rel/fooBarType") class ControllerWithRequestMethodsAtTypeLevel {
-        public @RequestMapping("/bar") void bar() {}
-    }
-
-    public static @Controller @RequestMapping(value = "/foo", method = {GET, PUT}) @LinkRelationType("http://example.org/rel/fooBarType") class ControllerWithRequestMethodsAtTypeAndMethodLevel {
-        public @RequestMapping(value = "/bar", method = {GET, RequestMethod.POST}) void bar() {}
-    }
-
     public static @Controller class ControllerWithRequestMappingAndLinkRelationTypeAtMethodLevel {
         public @RequestMapping(value = "/bar") @LinkRelationType("/rel/foo") void bar() {}
     }

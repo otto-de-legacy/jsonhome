@@ -131,28 +131,6 @@ public class LinkRelationTypeTest {
     }
 
     @Test
-    public void shouldInheritAllowsSpecFromTypeLevel() throws Exception {
-        // given
-        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithRequestMethodsAtTypeLevel.class);
-        // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResourceLinks();
-        // then
-        assertEquals(resourceLinks.size(), 1);
-        assertEquals(resourceLinks.get(0).getAllows(), asList("GET", "PUT"));
-    }
-
-    @Test
-    public void shouldOverrideInheritedAllowsSpecFromTypeLevel() throws Exception {
-        // given
-        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithRequestMethodsAtTypeAndMethodLevel.class);
-        // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResourceLinks();
-        // then
-        assertEquals(resourceLinks.size(), 1);
-        assertEquals(resourceLinks.get(0).getAllows(), asList("GET", "POST"));
-    }
-
-    @Test
     public void methodShouldDefineLinkRelationTypeIfControllerHasNoAnnotation() {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithRequestMappingAndLinkRelationTypeAtMethodLevel.class);
