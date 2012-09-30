@@ -3,6 +3,9 @@ package de.otto.jsonhome.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A builder used to build JsonHome instances.
+ */
 public final class JsonHomeBuilder {
 
     private final List<ResourceLink> resources = new ArrayList<ResourceLink>();

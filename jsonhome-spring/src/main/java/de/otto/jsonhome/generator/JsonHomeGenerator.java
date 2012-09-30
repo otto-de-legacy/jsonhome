@@ -11,12 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.JsonHome.emptyJsonHome;
 import static de.otto.jsonhome.model.JsonHome.jsonHome;
 import static de.otto.jsonhome.model.JsonHomeBuilder.jsonHomeBuilder;
+import static de.otto.jsonhome.model.ResourceLinkHelper.mergeResources;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -75,24 +79,6 @@ public class JsonHomeGenerator {
             resourceLinks = mergeResources(resourceLinks, resourceLinksForMethod(controller, method, resourcePathPrefixes));
         }
         return resourceLinks;
-    }
-
-    private List<ResourceLink> mergeResources(final List<ResourceLink> resourceLinks, final List<ResourceLink> other) {
-        final List<ResourceLink> allCandidates = new ArrayList<ResourceLink>(resourceLinks.size() + other.size());
-        allCandidates.addAll(resourceLinks);
-        allCandidates.addAll(other);
-        final Map<URI, ResourceLink> resourceLinkCandidates = new LinkedHashMap<URI, ResourceLink>();
-        for (final ResourceLink candidate : allCandidates) {
-            final URI linkRelationType = candidate.getLinkRelationType();
-            final ResourceLink existingCandidate = resourceLinkCandidates.get(linkRelationType);
-            if (existingCandidate != null) {
-                // merge the candidates, they are belonging to the same resource link
-                resourceLinkCandidates.put(linkRelationType, existingCandidate.mergeWith(candidate));
-            } else {
-                resourceLinkCandidates.put(linkRelationType, candidate);
-            }
-        }
-        return new ArrayList<ResourceLink>(resourceLinkCandidates.values());
     }
 
     private List<ResourceLink> resourceLinksForMethod(final Class<?> controller,

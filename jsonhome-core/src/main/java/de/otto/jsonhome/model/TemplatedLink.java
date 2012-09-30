@@ -6,6 +6,9 @@ import java.util.*;
 import static java.util.Collections.unmodifiableList;
 
 /**
+ * A templated resource link.
+ *
+ * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#section-4.1">http://tools.ietf.org/html/draft-nottingham-json-home-02#section-4.1</a>
  * @author Guido Steinacker
  * @since 15.09.12
  */

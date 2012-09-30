@@ -21,6 +21,8 @@ import static de.otto.jsonhome.model.JsonHome.emptyJsonHome;
 
 
 /**
+ * A Spring controller, serving a json-home document.
+ *
  * @author Guido Steinacker
  * @since 15.09.12
  */
