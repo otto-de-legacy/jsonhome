@@ -70,8 +70,7 @@ The library is actively used (and developed) at otto.
 ## Licensing
 
 Well - we have to think about it. If you care about licenses, please come back in a few weeks. In the meantime, feel
-free to evaluate (and use) the code. It will definitly remain open source. Currently, the full code-base is still owned
-by me, so no evil company lawyer will be able to do any harm.
+free to evaluate (and use) the code.
 
 ## Feedback + Help Wanted
 
