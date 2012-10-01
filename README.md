@@ -2,7 +2,7 @@
 
 A json-home generator for RESTful web applications.
 
-## Json-Home???
+## Json-Home?
 
 Think of an machine-readable alternative to an index.html in json format, describing the REST resources of an
 application. If the caller knows the format, no URIs must be constructed using string-magic. The resources
