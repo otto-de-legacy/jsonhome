@@ -69,8 +69,7 @@ The library is actively used (and developed) at otto.
 
 ## Licensing
 
-Well - we have to think about it. If you care about licenses, please come back in a few weeks. In the meantime, feel
-free to evaluate (and use) the code.
+The project is released under version 2.0 of the Apache License.
 
 ## Feedback + Help Wanted
 
