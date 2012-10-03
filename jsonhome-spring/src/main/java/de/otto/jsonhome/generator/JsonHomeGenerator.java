@@ -1,6 +1,6 @@
 package de.otto.jsonhome.generator;
 
-import de.otto.jsonhome.annotation.LinkRelationType;
+import de.otto.jsonhome.annotation.Rel;
 import de.otto.jsonhome.model.JsonHome;
 import de.otto.jsonhome.model.ResourceLink;
 import org.springframework.stereotype.Controller;
@@ -135,23 +135,23 @@ public class JsonHomeGenerator {
     /**
      * Analyses a method of a controller and returns the fully qualified URI of the link-relation type.
      *
-     * If the neither the method, nor the controller is annotated with LinkRelationType, null is returned.
+     * If the neither the method, nor the controller is annotated with Rel, null is returned.
      *
-     * The LinkRelationType of the method is overriding the LinkRelationType of the Controller.
+     * The Rel of the method is overriding the Rel of the Controller.
      *
      * @param controller the controller
      * @param method the method
      * @return URI of the link-relation type, or null
      */
     protected URI relationTypeFrom(final Class<?> controller, final Method method) {
-        final LinkRelationType controllerLinkRelationType = controller.getAnnotation(LinkRelationType.class);
-        final LinkRelationType methodLinkRelationType = method.getAnnotation(LinkRelationType.class);
-        if (controllerLinkRelationType == null && methodLinkRelationType == null) {
+        final Rel controllerRel = controller.getAnnotation(Rel.class);
+        final Rel methodRel = method.getAnnotation(Rel.class);
+        if (controllerRel == null && methodRel == null) {
             return null;
         } else {
-            final String linkRelationType = methodLinkRelationType != null
-                    ? methodLinkRelationType.value()
-                    : controllerLinkRelationType.value();
+            final String linkRelationType = methodRel != null
+                    ? methodRel.value()
+                    : controllerRel.value();
             return URI.create(linkRelationType.startsWith("http://")
                     ? linkRelationType
                     : rootUri + linkRelationType);

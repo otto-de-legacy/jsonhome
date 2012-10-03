@@ -1,6 +1,6 @@
 package de.otto.jsonhome.controller;
 
-import de.otto.jsonhome.annotation.LinkRelationType;
+import de.otto.jsonhome.annotation.Rel;
 import de.otto.jsonhome.model.JsonHome;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -53,7 +53,7 @@ public class JsonHomeController {
         jsonHome = jsonHomeFor(rootUri).with(controllerTypes);
     }
 
-    @LinkRelationType(
+    @Rel(
             value = "http://tools.ietf.org/html/draft-nottingham-json-home-02",
             description = "Json-Home Document."
     )

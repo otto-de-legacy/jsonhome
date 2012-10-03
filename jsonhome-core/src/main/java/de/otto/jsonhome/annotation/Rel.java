@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface LinkRelationType {
+public @interface Rel {
 
     /**
      * The URI uniquely identifying the link relation type in a given context.

@@ -1,6 +1,6 @@
 package de.otto.jsonhome.example.products;
 
-import de.otto.jsonhome.annotation.LinkRelationType;
+import de.otto.jsonhome.annotation.Rel;
 import de.otto.jsonhome.annotation.VarType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,7 +30,7 @@ public class ProductsController {
     @RequestMapping(
             produces = "text/html"
     )
-    @LinkRelationType(
+    @Rel(
             value = "/rel/products",
             description = "Returns the collection of all products."
     )
@@ -43,7 +43,7 @@ public class ProductsController {
             method = RequestMethod.POST,
             consumes = "application/x-www-form-urlencoded"
     )
-    @LinkRelationType(
+    @Rel(
             value = "/rel/products",
             description = "Adds a new product to the collection of all products and returns the id of the new product in the Location header."
     )
@@ -62,7 +62,7 @@ public class ProductsController {
             method = RequestMethod.GET,
             produces = "text/html"
     )
-    @LinkRelationType(
+    @Rel(
             value = "/rel/product",
             description = "Retrieves a single product from the collection of all products."
     )
@@ -81,7 +81,7 @@ public class ProductsController {
             method = RequestMethod.PUT,
             consumes = "application/x-www-form-urlencoded"
     )
-    @LinkRelationType(
+    @Rel(
             value = "/rel/product",
             description = "Updates a product."
     )

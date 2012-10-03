@@ -1,6 +1,6 @@
 package de.otto.jsonhome.example.storefront;
 
-import de.otto.jsonhome.annotation.LinkRelationType;
+import de.otto.jsonhome.annotation.Rel;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping(value = "/storefront")
-@LinkRelationType("/rel/storefront")
+@Rel("/rel/storefront")
 public class StorefrontController {
 
     @RequestMapping(produces = "text/html")
