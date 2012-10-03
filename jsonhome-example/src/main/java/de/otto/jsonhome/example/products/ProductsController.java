@@ -1,7 +1,6 @@
 package de.otto.jsonhome.example.products;
 
 import de.otto.jsonhome.annotation.Rel;
-import de.otto.jsonhome.annotation.VarType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,12 +65,7 @@ public class ProductsController {
             value = "/rel/product",
             description = "Retrieves a single product from the collection of all products."
     )
-    @VarType(
-            value = "productId",
-            description = "The id of the product",
-            reference = "/rel/product-id"
-    )
-    public ModelAndView getProduct(final @PathVariable long productId) {
+    public ModelAndView getProduct(final @PathVariable long productId, final HttpServletResponse response) {
         final Product product = productService.findProduct(productId);
         return new ModelAndView("product", singletonMap("product", product));
     }

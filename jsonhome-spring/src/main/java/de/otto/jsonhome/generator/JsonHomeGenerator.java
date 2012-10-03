@@ -98,7 +98,7 @@ public class JsonHomeGenerator {
                             resourceLinks.add(templatedLink(
                                     relationType,
                                     resourcePath,
-                                    hrefVarsGenerator.hrefVarsFor(method),
+                                    hrefVarsGenerator.hrefVarsFor(relationType, method),
                                     hintsGenerator.hintsOf(method)
                             ));
                         } else {
