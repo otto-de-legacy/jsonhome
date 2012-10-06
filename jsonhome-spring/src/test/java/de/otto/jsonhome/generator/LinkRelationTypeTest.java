@@ -35,7 +35,7 @@ public class LinkRelationTypeTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithoutResource.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResourceLinks();
+        final List<ResourceLink> resourceLinks = jsonHome.getResources();
         // then
         assertTrue(resourceLinks.isEmpty());
     }
@@ -45,7 +45,7 @@ public class LinkRelationTypeTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithoutMethods.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResourceLinks();
+        final List<ResourceLink> resourceLinks = jsonHome.getResources();
         // then
         assertTrue(resourceLinks.isEmpty());
     }
@@ -55,7 +55,7 @@ public class LinkRelationTypeTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithResourceWithoutLinkRelationType.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResourceLinks();
+        final List<ResourceLink> resourceLinks = jsonHome.getResources();
         // then
         assertEquals(resourceLinks.size(), 0);
     }
@@ -65,7 +65,7 @@ public class LinkRelationTypeTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithDifferentRepresentations.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResourceLinks();
+        final List<ResourceLink> resourceLinks = jsonHome.getResources();
         // then
         assertEquals(resourceLinks.size(), 1);
         final List<String> expected = asList("application/foo", "text/html", "text/plain", "application/json", "application/bar");
@@ -77,7 +77,7 @@ public class LinkRelationTypeTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithAllowsSpecAcrossMultipleMethods.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResourceLinks();
+        final List<ResourceLink> resourceLinks = jsonHome.getResources();
         // then
         assertEquals(resourceLinks.size(), 1);
         assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(asList("GET", "PUT", "POST", "DELETE")));
@@ -88,7 +88,7 @@ public class LinkRelationTypeTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithDifferentAllowsSpecifications.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResourceLinks();
+        final List<ResourceLink> resourceLinks = jsonHome.getResources();
         // then
         assertEquals(resourceLinks.size(), 1);
         assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(asList("GET", "PUT", "POST", "DELETE", "HEAD")));
@@ -99,7 +99,7 @@ public class LinkRelationTypeTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithDifferentResourceDefinitions.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResourceLinks();
+        final List<ResourceLink> resourceLinks = jsonHome.getResources();
         // then
         assertEquals(resourceLinks.size(), 3);
         final List<String> uris = asList(
@@ -114,7 +114,7 @@ public class LinkRelationTypeTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithDifferentUrisForSameRelationType.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResourceLinks();
+        final List<ResourceLink> resourceLinks = jsonHome.getResources();
         // then an exception is thrown
     }
 
@@ -123,7 +123,7 @@ public class LinkRelationTypeTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithResourceAndLinkRelationType.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResourceLinks();
+        final List<ResourceLink> resourceLinks = jsonHome.getResources();
         // then
         assertEquals(resourceLinks.size(), 1);
         final ResourceLink link = resourceLinks.get(0);
@@ -136,7 +136,7 @@ public class LinkRelationTypeTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithRequestMappingAndLinkRelationTypeAtMethodLevel.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResourceLinks();
+        final List<ResourceLink> resourceLinks = jsonHome.getResources();
         // then
         assertEquals(resourceLinks.size(), 1);
         assertEquals(resourceLinks.get(0).getLinkRelationType(), create("http://example.org/rel/foo"));
@@ -147,7 +147,7 @@ public class LinkRelationTypeTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResourceLinks();
+        final List<ResourceLink> resourceLinks = jsonHome.getResources();
         // then
         assertEquals(resourceLinks.size(), 1);
         assertEquals(resourceLinks.get(0).getLinkRelationType(), create("http://example.org/rel/foo"));
@@ -158,7 +158,7 @@ public class LinkRelationTypeTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithMultipleLinkRelationTypes.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResourceLinks();
+        final List<ResourceLink> resourceLinks = jsonHome.getResources();
         // then
         assertEquals(resourceLinks.size(), 2);
         assertTrue(resourceLinks.containsAll(asList(
@@ -177,7 +177,7 @@ public class LinkRelationTypeTest {
         );
         final JsonHome foo = jsonHomeFor(create("http://example.org")).with(controller);
         // when
-        final List<ResourceLink> resourceLinks = foo.getResourceLinks();
+        final List<ResourceLink> resourceLinks = foo.getResources();
         // then
         assertEquals(resourceLinks.size(), 1);
         assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(asList("GET", "PUT")));
@@ -188,7 +188,7 @@ public class LinkRelationTypeTest {
         // given
         final JsonHome foo = jsonHomeFor(create("http://example.org")).with(ControllerWithAcceptPutAndAcceptPost.class);
         // when
-        final List<ResourceLink> resourceLinks = foo.getResourceLinks();
+        final List<ResourceLink> resourceLinks = foo.getResources();
         // then
         assertEquals(resourceLinks.size(), 1);
         assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(asList("GET", "PUT", "POST")));

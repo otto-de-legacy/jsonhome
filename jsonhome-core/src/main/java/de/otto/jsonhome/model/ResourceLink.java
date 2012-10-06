@@ -1,7 +1,6 @@
 package de.otto.jsonhome.model;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,6 +9,11 @@ import java.util.Map;
  * @since 16.09.12
  */
 public interface ResourceLink {
+
+    /**
+     * A human-readable name of the resource.
+     */
+    public String getName();
 
     /**
      * The link-relation type of the resource link

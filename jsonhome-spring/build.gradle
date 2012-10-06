@@ -9,6 +9,7 @@ dependencies {
 
     compile project(':jsonhome-core')
     compile 'org.springframework:spring-webmvc:3.1.2.RELEASE'
+    compile 'cglib:cglib-nodep:2.2'
     compile 'javax.servlet:servlet-api:2.5'
     testCompile 'org.testng:testng:6.3.1'
     testCompile 'org.springframework:spring-test:3.1.2.RELEASE'

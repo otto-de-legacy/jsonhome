@@ -1,23 +1,15 @@
 package de.otto.jsonhome.controller;
 
 import de.otto.jsonhome.annotation.Rel;
-import de.otto.jsonhome.model.JsonHome;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.URI;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
-import static de.otto.jsonhome.generator.JsonHomeGenerator.jsonHomeFor;
-import static de.otto.jsonhome.model.JsonHome.emptyJsonHome;
 
 
 /**
@@ -27,49 +19,28 @@ import static de.otto.jsonhome.model.JsonHome.emptyJsonHome;
  * @since 15.09.12
  */
 @Controller
+@Rel("/rel/json-home")
 @RequestMapping(value = "/json-home")
-public class JsonHomeController {
+public class JsonHomeController extends JsonHomeControllerBase {
 
-    private JsonHome jsonHome = emptyJsonHome();
-    private URI rootUri;
-    private Set<Class<?>> controllerTypes;
-
-    @Value ("${rootUri}")
-    public void setRootUri(final String rootUri) {
-        this.rootUri = URI.create(rootUri);
-    }
-
-    @Resource
-    public void setApplicationContext(final ApplicationContext applicationContext) {
-        final Map<String, Object> controllerBeans = applicationContext.getBeansWithAnnotation(Controller.class);
-        controllerTypes = new HashSet<Class<?>>();
-        for (Object o : controllerBeans.values()) {
-            controllerTypes.add(o.getClass());
-        }
-    }
-
-    public void setControllerTypes(final Class<?>... controllerTypes) {
-        this.controllerTypes = new HashSet<Class<?>>(controllerTypes.length);
-        for (final Class<?> controllerType : controllerTypes) {
-            this.controllerTypes.add(controllerType);
-        }
-    }
-
-    @PostConstruct
-    public void postConstruct() {
-        jsonHome = jsonHomeFor(rootUri).with(controllerTypes);
-    }
-
-    @Rel(
-            value = "http://tools.ietf.org/html/draft-nottingham-json-home-02",
-            description = "Json-Home Document."
-    )
     @RequestMapping(produces = {"application/json-home", "application/json"})
     @ResponseBody
     public Map<String, ?> getHomeDocument(final HttpServletResponse response) {
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=3600");
-        return jsonHome.toJson();
+        return jsonHome().toJson();
+    }
+
+    @RequestMapping(produces = "text/html")
+    @ResponseBody
+    public ModelAndView getResourcesDoc(final HttpServletRequest request,
+                                        final HttpServletResponse response) {
+        // home document should be cached:
+        response.setHeader("Cache-Control", "max-age=3600");
+        final Map<String,Object> resources = new HashMap<String, Object>();
+        resources.put("resources", jsonHome().getResources());
+        resources.put("contextpath", request.getContextPath());
+        return new ModelAndView("doc/resources", resources);
     }
 
 

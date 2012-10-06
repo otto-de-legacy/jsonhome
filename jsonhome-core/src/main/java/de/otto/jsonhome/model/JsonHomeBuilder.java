@@ -22,7 +22,7 @@ public final class JsonHomeBuilder {
     }
 
     public JsonHomeBuilder mergeWith(final JsonHome jsonHome) {
-        resources.addAll(jsonHome.getResourceLinks());
+        resources.addAll(jsonHome.getResources());
         return this;
     }
 

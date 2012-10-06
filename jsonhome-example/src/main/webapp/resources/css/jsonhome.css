@@ -1,0 +1,4 @@
+table   { margin: 1em; border-collapse: collapse }
+td, th  { padding: 0.5em; border: 1px #ccc solid; text-align: left }
+thead   { background: #bee7ff }
+ul      { margin: 0; padding: 0; list-style: none }

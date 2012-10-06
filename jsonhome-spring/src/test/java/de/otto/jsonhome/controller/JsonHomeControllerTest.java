@@ -20,10 +20,7 @@ public class JsonHomeControllerTest {
     @Test
     public void testGetHomeDocument() throws Exception {
         // given
-        final JsonHomeController controller = new JsonHomeController();
-        controller.setControllerTypes(ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class);
-        controller.setRootUri("http://example.org");
-        controller.postConstruct();
+        final JsonHomeController controller = jsonHomeController();
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String, ?> resourcesMap = controller.getHomeDocument(response);
@@ -38,6 +35,13 @@ public class JsonHomeControllerTest {
         expected.put("allow", asList("GET"));
         final Object hints = resources.get("http://example.org/rel/foo").get("hints");
         assertEquals(hints, expected);
+    }
+
+    private JsonHomeController jsonHomeController() {
+        final JsonHomeController controller = new JsonHomeController();
+        controller.setControllerTypes(ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class);
+        controller.setRootUri("http://example.org");
+        return controller;
     }
 
 }

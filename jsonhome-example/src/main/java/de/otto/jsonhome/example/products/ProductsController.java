@@ -29,23 +29,17 @@ public class ProductsController {
     @RequestMapping(
             produces = "text/html"
     )
-    @Rel(
-            value = "/rel/products",
-            description = "Returns the collection of all products."
-    )
+    @Rel("/rel/products")
     public ModelAndView getProducts(final @RequestParam(required = false, defaultValue = "*") String query) {
         final List<Product> products = productService.findProducts(query);
-        return new ModelAndView("products", singletonMap("products", products));
+        return new ModelAndView("example/products", singletonMap("products", products));
     }
 
     @RequestMapping(
             method = RequestMethod.POST,
             consumes = "application/x-www-form-urlencoded"
     )
-    @Rel(
-            value = "/rel/products",
-            description = "Adds a new product to the collection of all products and returns the id of the new product in the Location header."
-    )
+    @Rel("/rel/products")
     public ModelAndView addProduct(final @RequestParam String title,
                                    final @RequestParam String price,
                                    final HttpServletResponse response) {
@@ -53,7 +47,7 @@ public class ProductsController {
         final List<Product> products = productService.findProducts("*");
         response.setHeader("Location", String.valueOf(id));
         response.setStatus(201);
-        return new ModelAndView("products", singletonMap("products", products));
+        return new ModelAndView("example/products", singletonMap("products", products));
     }
 
     @RequestMapping(
@@ -61,13 +55,10 @@ public class ProductsController {
             method = RequestMethod.GET,
             produces = "text/html"
     )
-    @Rel(
-            value = "/rel/product",
-            description = "Retrieves a single product from the collection of all products."
-    )
-    public ModelAndView getProduct(final @PathVariable long productId, final HttpServletResponse response) {
+    @Rel("/rel/product")
+    public ModelAndView getProduct(final @PathVariable long productId) {
         final Product product = productService.findProduct(productId);
-        return new ModelAndView("product", singletonMap("product", product));
+        return new ModelAndView("example/product", singletonMap("product", product));
     }
 
     @RequestMapping(
@@ -75,17 +66,14 @@ public class ProductsController {
             method = RequestMethod.PUT,
             consumes = "application/x-www-form-urlencoded"
     )
-    @Rel(
-            value = "/rel/product",
-            description = "Updates a product."
-    )
+    @Rel("/rel/product")
     public ModelAndView putProduct(final @PathVariable long productId,
                                    final @RequestParam String title,
                                    final @RequestParam String price,
                                    final HttpServletResponse response) {
         response.setStatus(201);
         final Product product = productService.createOrUpdateProduct(productId, title, price);
-        return new ModelAndView("product", singletonMap("product", product));
+        return new ModelAndView("example/product", singletonMap("product", product));
     }
 
 }

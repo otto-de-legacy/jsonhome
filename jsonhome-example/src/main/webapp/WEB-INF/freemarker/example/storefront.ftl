@@ -12,6 +12,7 @@
         <input id="query" class="productsearch" type="text" name="query"/>
         <input class="submit" type="submit" />
     </form>
+    <p>Documentation of the Example Shop' REST API: <a href="json-home">REST documentation</a> </p>
 
 </body>
 </html>

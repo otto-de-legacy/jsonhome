@@ -1,5 +1,6 @@
 package de.otto.jsonhome.model;
 
+import java.net.URI;
 import java.util.*;
 
 import static java.util.Collections.singletonMap;
@@ -29,8 +30,21 @@ public final class JsonHome {
         return new JsonHome(resources);
     }
 
-    public List<ResourceLink> getResourceLinks() {
+    public List<ResourceLink> getResources() {
         return resources;
+    }
+
+    public boolean hasResourceFor(final URI relationTypeURI) {
+        return getResourceFor(relationTypeURI) != null;
+    }
+
+    public ResourceLink getResourceFor(URI relationTypeURI) {
+        for (final ResourceLink resource : resources) {
+            if (resource.getLinkRelationType().equals(relationTypeURI)) {
+                return resource;
+            }
+        }
+        return null;
     }
 
     public Map<String, ?> toJson() {

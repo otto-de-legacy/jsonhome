@@ -36,6 +36,10 @@ public final class TemplatedLink implements ResourceLink {
         return new TemplatedLink(relationType, hrefTemplate, hrefVars, hints);
     }
 
+    public String getName() {
+        return relationType.toString().substring(relationType.toString().lastIndexOf("/"));
+    }
+
     public URI getLinkRelationType() {
         return relationType;
     }

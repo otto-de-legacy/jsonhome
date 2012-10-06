@@ -1,7 +1,8 @@
 package de.otto.jsonhome.model;
 
 import java.net.URI;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A direct resource link.
@@ -28,6 +29,10 @@ public final class DirectLink implements ResourceLink {
                                         final URI href,
                                         final Hints hints) {
         return new DirectLink(relationType, href, hints);
+    }
+
+    public String getName() {
+        return relationType.toString().substring(relationType.toString().lastIndexOf("/"));
     }
 
     public URI getLinkRelationType() {

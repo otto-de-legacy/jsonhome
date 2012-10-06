@@ -21,6 +21,4 @@ public @interface Rel {
      */
     String value();
 
-    String description() default "";
-
 }
