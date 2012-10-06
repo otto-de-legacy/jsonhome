@@ -16,14 +16,5 @@
         <servlet-name>spring-dispatcher</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-	    
-    <servlet>
-        <servlet-name>default</servlet-name>
-        <servlet-class>org.mortbay.jetty.servlet.DefaultServlet</servlet-class>
-    </servlet>
-    
-	<servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>/swagger-ui-1.1.0/*</url-pattern>
-    </servlet-mapping>
+
 </web-app>
