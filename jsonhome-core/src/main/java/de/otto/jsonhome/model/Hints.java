@@ -19,6 +19,7 @@ import java.util.*;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableSet;
 
 /**
  *
@@ -28,26 +29,26 @@ import static java.util.Collections.unmodifiableList;
  */
 public final class Hints {
 
-    private final List<String> allows;
+    private final Set<Allow> allows;
     private final List<String> representations;
     private final List<String> acceptPut;
     private final List<String> acceptPost;
 
-    public Hints(final Collection<String> allows, final List<String> representations) {
+    public Hints(final Set<Allow> allows, final List<String> representations) {
         this(allows, representations, Collections.<String>emptyList(), Collections.<String>emptyList());
     }
 
-    public Hints(final Collection<String> allows,
+    public Hints(final Set<Allow> allows,
                  final List<String> representations,
                  final List<String> acceptPut,
                  final List<String> acceptPost) {
-        if (!acceptPost.isEmpty() && !allows.contains("POST")) {
+        if (!acceptPost.isEmpty() && !allows.contains(Allow.POST)) {
             throw new IllegalArgumentException("POST is not allowed but accept-post is provided.");
         }
-        if (!acceptPut.isEmpty() && !allows.contains("PUT")) {
+        if (!acceptPut.isEmpty() && !allows.contains(Allow.PUT)) {
             throw new IllegalArgumentException("PUT is not allowed but accept-put is provided.");
         }
-        this.allows = unmodifiableList(new ArrayList<String>(allows));
+        this.allows = unmodifiableSet(EnumSet.copyOf(allows));
         this.representations = unmodifiableList(new ArrayList<String>(representations));
         this.acceptPut = acceptPut;
         this.acceptPost = acceptPost;
@@ -57,7 +58,7 @@ public final class Hints {
      * @return the list of allowed HTTP methods.
      * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#section-5.1">http://tools.ietf.org/html/draft-nottingham-json-home-02#section-5.1</a>
      */
-    public List<String> getAllows() {
+    public Set<Allow> getAllows() {
         return allows;
     }
 
@@ -90,7 +91,7 @@ public final class Hints {
      * @return a new, merged Hints instance
      */
     public Hints mergeWith(final Hints other) {
-        final Set<String> allows = new LinkedHashSet<String>(this.allows);
+        final EnumSet<Allow> allows = EnumSet.copyOf(this.allows);
         allows.addAll(other.getAllows());
         final Set<String> representations = new LinkedHashSet<String>(this.representations);
         representations.addAll(other.getRepresentations());

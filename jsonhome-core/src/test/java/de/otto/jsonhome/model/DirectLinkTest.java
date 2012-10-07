@@ -19,12 +19,16 @@ import de.otto.jsonhome.fixtures.LinkFixtures;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.Map;
 
 import static de.otto.jsonhome.fixtures.LinkFixtures.*;
+import static de.otto.jsonhome.model.Allow.GET;
+import static de.otto.jsonhome.model.Allow.PUT;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.EnumSet.of;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.fail;
@@ -46,7 +50,7 @@ public class DirectLinkTest {
         assertEquals(json.get("href"), ABS_STOREFRONT_HREF.toString());
         final Map hints = (Map) json.get("hints");
         assertNotNull(hints);
-        assertEquals(hints.get("allow"), Arrays.asList("GET"));
+        assertEquals(hints.get("allow"), of(GET));
         assertEquals(hints.get("representations"), Arrays.asList("text/html", "application/json"));
     }
 
@@ -64,7 +68,7 @@ public class DirectLinkTest {
     public void mergeWithShouldFailIfOtherHasDifferentHref() {
         // given
         final DirectLink storeFrontLink = STOREFRONT_LINK;
-        final DirectLink linkWithDifferentHref = directLink(LinkFixtures.RESOURCELINK_SHOP_STOREFRONT, LinkFixtures.ABS_SHOPPAGES_HREF, new Hints(singletonList("GET"), asList("text/html", "application/json")));
+        final DirectLink linkWithDifferentHref = directLink(LinkFixtures.RESOURCELINK_SHOP_STOREFRONT, LinkFixtures.ABS_SHOPPAGES_HREF, new Hints(of(GET), asList("text/html", "application/json")));
         // when
         storeFrontLink.mergeWith(linkWithDifferentHref);
         // then an exception is thrown
@@ -74,18 +78,18 @@ public class DirectLinkTest {
     public void mergeWithShouldMergeAllowsSpec() {
         // given
         final DirectLink storeFrontLink = STOREFRONT_LINK;
-        final DirectLink linkWithDifferentHref = directLink(LinkFixtures.RESOURCELINK_SHOP_STOREFRONT, LinkFixtures.ABS_STOREFRONT_HREF, new Hints(singletonList("PUT"), singletonList("text/html")));
+        final DirectLink linkWithDifferentHref = directLink(LinkFixtures.RESOURCELINK_SHOP_STOREFRONT, LinkFixtures.ABS_STOREFRONT_HREF, new Hints(of(PUT), singletonList("text/html")));
         // when
         final ResourceLink resourceLink = storeFrontLink.mergeWith(linkWithDifferentHref);
         // then
-        assertEquals(resourceLink.getHints().getAllows(), asList("GET", "PUT"));
+        assertEquals(resourceLink.getHints().getAllows(), of(GET, PUT));
     }
 
     @Test
     public void mergeWithShouldMergeRepresentations() {
         // given
         final DirectLink storeFrontLink = STOREFRONT_LINK;
-        final DirectLink linkWithDifferentHref = directLink(LinkFixtures.RESOURCELINK_SHOP_STOREFRONT, LinkFixtures.ABS_STOREFRONT_HREF, new Hints(singletonList("GET"), singletonList("application/json")));
+        final DirectLink linkWithDifferentHref = directLink(LinkFixtures.RESOURCELINK_SHOP_STOREFRONT, LinkFixtures.ABS_STOREFRONT_HREF, new Hints(of(GET), singletonList("application/json")));
         // when
         final ResourceLink resourceLink = storeFrontLink.mergeWith(linkWithDifferentHref);
         // then

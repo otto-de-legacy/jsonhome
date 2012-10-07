@@ -15,6 +15,7 @@
  */
 package de.otto.jsonhome.generator;
 
+import de.otto.jsonhome.model.Allow;
 import de.otto.jsonhome.model.Hints;
 import de.otto.jsonhome.model.HintsBuilder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,21 +23,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.HintsBuilder.hints;
+import static java.util.EnumSet.of;
 
 public class HintsGenerator {
 
     public Hints hintsOf(final Method method) {
-        final List<String> allows = allowedHttpMethodsOf(method);
+        final Set<Allow> allows = allowedHttpMethodsOf(method);
         final HintsBuilder hintsBuilder = hints().allowing(allows);
         final List<String> supportedRepresentations = supportedRepresentationsOf(method);
-        if (allows.contains("PUT")) {
+        if (allows.contains(PUT)) {
             hintsBuilder.acceptingForPut(supportedRepresentations);
         }
-        if (allows.contains("POST")) {
+        if (allows.contains(POST)) {
             hintsBuilder.acceptingForPost(supportedRepresentations);
         }
-        if (allows.contains("GET") || allows.contains("HEAD")) {
+        if (allows.contains(GET) || allows.contains(HEAD)) {
             hintsBuilder.representedAs(supportedRepresentations);
         }
         // TODO: PATCH
@@ -52,11 +55,11 @@ public class HintsGenerator {
      * @return list of allowed HTTP methods.
      * @throws NullPointerException if method is not annotated with @RequestMapping.
      */
-    protected List<String> allowedHttpMethodsOf(final Method method) {
+    protected Set<Allow> allowedHttpMethodsOf(final Method method) {
         final RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
-        final List<String> allows = listOfStringsFrom(methodRequestMapping.method());
+        final Set<Allow> allows = listOfStringsFrom(methodRequestMapping.method());
         if (allows.isEmpty()) {
-            return Collections.singletonList("GET");
+            return of(GET);
         } else {
             return allows;
         }
@@ -97,10 +100,10 @@ public class HintsGenerator {
         return new ArrayList<String>(representations);
     }
 
-    private List<String> listOfStringsFrom(Object[] array) {
-        final List<String> result = new ArrayList<String>(array.length);
+    private Set<Allow> listOfStringsFrom(Object[] array) {
+        final Set<Allow> result = EnumSet.noneOf(Allow.class);
         for (Object o : array) {
-            result.add(o.toString());
+            result.add(Allow.valueOf(o.toString()));
         }
         return result;
     }

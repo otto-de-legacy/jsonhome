@@ -22,7 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.otto.jsonhome.fixtures.ControllerFixtures.ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel;
+import static de.otto.jsonhome.model.Allow.GET;
 import static java.util.Arrays.asList;
+import static java.util.EnumSet.of;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -47,7 +49,7 @@ public class JsonHomeControllerTest {
         final Map<String, Map<String, ?>> resources = (Map<String, Map<String, ?>>) resourcesMap.get("resources");
         final Map<String, Object> expected = new HashMap<String, Object>();
         expected.put("representations", asList("text/html"));
-        expected.put("allow", asList("GET"));
+        expected.put("allow", of(GET));
         final Object hints = resources.get("http://example.org/rel/foo").get("hints");
         assertEquals(hints, expected);
     }

@@ -17,11 +17,15 @@ package de.otto.jsonhome.model;
 
 import org.testng.annotations.Test;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.HintsBuilder.hints;
 import static java.util.Arrays.asList;
+import static java.util.EnumSet.of;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -34,7 +38,7 @@ public class HintsTest {
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void creationShouldFailWithAcceptPostIfPostIsNotAllowed() {
         // given
-        final List<String> allows = asList("GET", "PUT");
+        final Set<Allow> allows = of(GET, PUT);
         final String acceptPost = "text/plain";
         // when
         hints().allowing(allows).representedAs("text/html").acceptingForPost(acceptPost).build();
@@ -44,7 +48,7 @@ public class HintsTest {
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void creationShouldFailWithAcceptPutIfPutIsNotAllowed() {
         // given
-        final List<String> allows = asList("GET", "POST");
+        final Set<Allow> allows = of(GET, POST);
         final String acceptPut = "text/plain";
         // when
         hints().allowing(allows).representedAs("text/html").acceptingForPut(acceptPut).build();
@@ -54,7 +58,7 @@ public class HintsTest {
     @Test
     public void testToJson() throws Exception {
         // given
-        final List<String> allows = asList("GET", "POST", "PUT");
+        final Set<Allow> allows = of(GET, POST, PUT);
         final List<String> representations = asList("text/html", "text/plain");
         final List<String> acceptPut = asList("foo/bar");
         final List<String> acceptPost = asList("bar/foo");
@@ -77,19 +81,19 @@ public class HintsTest {
     public void testMergeWith() {
         // given
         final Hints firstHints = hints()
-                .allowing("GET", "PUT")
+                .allowing(of(GET, PUT))
                 .representedAs("text/html", "text/plain")
                 .acceptingForPut("bar/foo")
                 .build();
         final Hints secondHints = hints()
-                .allowing("GET", "POST", "DELETE")
+                .allowing(of(GET, POST, DELETE))
                 .representedAs("text/html", "application/json")
                 .acceptingForPost("foo/bar")
                 .build();
         // when
         final Hints merged = firstHints.mergeWith(secondHints);
         // then
-        assertEquals(merged.getAllows(), asList("GET", "PUT", "POST", "DELETE"));
+        assertEquals(merged.getAllows(), of(GET, PUT, POST, DELETE));
         assertEquals(merged.getRepresentations(), asList("text/html", "text/plain", "application/json"));
         assertEquals(merged.getAcceptPut(), asList("bar/foo"));
         assertEquals(merged.getAcceptPost(), asList("foo/bar"));

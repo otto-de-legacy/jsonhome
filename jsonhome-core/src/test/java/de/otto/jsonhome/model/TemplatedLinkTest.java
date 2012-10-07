@@ -22,9 +22,13 @@ import java.util.Collections;
 import java.util.Map;
 
 import static de.otto.jsonhome.fixtures.LinkFixtures.*;
+import static de.otto.jsonhome.model.Allow.GET;
+import static de.otto.jsonhome.model.Allow.POST;
+import static de.otto.jsonhome.model.Allow.PUT;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonMap;
+import static java.util.EnumSet.of;
 import static org.testng.Assert.*;
 
 /**
@@ -46,7 +50,7 @@ public class TemplatedLinkTest {
         assertEquals(json.get("href-vars"), singletonMap("pageId", "http://example.org/json-home/vartype/shop/page/pageId"));
         final Map hints = (Map) json.get("hints");
         assertNotNull(hints);
-        assertEquals(hints.get("allow"), Arrays.asList("GET"));
+        assertEquals(hints.get("allow"), of(GET));
         assertEquals(hints.get("representations"), Arrays.asList("text/html", "application/json"));
 
     }
@@ -60,7 +64,7 @@ public class TemplatedLinkTest {
                 REL_PAGE_HREF,
                 asList(new HrefVar("pageId", VAR_TYPE_PAGEID, "")),
                 new Hints(
-                        asList("GET"),
+                        of(GET),
                         asList("text/html")
                 ));
         // when
@@ -77,7 +81,7 @@ public class TemplatedLinkTest {
                 "/foo/{fooId}",
                 asList(new HrefVar("fooId", VAR_TYPE_PAGEID, "")),
                 new Hints(
-                        asList("GET"),
+                        of(GET),
                         asList("text/html")
                 ));
         // when
@@ -94,14 +98,14 @@ public class TemplatedLinkTest {
                 REL_PAGE_HREF,
                 asList(new HrefVar("pageId", VAR_TYPE_PAGEID, "")),
                 new Hints(
-                        asList("PUT"),
+                        of(PUT),
                         asList("text/html", "application/json")
                 )
         );
         // when
         final ResourceLink resourceLink = aboutPageLink.mergeWith(otherTemplatedLink);
         // then
-        assertEquals(resourceLink.getHints().getAllows(), asList("GET", "PUT"));
+        assertEquals(resourceLink.getHints().getAllows(), of(GET, PUT));
     }
 
     @Test
@@ -113,7 +117,7 @@ public class TemplatedLinkTest {
                 REL_PAGE_HREF,
                 asList(new HrefVar("pageId", VAR_TYPE_PAGEID, "")),
                 new Hints(
-                        asList("GET"),
+                        of(GET),
                         asList("text/html", "application/foo")
                 )
         );
@@ -138,7 +142,7 @@ public class TemplatedLinkTest {
                 "pages/foo/{pageId}",
                 asList(new HrefVar("pageId", VAR_TYPE_PAGEID, "")),
                 new Hints(
-                        asList("GET"),
+                        of(GET),
                         asList("text/html", "application/json")
                 )
         );
@@ -156,7 +160,7 @@ public class TemplatedLinkTest {
                 "pages/{pageId}",
                 asList(new HrefVar("foo", VAR_TYPE_PAGEID, "")),
                 new Hints(
-                        asList("GET"),
+                        of(GET),
                         asList("text/html", "application/json")
                 )
         );
@@ -173,7 +177,7 @@ public class TemplatedLinkTest {
                 REL_PAGE_HREF,
                 asList(new HrefVar("pageId", VAR_TYPE_PAGEID, "")),
                 new Hints(
-                        asList("GET", "PUT"),
+                        of(GET, PUT),
                         asList("application/foo"),
                         asList("application/json"),
                         Collections.<String>emptyList()
@@ -184,7 +188,7 @@ public class TemplatedLinkTest {
                 REL_PAGE_HREF,
                 asList(new HrefVar("pageId", VAR_TYPE_PAGEID, "")),
                 new Hints(
-                        asList("GET", "PUT"),
+                        of(GET, PUT),
                         asList("application/foo"),
                         asList("application/foo"),
                         Collections.<String>emptyList()
@@ -206,7 +210,7 @@ public class TemplatedLinkTest {
                 REL_PAGE_HREF,
                 asList(new HrefVar("pageId", VAR_TYPE_PAGEID, "")),
                 new Hints(
-                        asList("GET", "POST"),
+                        of(GET, POST),
                         asList("application/foo"),
                         Collections.<String>emptyList(),
                         asList("application/json")
@@ -217,7 +221,7 @@ public class TemplatedLinkTest {
                 REL_PAGE_HREF,
                 asList(new HrefVar("pageId", VAR_TYPE_PAGEID, "")),
                 new Hints(
-                        asList("GET", "POST"),
+                        of(GET, POST),
                         asList("application/foo"),
                         Collections.<String>emptyList(),
                         asList("application/foo")

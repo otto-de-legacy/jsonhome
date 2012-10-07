@@ -24,10 +24,12 @@ import java.util.List;
 
 import static de.otto.jsonhome.fixtures.ControllerFixtures.*;
 import static de.otto.jsonhome.generator.JsonHomeGenerator.jsonHomeFor;
+import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static java.net.URI.create;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.EnumSet.of;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -95,7 +97,7 @@ public class JsonHomeGeneratorTest {
         final List<ResourceLink> resourceLinks = jsonHome.getResources();
         // then
         assertEquals(resourceLinks.size(), 1);
-        assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(asList("GET", "PUT", "POST", "DELETE")));
+        assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(of(GET, PUT, POST, DELETE)));
     }
 
     @Test
@@ -106,7 +108,7 @@ public class JsonHomeGeneratorTest {
         final List<ResourceLink> resourceLinks = jsonHome.getResources();
         // then
         assertEquals(resourceLinks.size(), 1);
-        assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(asList("GET", "PUT", "POST", "DELETE", "HEAD")));
+        assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(of(GET, PUT, POST, DELETE, HEAD)));
     }
 
     @Test
@@ -177,8 +179,8 @@ public class JsonHomeGeneratorTest {
         // then
         assertEquals(resourceLinks.size(), 2);
         assertTrue(resourceLinks.containsAll(asList(
-                directLink(create("http://example.org/rel/foo"), create("http://example.org/foo"), new Hints(singletonList("GET"), singletonList("text/html"))),
-                directLink(create("http://example.org/rel/bar"), create("http://example.org/foo"), new Hints(singletonList("GET"), singletonList("text/html")))
+                directLink(create("http://example.org/rel/foo"), create("http://example.org/foo"), new Hints(of(GET), singletonList("text/html"))),
+                directLink(create("http://example.org/rel/bar"), create("http://example.org/foo"), new Hints(of(GET), singletonList("text/html")))
         )));
     }
 
@@ -195,7 +197,7 @@ public class JsonHomeGeneratorTest {
         final List<ResourceLink> resourceLinks = foo.getResources();
         // then
         assertEquals(resourceLinks.size(), 1);
-        assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(asList("GET", "PUT")));
+        assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(of(GET, PUT)));
     }
 
     @Test
@@ -206,7 +208,7 @@ public class JsonHomeGeneratorTest {
         final List<ResourceLink> resourceLinks = foo.getResources();
         // then
         assertEquals(resourceLinks.size(), 1);
-        assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(asList("GET", "PUT", "POST")));
+        assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(of(GET, PUT, POST)));
         assertEquals(resourceLinks.get(0).getHints().getRepresentations(), asList("text/plain"));
         assertEquals(resourceLinks.get(0).getHints().getAcceptPost(), asList("foo/bar"));
         assertEquals(resourceLinks.get(0).getHints().getAcceptPut(), asList("bar/foo"));

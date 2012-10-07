@@ -27,7 +27,7 @@ import static java.util.Arrays.asList;
  */
 public class HintsBuilder {
 
-    private final Set<String> allows = new LinkedHashSet<String>();
+    private final Set<Allow> allows = EnumSet.noneOf(Allow.class);
     private final Set<String> representations = new LinkedHashSet<String>();
     private final Set<String> acceptPost = new LinkedHashSet<String>();
     private final Set<String> acceptPut = new LinkedHashSet<String>();
@@ -47,12 +47,7 @@ public class HintsBuilder {
                 .acceptingForPost(hints.getAcceptPost());
     }
 
-    public HintsBuilder allowing(final String... allows) {
-        this.allows.addAll(asList(allows));
-        return this;
-    }
-
-    public HintsBuilder allowing(final Collection<String> allows) {
+    public HintsBuilder allowing(final Set<Allow> allows) {
         this.allows.addAll(allows);
         return this;
     }
