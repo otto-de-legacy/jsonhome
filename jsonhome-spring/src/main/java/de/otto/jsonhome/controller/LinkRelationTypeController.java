@@ -17,7 +17,10 @@ package de.otto.jsonhome.controller;
 
 import de.otto.jsonhome.model.ResourceLink;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,13 +42,14 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class LinkRelationTypeController extends JsonHomeControllerBase {
 
     @RequestMapping(
-            value = "/{relationType}",
+            value = "/**",
             method = RequestMethod.GET,
             produces = "text/html"
     )
-    public ModelAndView getRelationshipType(final @PathVariable String relationType,
-                                            final HttpServletRequest request) {
-        final URI relationTypeURI = URI.create(rootUri().toString() + "/rel/" + relationType);
+    public ModelAndView getRelationshipType(final HttpServletRequest request) {
+        final String requestURI = request.getRequestURI();
+        final String relationType = requestURI.substring(requestURI.indexOf("/rel/"));
+        final URI relationTypeURI = URI.create(rootUri().toString() + relationType);
         final Map<String,Object> model = new HashMap<String, Object>();
         model.put("contextpath", request.getContextPath());
         if (jsonHome().hasResourceFor(relationTypeURI)) {
