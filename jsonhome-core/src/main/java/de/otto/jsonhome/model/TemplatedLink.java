@@ -18,6 +18,7 @@ package de.otto.jsonhome.model;
 import java.net.URI;
 import java.util.*;
 
+import static de.otto.jsonhome.model.NamingHelper.toName;
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableList;
 
@@ -54,7 +55,7 @@ public final class TemplatedLink implements ResourceLink {
 
     @Override
     public String getName() {
-        return relationType.toString().substring(relationType.toString().lastIndexOf("/"));
+        return toName(relationType);
     }
 
     @Override

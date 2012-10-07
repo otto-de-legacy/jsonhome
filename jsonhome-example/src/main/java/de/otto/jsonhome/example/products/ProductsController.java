@@ -56,7 +56,7 @@ public class ProductsController {
             method = RequestMethod.POST,
             consumes = "application/x-www-form-urlencoded"
     )
-    @Rel("/rel/add-product")
+    @Rel("/rel/product/form")
     public ModelAndView addProduct(final @RequestParam String title,
                                    final @RequestParam String price,
                                    final HttpServletResponse response) {

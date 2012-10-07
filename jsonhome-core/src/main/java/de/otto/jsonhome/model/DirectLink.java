@@ -19,6 +19,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.otto.jsonhome.model.NamingHelper.toName;
+
 /**
  * A direct resource link.
  *
@@ -48,7 +50,7 @@ public final class DirectLink implements ResourceLink {
 
     @Override
     public String getName() {
-        return relationType.toString().substring(relationType.toString().lastIndexOf("/"));
+        return toName(relationType);
     }
 
     @Override
