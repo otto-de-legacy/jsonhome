@@ -31,10 +31,12 @@ public final class DirectLink implements ResourceLink {
         return new DirectLink(relationType, href, hints);
     }
 
+    @Override
     public String getName() {
         return relationType.toString().substring(relationType.toString().lastIndexOf("/"));
     }
 
+    @Override
     public URI getLinkRelationType() {
         return relationType;
     }
@@ -43,8 +45,24 @@ public final class DirectLink implements ResourceLink {
         return href;
     }
 
+    @Override
     public Hints getHints() {
         return hints;
+    }
+
+    @Override
+    public boolean isDirectLink() {
+        return true;
+    }
+
+    @Override
+    public TemplatedLink asTemplatedLink() {
+        throw new IllegalStateException("Not a templated link.");
+    }
+
+    @Override
+    public DirectLink asDirectLink() {
+        return this;
     }
 
     @Override
@@ -66,11 +84,6 @@ public final class DirectLink implements ResourceLink {
                 href,
                 hints.mergeWith(other.getHints())
         );
-    }
-
-    @Override
-    public boolean isDirectLink() {
-        return true;
     }
 
     @Override

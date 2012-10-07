@@ -24,17 +24,33 @@ public interface ResourceLink {
     public URI getLinkRelationType();
 
     /**
-     * @return true, if the resource link is a direct link, false if it is a templated link.
-     */
-    public boolean isDirectLink();
-
-    /**
      * Returns the hints of a ResourceLink object.
      *
      * @return hints
      * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#section-5">http://tools.ietf.org/html/draft-nottingham-json-home-02#section-5</a>
      */
     public Hints getHints();
+
+    /**
+     * @return true, if the resource link is a direct link, false if it is a templated link.
+     */
+    public boolean isDirectLink();
+
+    /**
+     * Returns the ResourceLink as a TemplatedLink.
+     *
+     * @return TemplatedLink
+     * @throws IllegalStateException if this resource is a DirectLink.
+     */
+    public TemplatedLink asTemplatedLink();
+
+    /**
+     * Returns this ResourceLink as a DirectLink.
+     *
+     * @return DirectLink
+     * @throws IllegalStateException if this resource is a TemplatedLink.
+     */
+    public DirectLink asDirectLink();
 
     /**
      * Merges this resource link with another one and returns a new instance.

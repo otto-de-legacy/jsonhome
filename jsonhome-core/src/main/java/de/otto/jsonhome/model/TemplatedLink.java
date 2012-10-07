@@ -36,10 +36,12 @@ public final class TemplatedLink implements ResourceLink {
         return new TemplatedLink(relationType, hrefTemplate, hrefVars, hints);
     }
 
+    @Override
     public String getName() {
         return relationType.toString().substring(relationType.toString().lastIndexOf("/"));
     }
 
+    @Override
     public URI getLinkRelationType() {
         return relationType;
     }
@@ -53,12 +55,23 @@ public final class TemplatedLink implements ResourceLink {
     }
 
     @Override
+    public Hints getHints() {
+        return hints;
+    }
+
+    @Override
     public boolean isDirectLink() {
         return false;
     }
 
-    public Hints getHints() {
-        return hints;
+    @Override
+    public TemplatedLink asTemplatedLink() {
+        return this;
+    }
+
+    @Override
+    public DirectLink asDirectLink() {
+        throw new IllegalStateException("not a direct link");
     }
 
     @Override
