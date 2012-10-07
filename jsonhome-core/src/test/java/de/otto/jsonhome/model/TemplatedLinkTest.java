@@ -3,7 +3,7 @@ package de.otto.jsonhome.model;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
 
 import static de.otto.jsonhome.fixtures.LinkFixtures.*;
@@ -152,12 +152,68 @@ public class TemplatedLinkTest {
 
     @Test(enabled = false)
     public void mergeWithShouldMergeAcceptPut() {
-        // TODO not yet implemented
+        // given
+        final TemplatedLink thisTemplatedLink = templatedLink(
+                RESOURCELINK_SHOP_PAGE,
+                REL_PAGE_HREF,
+                asList(new HrefVar("pageId", VAR_TYPE_PAGEID, "")),
+                new Hints(
+                        asList("GET", "PUT"),
+                        asList("application/foo"),
+                        asList("application/json"),
+                        Collections.<String>emptyList()
+                )
+        );
+        final TemplatedLink thatTemplatedLink = templatedLink(
+                RESOURCELINK_SHOP_PAGE,
+                REL_PAGE_HREF,
+                asList(new HrefVar("pageId", VAR_TYPE_PAGEID, "")),
+                new Hints(
+                        asList("GET", "PUT"),
+                        asList("application/foo"),
+                        asList("application/foo"),
+                        Collections.<String>emptyList()
+                )
+        );
+        // when
+        final ResourceLink resourceLink = thisTemplatedLink.mergeWith(thatTemplatedLink);
+        // then
+        final Hints hints = resourceLink.getHints();
+        assertEquals(hints.getRepresentations(), asList("application/foo"));
+        assertEquals(hints.getAcceptPut(), asList("application/json", "application/foo"));
     }
 
     @Test(enabled = false)
     public void mergeWithShouldMergeAcceptPost() {
-        // TODO not yet implemented
+        // given
+        final TemplatedLink thisTemplatedLink = templatedLink(
+                RESOURCELINK_SHOP_PAGE,
+                REL_PAGE_HREF,
+                asList(new HrefVar("pageId", VAR_TYPE_PAGEID, "")),
+                new Hints(
+                        asList("GET", "POST"),
+                        asList("application/foo"),
+                        Collections.<String>emptyList(),
+                        asList("application/json")
+                )
+        );
+        final TemplatedLink thatTemplatedLink = templatedLink(
+                RESOURCELINK_SHOP_PAGE,
+                REL_PAGE_HREF,
+                asList(new HrefVar("pageId", VAR_TYPE_PAGEID, "")),
+                new Hints(
+                        asList("GET", "POST"),
+                        asList("application/foo"),
+                        Collections.<String>emptyList(),
+                        asList("application/foo")
+                )
+        );
+        // when
+        final ResourceLink resourceLink = thisTemplatedLink.mergeWith(thatTemplatedLink);
+        // then
+        final Hints hints = resourceLink.getHints();
+        assertEquals(hints.getRepresentations(), asList("application/foo"));
+        assertEquals(hints.getAcceptPost(), asList("application/json", "application/foo"));
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
