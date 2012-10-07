@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Collections.singletonMap;
 
@@ -39,7 +41,7 @@ public class ProductsController {
             method = RequestMethod.POST,
             consumes = "application/x-www-form-urlencoded"
     )
-    @Rel("/rel/products")
+    @Rel("/rel/add-product")
     public ModelAndView addProduct(final @RequestParam String title,
                                    final @RequestParam String price,
                                    final HttpServletResponse response) {
@@ -56,23 +58,40 @@ public class ProductsController {
             produces = "text/html"
     )
     @Rel("/rel/product")
-    public ModelAndView getProduct(final @PathVariable long productId) {
+    public ModelAndView getProductAsHtml(final @PathVariable long productId) {
         final Product product = productService.findProduct(productId);
         return new ModelAndView("example/product", singletonMap("product", product));
     }
 
     @RequestMapping(
             value = "/{productId}",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
+    @Rel("/rel/product")
+    public Map<String, Object> getProductAsJson(final @PathVariable long productId) {
+        final Product product = productService.findProduct(productId);
+        return Collections.<String, Object>singletonMap("product", product.toJson());
+    }
+
+    @RequestMapping(
+            value = "/{productId}",
             method = RequestMethod.PUT,
-            consumes = "application/x-www-form-urlencoded"
+            consumes = "application/json"
     )
     @Rel("/rel/product")
     public ModelAndView putProduct(final @PathVariable long productId,
-                                   final @RequestParam String title,
-                                   final @RequestParam String price,
+                                   final Map<String, String> productData,
                                    final HttpServletResponse response) {
         response.setStatus(201);
-        final Product product = productService.createOrUpdateProduct(productId, title, price);
+        final String title = productData.get("title");
+        final String price = productData.get("price");
+        final Product product;
+        if (title != null && price != null) {
+            product = productService.createOrUpdateProduct(productId, title, price);
+        } else {
+            product = productService.findProduct(productId);
+        }
         return new ModelAndView("example/product", singletonMap("product", product));
     }
 

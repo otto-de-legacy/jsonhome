@@ -2,8 +2,10 @@ package de.otto.jsonhome.fixtures;
 
 import de.otto.jsonhome.annotation.Rel;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -78,4 +80,10 @@ public class ControllerFixtures {
         public @RequestMapping(value = "/foo", method = RequestMethod.POST, consumes = "foo/bar")  void postIt() {}
         public @RequestMapping(value = "/foo", method = RequestMethod.PUT, consumes = "bar/foo") void putIt() {}
     }
+
+    public static @Controller class ControllerWithTemplatedResourceLink {
+        public @Rel("/rel/foo") @RequestMapping(value = "/{bar}") void find(@PathVariable String bar, @RequestParam String query) {}
+        public @Rel("/rel/foobar") @RequestMapping(value = "/{bar}/{foobar}") void find(@PathVariable String bar, @PathVariable String foobar, @RequestParam String query, @RequestParam int page) {}
+    }
+
 }

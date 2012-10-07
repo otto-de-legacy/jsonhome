@@ -1,10 +1,10 @@
 package de.otto.jsonhome.generator;
 
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,5 +40,30 @@ public final class MethodHelper {
             ));
         }
         return parameterInfos;
+    }
+
+    /**
+     * Parses the method parameter annotations, looking for parameters annotated as @RequestParam, and returns the
+     * query part of a href-template.
+     *
+     * @param method method, optionally having parameters annotated as being a @RequestParam.
+     * @return query part of a href-template, like {?param1,param2,param3}
+     */
+    public static String queryTemplateFrom(final Method method) {
+        final StringBuilder sb = new StringBuilder();
+        final List<ParameterInfo> parameterInfos = getParameterInfos(method);
+        boolean first = true;
+        for (final ParameterInfo parameterInfo : parameterInfos) {
+            if (parameterInfo.hasAnnotation(RequestParam.class)) {
+                if (first) {
+                    first = false;
+                    sb.append("{?").append(parameterInfo.getName());
+                } else {
+                    sb.append(",").append(parameterInfo.getName());
+                }
+            }
+        }
+        final String s = sb.toString();
+        return s.isEmpty() ? s : s + "}";
     }
 }

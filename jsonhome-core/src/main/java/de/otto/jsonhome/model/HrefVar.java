@@ -1,9 +1,11 @@
 package de.otto.jsonhome.model;
 
 import java.net.URI;
+import java.util.EnumSet;
 import java.util.Map;
 
 import static java.util.Collections.singletonMap;
+import static java.util.EnumSet.noneOf;
 
 /**
  * A single href-var used to describe the href-vars of templated resource links.
@@ -17,11 +19,23 @@ public final class HrefVar {
     private final String var;
     private final URI varType;
     private final String description;
+    private final EnumSet<HrefVarFlags> flags;
 
     public HrefVar(final String var, final URI varType, final String description) {
         this.var = var;
         this.varType = varType;
         this.description = description;
+        flags = noneOf(HrefVarFlags.class);
+    }
+
+    public HrefVar(final String var,
+                   final URI varType,
+                   final String description,
+                   final EnumSet<HrefVarFlags> flags) {
+        this.var = var;
+        this.varType = varType;
+        this.description = description;
+        this.flags = flags;
     }
 
     /**
@@ -52,11 +66,51 @@ public final class HrefVar {
     }
 
     /**
+     * Returns the HrefVarFlags of the href variable.
+     *
+     * @return set of flags
+     */
+    public EnumSet<HrefVarFlags> getFlags() {
+        return flags;
+    }
+
+    /**
      * @return a Java representation of a JSON document used to serialize a JsonHome document into application-json format.
      */
     public Map<String, ?> toJson() {
         return singletonMap(
                 var, varType.toString()
         );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        HrefVar hrefVar = (HrefVar) o;
+
+        if (description != null ? !description.equals(hrefVar.description) : hrefVar.description != null) return false;
+        if (var != null ? !var.equals(hrefVar.var) : hrefVar.var != null) return false;
+        if (varType != null ? !varType.equals(hrefVar.varType) : hrefVar.varType != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = var != null ? var.hashCode() : 0;
+        result = 31 * result + (varType != null ? varType.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "HrefVar{" +
+                "var='" + var + '\'' +
+                ", varType=" + varType +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

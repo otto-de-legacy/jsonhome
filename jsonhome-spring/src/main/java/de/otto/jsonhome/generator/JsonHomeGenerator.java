@@ -1,6 +1,7 @@
 package de.otto.jsonhome.generator;
 
 import de.otto.jsonhome.annotation.Rel;
+import de.otto.jsonhome.model.Hints;
 import de.otto.jsonhome.model.JsonHome;
 import de.otto.jsonhome.model.ResourceLink;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static de.otto.jsonhome.generator.MethodHelper.queryTemplateFrom;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.JsonHome.emptyJsonHome;
 import static de.otto.jsonhome.model.JsonHome.jsonHome;
@@ -91,21 +93,22 @@ public class JsonHomeGenerator {
                         ? methodRequestMapping.value()
                         : new String[] {""};
                 for (String resourcePathSuffix : resourcePathSuffixes) {
-                    final String resourcePath = rootUri + resourcePathPrefix + resourcePathSuffix;
+                    final String resourcePath = rootUri + resourcePathPrefix + resourcePathSuffix + queryTemplateFrom(method);
                     final URI relationType = relationTypeFrom(controller, method);
                     if (relationType != null) {
+                        final Hints hints = hintsGenerator.hintsOf(method);
                         if (resourcePath.matches(".*\\{.*\\}")) {
                             resourceLinks.add(templatedLink(
                                     relationType,
                                     resourcePath,
-                                    hrefVarsGenerator.hrefVarsFor(relationType, method),
-                                    hintsGenerator.hintsOf(method)
+                                    hrefVarsGenerator.hrefVarsFor(relationType, method, hints),
+                                    hints
                             ));
                         } else {
                             resourceLinks.add(directLink(
                                     relationType,
                                     URI.create(resourcePath),
-                                    hintsGenerator.hintsOf(method)
+                                    hints
                             ));
                         }
                     }

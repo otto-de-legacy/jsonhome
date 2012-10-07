@@ -3,6 +3,7 @@ package de.otto.jsonhome.model;
 import java.net.URI;
 import java.util.*;
 
+import static java.lang.String.format;
 import static java.util.Collections.unmodifiableList;
 
 /**
@@ -77,22 +78,36 @@ public final class TemplatedLink implements ResourceLink {
     @Override
     public ResourceLink mergeWith(ResourceLink other) {
         if (other.isDirectLink()) {
-            throw new IllegalArgumentException("Merging TemplatedLink with DirectLink is not supported.");
+            throw new IllegalArgumentException(format(
+                    "Merging TemplatedLink with DirectLink is not supported. "
+                    + "\nTemplatedLink=%s, \nDirectLink=%s", this, other));
         }
         if (!relationType.equals(other.getLinkRelationType())) {
-            throw new IllegalArgumentException("Resource links with different relation types can not be merged. One resource must not have multiple relation types.");
+            throw new IllegalArgumentException(format(
+                    "Resource links with different relation types can not be merged. "
+                    + "One resource must not have multiple relation types. "
+                    + "\nTemplatedLink=%s, \nDirectLink=%s", this, other));
         }
         final TemplatedLink otherTemplatedLink = (TemplatedLink)other;
-        if (hrefTemplate.equals(otherTemplatedLink.getHrefTemplate())) {
+        if (hrefTemplate.startsWith(otherTemplatedLink.getHrefTemplate())) {
             return new TemplatedLink(
                     relationType,
                     hrefTemplate,
                     hrefVars,
                     hints.mergeWith(other.getHints())
             );
-        } else {
-            throw new IllegalArgumentException("Templated resource-links with different uri templates can not be merged.");
         }
+        if (otherTemplatedLink.getHrefTemplate().startsWith(hrefTemplate)) {
+            return new TemplatedLink(
+                    relationType,
+                    otherTemplatedLink.getHrefTemplate(),
+                    otherTemplatedLink.getHrefVars(),
+                    hints.mergeWith(otherTemplatedLink.getHints())
+            );
+        }
+        throw new IllegalArgumentException(format(
+                "Templated resource-links with different uri templates can not be merged. "
+                + "\nTemplatedLink=%s, \nDirectLink=%s", this, other));
     }
 
     @Override

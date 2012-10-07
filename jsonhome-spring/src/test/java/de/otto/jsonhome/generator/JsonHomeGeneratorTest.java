@@ -1,11 +1,9 @@
 package de.otto.jsonhome.generator;
 
-import de.otto.jsonhome.model.DirectLink;
-import de.otto.jsonhome.model.Hints;
-import de.otto.jsonhome.model.JsonHome;
-import de.otto.jsonhome.model.ResourceLink;
+import de.otto.jsonhome.model.*;
 import org.testng.annotations.Test;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,7 +20,9 @@ import static org.testng.Assert.assertTrue;
  * @author Guido Steinacker
  * @since 17.09.12
  */
-public class LinkRelationTypeTest {
+public class JsonHomeGeneratorTest {
+
+    public static final URI ROOT_URI = create("http://example.org");
 
     @Test(expectedExceptions = NullPointerException.class)
     public void jsonHomeWithoutURIShouldThrowNullPointerException() throws Exception {
@@ -186,7 +186,7 @@ public class LinkRelationTypeTest {
     @Test
     public void shouldHaveAcceptPostHintIfPostSupportsDifferentMediaTypeThanGet() {
         // given
-        final JsonHome foo = jsonHomeFor(create("http://example.org")).with(ControllerWithAcceptPutAndAcceptPost.class);
+        final JsonHome foo = jsonHomeFor(ROOT_URI).with(ControllerWithAcceptPutAndAcceptPost.class);
         // when
         final List<ResourceLink> resourceLinks = foo.getResources();
         // then
@@ -195,6 +195,46 @@ public class LinkRelationTypeTest {
         assertEquals(resourceLinks.get(0).getHints().getRepresentations(), asList("text/plain"));
         assertEquals(resourceLinks.get(0).getHints().getAcceptPost(), asList("foo/bar"));
         assertEquals(resourceLinks.get(0).getHints().getAcceptPut(), asList("bar/foo"));
+    }
+
+    @Test
+    public void templatedResourceLinkShouldHavePathAndQueryVar() {
+        // given
+        final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ControllerWithTemplatedResourceLink.class);
+        // when
+        final TemplatedLink templatedLink = jsonHome.getResourceFor(create(ROOT_URI + "/rel/foo")).asTemplatedLink();
+        // then
+        assertEquals(templatedLink.getHrefTemplate(), ROOT_URI + "/{bar}{?query}");
+        assertEquals(templatedLink.getHrefVars().size(), 2);
+        assertEquals(templatedLink.getHrefVars().get(0), new HrefVar(
+                "bar", create(ROOT_URI + "/rel/foo#bar"), ""
+        ));
+        assertEquals(templatedLink.getHrefVars().get(1), new HrefVar(
+                "query", create(ROOT_URI + "/rel/foo#query"), ""
+        ));
+    }
+
+    @Test
+    public void templatedResourceLinkShouldHavePathAndQueryVars() {
+        // given
+        final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ControllerWithTemplatedResourceLink.class);
+        // when
+        final TemplatedLink templatedLink = jsonHome.getResourceFor(create(ROOT_URI + "/rel/foobar")).asTemplatedLink();
+        // then
+        assertEquals(templatedLink.getHrefTemplate(), ROOT_URI + "/{bar}/{foobar}{?query,page}");
+        assertEquals(templatedLink.getHrefVars().size(), 4);
+        assertEquals(templatedLink.getHrefVars().get(0), new HrefVar(
+                "bar", create(ROOT_URI + "/rel/foobar#bar"), ""
+        ));
+        assertEquals(templatedLink.getHrefVars().get(1), new HrefVar(
+                "foobar", create(ROOT_URI + "/rel/foobar#foobar"), ""
+        ));
+        assertEquals(templatedLink.getHrefVars().get(2), new HrefVar(
+                "query", create(ROOT_URI + "/rel/foobar#query"), ""
+        ));
+        assertEquals(templatedLink.getHrefVars().get(3), new HrefVar(
+                "page", create(ROOT_URI + "/rel/foobar#page"), ""
+        ));
     }
 
     @Test(enabled = false)

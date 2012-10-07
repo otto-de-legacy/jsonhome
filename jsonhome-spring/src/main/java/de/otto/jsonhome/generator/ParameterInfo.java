@@ -1,9 +1,6 @@
 package de.otto.jsonhome.generator;
 
-import org.springframework.web.bind.annotation.PathVariable;
-
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -42,6 +39,15 @@ public final class ParameterInfo {
             }
         }
         return false;
+    }
+
+    public <T extends Annotation> T getAnnotation(final Class<T> annotationType) {
+        for (final Annotation annotation : annotations) {
+            if (annotationType.isAssignableFrom(annotation.annotationType())) {
+                return annotationType.cast(annotation);
+            }
+        }
+        return null;
     }
 
     @Override
