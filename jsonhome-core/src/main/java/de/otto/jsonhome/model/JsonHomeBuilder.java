@@ -37,7 +37,7 @@ public final class JsonHomeBuilder {
     }
 
     public JsonHomeBuilder mergeWith(final JsonHome jsonHome) {
-        resources.addAll(jsonHome.getResources());
+        resources.addAll(jsonHome.getResources().values());
         return this;
     }
 

@@ -53,7 +53,7 @@ public class JsonHomeController extends JsonHomeControllerBase {
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=3600");
         final Map<String,Object> resources = new HashMap<String, Object>();
-        resources.put("resources", jsonHome().getResources());
+        resources.put("resources", jsonHome().getResources().values());
         resources.put("contextpath", request.getContextPath());
         return new ModelAndView("doc/resources", resources);
     }

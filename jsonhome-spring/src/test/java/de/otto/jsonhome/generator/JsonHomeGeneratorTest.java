@@ -20,6 +20,8 @@ import org.testng.annotations.Test;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import static de.otto.jsonhome.fixtures.ControllerFixtures.*;
@@ -52,7 +54,7 @@ public class JsonHomeGeneratorTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithoutResource.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResources();
+        final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
         assertTrue(resourceLinks.isEmpty());
     }
@@ -62,7 +64,7 @@ public class JsonHomeGeneratorTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithoutMethods.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResources();
+        final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
         assertTrue(resourceLinks.isEmpty());
     }
@@ -72,7 +74,7 @@ public class JsonHomeGeneratorTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithResourceWithoutLinkRelationType.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResources();
+        final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
         assertEquals(resourceLinks.size(), 0);
     }
@@ -82,11 +84,11 @@ public class JsonHomeGeneratorTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithDifferentRepresentations.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResources();
+        final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
         assertEquals(resourceLinks.size(), 1);
         final List<String> expected = asList("application/foo", "text/html", "text/plain", "application/json", "application/bar");
-        assertTrue(resourceLinks.get(0).getHints().getRepresentations().containsAll(expected));
+        assertTrue(firstFrom(resourceLinks).getHints().getRepresentations().containsAll(expected));
     }
 
     @Test
@@ -94,10 +96,10 @@ public class JsonHomeGeneratorTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithAllowsSpecAcrossMultipleMethods.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResources();
+        final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
         assertEquals(resourceLinks.size(), 1);
-        assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(of(GET, PUT, POST, DELETE)));
+        assertTrue(firstFrom(resourceLinks).getHints().getAllows().containsAll(of(GET, PUT, POST, DELETE)));
     }
 
     @Test
@@ -105,10 +107,10 @@ public class JsonHomeGeneratorTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithDifferentAllowsSpecifications.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResources();
+        final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
         assertEquals(resourceLinks.size(), 1);
-        assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(of(GET, PUT, POST, DELETE, HEAD)));
+        assertTrue(firstFrom(resourceLinks).getHints().getAllows().containsAll(of(GET, PUT, POST, DELETE, HEAD)));
     }
 
     @Test
@@ -116,13 +118,14 @@ public class JsonHomeGeneratorTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithDifferentResourceDefinitions.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResources();
+        final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
         assertEquals(resourceLinks.size(), 3);
+        final Iterator<ResourceLink> iterator = resourceLinks.iterator();
         final List<String> uris = asList(
-                ((DirectLink) resourceLinks.get(0)).getHref().toString(),
-                ((DirectLink) resourceLinks.get(1)).getHref().toString(),
-                ((DirectLink) resourceLinks.get(2)).getHref().toString());
+                ((DirectLink) iterator.next()).getHref().toString(),
+                ((DirectLink) iterator.next()).getHref().toString(),
+                ((DirectLink) iterator.next()).getHref().toString());
         assertTrue(uris.containsAll(asList("http://example.org/foo", "http://example.org/foo/bar", "http://example.org/foo/foobar")));
     }
 
@@ -131,7 +134,7 @@ public class JsonHomeGeneratorTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithDifferentUrisForSameRelationType.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResources();
+        jsonHome.getResources();
         // then an exception is thrown
     }
 
@@ -140,10 +143,10 @@ public class JsonHomeGeneratorTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithResourceAndLinkRelationType.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResources();
+        final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
         assertEquals(resourceLinks.size(), 1);
-        final ResourceLink link = resourceLinks.get(0);
+        final ResourceLink link = firstFrom(resourceLinks);
         assertTrue(link.isDirectLink());
         assertEquals(link.getLinkRelationType(), create("http://example.org/rel/fooBarType"));
     }
@@ -153,10 +156,10 @@ public class JsonHomeGeneratorTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithRequestMappingAndLinkRelationTypeAtMethodLevel.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResources();
+        final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
         assertEquals(resourceLinks.size(), 1);
-        assertEquals(resourceLinks.get(0).getLinkRelationType(), create("http://example.org/rel/foo"));
+        assertEquals(firstFrom(resourceLinks).getLinkRelationType(), create("http://example.org/rel/foo"));
     }
 
     @Test
@@ -164,10 +167,10 @@ public class JsonHomeGeneratorTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResources();
+        final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
         assertEquals(resourceLinks.size(), 1);
-        assertEquals(resourceLinks.get(0).getLinkRelationType(), create("http://example.org/rel/foo"));
+        assertEquals(firstFrom(resourceLinks).getLinkRelationType(), create("http://example.org/rel/foo"));
     }
 
     @Test
@@ -175,7 +178,7 @@ public class JsonHomeGeneratorTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithMultipleLinkRelationTypes.class);
         // when
-        final List<ResourceLink> resourceLinks = jsonHome.getResources();
+        final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
         assertEquals(resourceLinks.size(), 2);
         assertTrue(resourceLinks.containsAll(asList(
@@ -194,10 +197,10 @@ public class JsonHomeGeneratorTest {
         );
         final JsonHome foo = jsonHomeFor(create("http://example.org")).with(controller);
         // when
-        final List<ResourceLink> resourceLinks = foo.getResources();
+        final Collection<ResourceLink> resourceLinks = foo.getResources().values();
         // then
         assertEquals(resourceLinks.size(), 1);
-        assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(of(GET, PUT)));
+        assertTrue(firstFrom(resourceLinks).getHints().getAllows().containsAll(of(GET, PUT)));
     }
 
     @Test
@@ -205,13 +208,14 @@ public class JsonHomeGeneratorTest {
         // given
         final JsonHome foo = jsonHomeFor(ROOT_URI).with(ControllerWithAcceptPutAndAcceptPost.class);
         // when
-        final List<ResourceLink> resourceLinks = foo.getResources();
+        final Collection<ResourceLink> resourceLinks = foo.getResources().values();
         // then
         assertEquals(resourceLinks.size(), 1);
-        assertTrue(resourceLinks.get(0).getHints().getAllows().containsAll(of(GET, PUT, POST)));
-        assertEquals(resourceLinks.get(0).getHints().getRepresentations(), asList("text/plain"));
-        assertEquals(resourceLinks.get(0).getHints().getAcceptPost(), asList("foo/bar"));
-        assertEquals(resourceLinks.get(0).getHints().getAcceptPut(), asList("bar/foo"));
+        final ResourceLink resourceLink = firstFrom(resourceLinks);
+        assertTrue(resourceLink.getHints().getAllows().containsAll(of(GET, PUT, POST)));
+        assertEquals(resourceLink.getHints().getRepresentations(), asList("text/plain"));
+        assertEquals(resourceLink.getHints().getAcceptPost(), asList("foo/bar"));
+        assertEquals(resourceLink.getHints().getAcceptPut(), asList("bar/foo"));
     }
 
     @Test
@@ -262,5 +266,9 @@ public class JsonHomeGeneratorTest {
     @Test(enabled = false)
     public void statusHintMustBeDeprecatedIfAllMethodsOfTheResourceAreDeprecated() {
         // TODO not yet implemented
+    }
+
+    private ResourceLink firstFrom(Collection<ResourceLink> resourceLinks) {
+        return resourceLinks.iterator().next();
     }
 }

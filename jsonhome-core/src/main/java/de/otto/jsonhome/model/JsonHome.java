@@ -20,6 +20,7 @@ import java.util.*;
 
 import static java.util.Collections.singletonMap;
 import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableMap;
 
 /**
  * Immutable container of {@link ResourceLink resource links}, representing a json-home document.
@@ -30,41 +31,55 @@ import static java.util.Collections.unmodifiableList;
  */
 public final class JsonHome {
 
-    private final List<ResourceLink> resources;
+    private final Map<URI, ResourceLink> resources;
 
-    private JsonHome(final List<ResourceLink> resources) {
-        this.resources = unmodifiableList(new ArrayList<ResourceLink>(resources));
+    private JsonHome(final Map<URI, ResourceLink> resources) {
+        this.resources = unmodifiableMap(new HashMap<URI, ResourceLink>(resources));
     }
 
     public static JsonHome emptyJsonHome() {
-        return new JsonHome(Collections.<ResourceLink>emptyList());
+        return new JsonHome(Collections.<URI, ResourceLink>emptyMap());
 
     }
 
-    public static JsonHome jsonHome(final List<ResourceLink> resources) {
-        return new JsonHome(resources);
+    /**
+     * Creates a JsonHome document from a collection of ResourceLinks. The link-relation types of the resources
+     * must be unique, otherwise an IllegalArgumentException is thrown.
+     *
+     * @param resources collection of resource links.
+     * @return JsonHome
+     */
+    public static JsonHome jsonHome(final Collection<ResourceLink> resources) {
+        final Map<URI, ResourceLink> resourceMap = new HashMap<URI, ResourceLink>(resources.size());
+        for (final ResourceLink resource : resources) {
+            if (resourceMap.containsKey(resource.getLinkRelationType())) {
+                throw new IllegalArgumentException("Unable to construct JsonHome. Link-relation types must be unique.");
+            }
+            resourceMap.put(resource.getLinkRelationType(), resource);
+        }
+        return new JsonHome(resourceMap);
     }
 
-    public List<ResourceLink> getResources() {
+    /**
+     * Returns an unmodifiable map containing the resources of this json-home document.
+     *
+     * @return mapping of link-relation types to resource links.
+     */
+    public Map<URI, ResourceLink> getResources() {
         return resources;
     }
 
     public boolean hasResourceFor(final URI relationTypeURI) {
-        return getResourceFor(relationTypeURI) != null;
+        return resources.containsKey(relationTypeURI);
     }
 
-    public ResourceLink getResourceFor(URI relationTypeURI) {
-        for (final ResourceLink resource : resources) {
-            if (resource.getLinkRelationType().equals(relationTypeURI)) {
-                return resource;
-            }
-        }
-        return null;
+    public ResourceLink getResourceFor(final URI relationTypeURI) {
+        return resources.get(relationTypeURI);
     }
 
     public Map<String, ?> toJson() {
         final Map<String, Map<String, ?>> jsonResources = new HashMap<String, Map<String, ?>>();
-        for (final ResourceLink resource : this.resources) {
+        for (final ResourceLink resource : this.resources.values()) {
             jsonResources.put(resource.getLinkRelationType().toString(), resource.toJson());
         }
         return singletonMap(
@@ -93,7 +108,7 @@ public final class JsonHome {
     @Override
     public String toString() {
         return "JsonHome{" +
-                "resources=" + resources +
+                "resources=" + resources.values() +
                 '}';
     }
 }
