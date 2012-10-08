@@ -15,15 +15,15 @@
  */
 package de.otto.jsonhome.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URI;
+import java.util.*;
 
 /**
  * A builder used to build JsonHome instances.
  */
 public final class JsonHomeBuilder {
 
-    private final List<ResourceLink> resources = new ArrayList<ResourceLink>();
+    private final Map<URI, ResourceLink> resources = new HashMap<URI, ResourceLink>();
 
     private JsonHomeBuilder() {
     }
@@ -37,21 +37,23 @@ public final class JsonHomeBuilder {
     }
 
     public JsonHomeBuilder mergeWith(final JsonHome jsonHome) {
-        resources.addAll(jsonHome.getResources().values());
+        resources.putAll(jsonHome.getResources());
         return this;
     }
 
     public JsonHomeBuilder addResource(final ResourceLink resource) {
-        this.resources.add(resource);
+        this.resources.put(resource.getLinkRelationType(), resource);
         return this;
     }
 
-    public JsonHomeBuilder addResources(final List<ResourceLink> resources) {
-        this.resources.addAll(resources);
+    public JsonHomeBuilder addResources(final Collection<ResourceLink> resources) {
+        for (final ResourceLink resource : resources) {
+            this.resources.put(resource.getLinkRelationType(), resource);
+        }
         return this;
     }
 
     public JsonHome build() {
-        return JsonHome.jsonHome(resources);
+        return JsonHome.jsonHome(resources.values());
     }
 }
