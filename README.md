@@ -47,29 +47,23 @@ An example from the draft specification:
 The json-home format is nice for automatic discovery of RESTful services. Generating this format directly from source
 code is nice, because it will always be consistent with your application. Being consistent is also important for≤
 human-readable documentation - and the information needed to generate such kind of documentation is more or less
-available in your source code. Because of this, we will provide an optional module used to generate such kind of
-documentation from the code itself.
+available in your source code.
 
-A more complete support of the json-home spec is already planned, please have a look at the GitHub Issues. If you
-need something else, please give us a note (or open an issue) or, even better, implemented it and send us a pull
-request.
+A more complete support of the json-home spec is already planned, please have a look at the GitHub Issues. 
 
 In order to consume json-home documents, a client-side library is needed. This will be implemented in the future.
 
 ## Work in Progress!
 
-* The project is in an very early state. Everything will change in the next weeks, most of it in an incompatible way.
-* The json-home specification is still a draft, it will possibly change itself in the next months.
+* The project is in a very early state. Many details will change in the next weeks, possibly in an incompatible way.
+* The json-home specification is still a draft, it might change itself in the next months.
 * This library does not yet fully support the current draft specification.
-* The current implementation is using a number of annotations to provide the information needed to generate the
-json-home document. These annotations will possibly change in the next few weeks, as the current implementation is
-too verbose.
 * But: it is already working. You can use it to easily generate json-home documents for your RESTful Spring application.
-The library is actively used (and developed) at otto.
+The library is actively used (and developed) at otto (http://www.otto.de).
 
 ## Licensing
 
-The project is released under version 2.0 of the Apache License.
+The project is released under version 2.0 of the Apache License. See LICENSE.txt for details.
 
 ## Feedback + Help Wanted
 
