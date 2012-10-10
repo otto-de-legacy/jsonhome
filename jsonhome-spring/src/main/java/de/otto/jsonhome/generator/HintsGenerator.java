@@ -25,6 +25,8 @@ import java.util.*;
 
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.HintsBuilder.hints;
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
 import static java.util.EnumSet.of;
 
 public class HintsGenerator {
@@ -91,6 +93,10 @@ public class HintsGenerator {
                 if (!representations.contains(consumesRepresentation)) {
                     representations.add(consumesRepresentation);
                 }
+            }
+        } else {
+            if (allowedHttpMethodsOf(method).equals(singleton(POST))) {
+                representations.add("application/x-www-form-urlencoded");
             }
         }
         // default is HTTP GET

@@ -67,6 +67,11 @@ public class ControllerFixtures {
         public @RequestMapping(value = "/default", method = {POST, DELETE, HEAD}) void someMoreMethods() {}
     }
 
+    public static @Controller @Rel("http://example.org/rel/fooType") class ControllerWithGetAndPostMethodWithDefaultAllowsSpec {
+        public @RequestMapping("/default") void defaultGet() {}
+        public @RequestMapping(value = "/default", method = POST) void defaultPost(@PathVariable String foo) {}
+    }
+
     public static @Controller @RequestMapping("foo") @Rel("http://example.org/rel/fooType") class ControllerWithAllowsSpecAcrossMultipleMethods{
         public @RequestMapping() void defaultGet() {}
         public @RequestMapping(method = PUT) void putSomething() {}

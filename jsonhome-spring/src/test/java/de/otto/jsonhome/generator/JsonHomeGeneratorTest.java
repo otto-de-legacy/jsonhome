@@ -103,6 +103,22 @@ public class JsonHomeGeneratorTest {
     }
 
     @Test
+    public void defaultAcceptPostShouldBeFormUrlEncoded() throws Exception {
+        // given
+        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithGetAndPostMethodWithDefaultAllowsSpec.class);
+        // when
+        final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
+        // then
+        assertEquals(resourceLinks.size(), 1);
+        final Hints hints = firstFrom(resourceLinks).getHints();
+        assertEquals(hints.getAllows().size(), 2);
+        assertTrue(hints.getAllows().containsAll(asList(GET, POST)));
+        assertEquals(hints.getRepresentations(), asList("text/html"));
+        assertEquals(hints.getAcceptPost().size(), 1);
+        assertEquals(hints.getAcceptPost().get(0), "application/x-www-form-urlencoded");
+    }
+
+    @Test
     public void shouldHaveCorrectAllowsSpec() throws Exception {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithDifferentAllowsSpecifications.class);
