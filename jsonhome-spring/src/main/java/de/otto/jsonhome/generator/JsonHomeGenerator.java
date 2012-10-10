@@ -47,12 +47,25 @@ import static java.util.Collections.emptyList;
 
 public class JsonHomeGenerator {
 
-    private final URI rootUri;
     private final HrefVarsGenerator hrefVarsGenerator = new HrefVarsGenerator();
     private final HintsGenerator hintsGenerator = new HintsGenerator();
+    private final Collection<Class<?>> controllers;
+    private URI rootUri;
+    private URI relationTypeRootUri;
 
     public static JsonHomeGenerator jsonHomeFor(final URI rootUri) {
         return new JsonHomeGenerator(rootUri);
+    }
+
+    /**
+     * Sets the root URI for link-relation types.
+     *
+     * @param relationTypeRootUri URI
+     * @return this
+     */
+    public JsonHomeGenerator withRelationTypeRoot(final URI relationTypeRootUri) {
+        this.relationTypeRootUri = relationTypeRootUri;
+        return this;
     }
 
     protected JsonHomeGenerator(final URI rootUri) {
@@ -60,24 +73,30 @@ public class JsonHomeGenerator {
             throw new NullPointerException("Parameter rootUri must not be null.");
         }
         this.rootUri = rootUri;
+        this.relationTypeRootUri = rootUri;
+        this.controllers = new ArrayList<Class<?>>();
     }
 
-    public JsonHome with(final Class<?> controller) {
+    public JsonHomeGenerator with(final Class<?> controller) {
         if (isSpringController(controller)) {
-            return jsonHomeBuilder()
-                    .addResources(resourceLinksFor(controller))
-                    .build();
-        } else {
-            return emptyJsonHome();
+            this.controllers.add(controller);
         }
+        return this;
     }
 
-    public JsonHome with(final Collection<Class<?>> controller) {
-        List<ResourceLink> resources = new ArrayList<ResourceLink>();
-        for (final Class<?> controllerClass : controller) {
-            if (isSpringController(controllerClass)) {
-                resources = mergeResources(resources, resourceLinksFor(controllerClass));
+    public JsonHomeGenerator with(final Collection<Class<?>> controllers) {
+        for (final Class<?> controller : controllers) {
+            if (isSpringController(controller)) {
+                this.controllers.add(controller);
             }
+        }
+        return this;
+    }
+
+    public JsonHome get() {
+        List<ResourceLink> resources = new ArrayList<ResourceLink>();
+        for (final Class<?> controllerClass : controllers) {
+            resources = mergeResources(resources, resourceLinksFor(controllerClass));
         }
         return jsonHome(resources);
     }
@@ -172,7 +191,7 @@ public class JsonHomeGenerator {
                     : controllerRel.value();
             return URI.create(linkRelationType.startsWith("http://")
                     ? linkRelationType
-                    : rootUri + linkRelationType);
+                    : relationTypeRootUri + linkRelationType);
         }
     }
 

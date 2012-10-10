@@ -18,10 +18,7 @@
 
     <mvc:resources mapping="/resources/**" location="/resources/" />
 
-    <util:properties id="exampleProperties">
-        <prop key="rootUri">http://localhost:8080/jsonhome-example</prop>
-    </util:properties>
-    <context:property-placeholder properties-ref="exampleProperties" ignore-resource-not-found="true"/>
+    <context:property-placeholder location="/resources/properties/jsonhome.properties" ignore-resource-not-found="false"/>
 
     <context:component-scan base-package="de.otto" />
 

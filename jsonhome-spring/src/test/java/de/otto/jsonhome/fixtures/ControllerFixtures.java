@@ -48,6 +48,10 @@ public class ControllerFixtures {
         public @RequestMapping("/bar") @Rel("http://example.org/rel/fooType") void bar() {}
     }
 
+    public static @Controller @RequestMapping("/foo") class ControllerWithRelativeLinkRelationType{
+        public @RequestMapping @Rel("/rel/fooType") void foo() {}
+    }
+
     public static @Controller @RequestMapping("/foo") class ControllerWithDifferentResourceDefinitions {
         public @RequestMapping @Rel("http://example.org/rel/fooType") void foo() {}
         public @RequestMapping("/bar") @Rel("http://example.org/rel/barType") void bar() {}

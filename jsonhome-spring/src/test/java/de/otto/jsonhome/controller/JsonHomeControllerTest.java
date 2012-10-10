@@ -18,14 +18,17 @@ package de.otto.jsonhome.controller;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.testng.annotations.Test;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
 import static de.otto.jsonhome.fixtures.ControllerFixtures.ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel;
 import static de.otto.jsonhome.model.Allow.GET;
+import static java.net.URI.create;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -52,6 +55,20 @@ public class JsonHomeControllerTest {
         expected.put("allow", of(GET));
         final Object hints = resources.get("http://example.org/rel/foo").get("hints");
         assertEquals(hints, expected);
+    }
+
+    @Test
+    public void shouldUseRootLinkRelationTypeUri() throws Exception {
+        // given
+        final JsonHomeController controller = jsonHomeController();
+        controller.setRelationTypeRootUri("http://otto.de");
+        // when
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        final Map<String, ?> resourcesMap = controller.getHomeDocument(response);
+        // then
+        @SuppressWarnings("unchecked")
+        final Map<String, Map<String, ?>> resources = (Map<String, Map<String, ?>>) resourcesMap.get("resources");
+        assertNotNull(resources.get("http://otto.de/rel/foo"));
     }
 
     private JsonHomeController jsonHomeController() {

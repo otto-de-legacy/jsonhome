@@ -19,10 +19,7 @@ import de.otto.jsonhome.model.*;
 import org.testng.annotations.Test;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static de.otto.jsonhome.fixtures.ControllerFixtures.*;
 import static de.otto.jsonhome.generator.JsonHomeGenerator.jsonHomeFor;
@@ -52,7 +49,7 @@ public class JsonHomeGeneratorTest {
     @Test
     public void controllerWithoutResourceMappingShouldNotHaveResourceLinks() throws Exception {
         // given
-        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithoutResource.class);
+        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithoutResource.class).get();
         // when
         final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
@@ -62,7 +59,7 @@ public class JsonHomeGeneratorTest {
     @Test
     public void controllerWithoutMethodsShouldNotHaveResourceLinks() throws Exception {
         // given
-        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithoutMethods.class);
+        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithoutMethods.class).get();
         // when
         final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
@@ -72,7 +69,9 @@ public class JsonHomeGeneratorTest {
     @Test
     public void controllerWithResourceWithoutLinkRelationTypeShouldNotHaveResourceLink() throws Exception {
         // given
-        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithResourceWithoutLinkRelationType.class);
+        final JsonHome jsonHome = jsonHomeFor(create("http://example.org"))
+                .with(ControllerWithResourceWithoutLinkRelationType.class)
+                .get();
         // when
         final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
@@ -82,7 +81,9 @@ public class JsonHomeGeneratorTest {
     @Test
     public void shouldCombineRepresentationsFromMultipleMethods() throws Exception {
         // given
-        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithDifferentRepresentations.class);
+        final JsonHome jsonHome = jsonHomeFor(create("http://example.org"))
+                .with(ControllerWithDifferentRepresentations.class)
+                .get();
         // when
         final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
@@ -94,7 +95,9 @@ public class JsonHomeGeneratorTest {
     @Test
     public void separateMethodsShouldBeCombinedInAllowsSpec() throws Exception {
         // given
-        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithAllowsSpecAcrossMultipleMethods.class);
+        final JsonHome jsonHome = jsonHomeFor(create("http://example.org"))
+                .with(ControllerWithAllowsSpecAcrossMultipleMethods.class)
+                .get();
         // when
         final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
@@ -105,7 +108,9 @@ public class JsonHomeGeneratorTest {
     @Test
     public void defaultAcceptPostShouldBeFormUrlEncoded() throws Exception {
         // given
-        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithGetAndPostMethodWithDefaultAllowsSpec.class);
+        final JsonHome jsonHome = jsonHomeFor(create("http://example.org"))
+                .with(ControllerWithGetAndPostMethodWithDefaultAllowsSpec.class)
+                .get();
         // when
         final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
@@ -121,7 +126,9 @@ public class JsonHomeGeneratorTest {
     @Test
     public void shouldHaveCorrectAllowsSpec() throws Exception {
         // given
-        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithDifferentAllowsSpecifications.class);
+        final JsonHome jsonHome = jsonHomeFor(create("http://example.org"))
+                .with(ControllerWithDifferentAllowsSpecifications.class)
+                .get();
         // when
         final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
@@ -132,7 +139,9 @@ public class JsonHomeGeneratorTest {
     @Test
     public void shouldHaveCorrectHref() throws Exception {
         // given
-        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithDifferentResourceDefinitions.class);
+        final JsonHome jsonHome = jsonHomeFor(create("http://example.org"))
+                .with(ControllerWithDifferentResourceDefinitions.class)
+                .get();
         // when
         final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
@@ -145,10 +154,40 @@ public class JsonHomeGeneratorTest {
         assertTrue(uris.containsAll(asList("http://example.org/foo", "http://example.org/foo/bar", "http://example.org/foo/foobar")));
     }
 
+    @Test
+    public void shouldKeepUseRootUriAsRelationTypePrefix() throws Exception {
+        // given
+        final JsonHome jsonHome = jsonHomeFor(create("http://example.org"))
+                .with(ControllerWithRelativeLinkRelationType.class)
+                .get();
+        // when
+        final Set<URI> resourceLinks = jsonHome.getResources().keySet();
+        // then
+        assertEquals(resourceLinks.size(), 1);
+        assertEquals(resourceLinks.iterator().next().toString(), "http://example.org/rel/fooType");
+    }
+
+    @Test
+    public void shouldKeepUseRootRelUriAsRelationTypePrefix() throws Exception {
+        // given
+        final JsonHome jsonHome = jsonHomeFor(create("http://example.org"))
+                .withRelationTypeRoot(create("http://otto.de"))
+                .with(ControllerWithRelativeLinkRelationType.class)
+                .get();
+        // when
+        final Set<URI> resourceLinks = jsonHome.getResources().keySet();
+        // then
+        assertEquals(resourceLinks.size(), 1);
+        assertEquals(resourceLinks.iterator().next().toString(), "http://otto.de/rel/fooType");
+    }
+
+
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void shouldFailIfMultipleHrefsAreSupported() {
         // given
-        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithDifferentUrisForSameRelationType.class);
+        final JsonHome jsonHome = jsonHomeFor(create("http://example.org"))
+                .with(ControllerWithDifferentUrisForSameRelationType.class)
+                .get();
         // when
         jsonHome.getResources();
         // then an exception is thrown
@@ -157,7 +196,9 @@ public class JsonHomeGeneratorTest {
     @Test
     public void controllerWithResourceAndDirectLinkRelationTypeShouldHaveDirectResourceLink() throws Exception {
         // given
-        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithResourceAndLinkRelationType.class);
+        final JsonHome jsonHome = jsonHomeFor(create("http://example.org"))
+                .with(ControllerWithResourceAndLinkRelationType.class)
+                .get();
         // when
         final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
@@ -170,7 +211,9 @@ public class JsonHomeGeneratorTest {
     @Test
     public void methodShouldDefineLinkRelationTypeIfControllerHasNoAnnotation() {
         // given
-        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithRequestMappingAndLinkRelationTypeAtMethodLevel.class);
+        final JsonHome jsonHome = jsonHomeFor(create("http://example.org"))
+                .with(ControllerWithRequestMappingAndLinkRelationTypeAtMethodLevel.class)
+                .get();
         // when
         final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
@@ -181,7 +224,9 @@ public class JsonHomeGeneratorTest {
     @Test
     public void methodShouldInheritLinkRelationTypeFromController() {
         // given
-        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class);
+        final JsonHome jsonHome = jsonHomeFor(create("http://example.org"))
+                .with(ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class)
+                .get();
         // when
         final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
@@ -192,7 +237,9 @@ public class JsonHomeGeneratorTest {
     @Test
     public void twoMethodsWithDifferentLinkRelationTypesShouldBeDifferentResources() {
         // given
-        final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ControllerWithMultipleLinkRelationTypes.class);
+        final JsonHome jsonHome = jsonHomeFor(create("http://example.org"))
+                .with(ControllerWithMultipleLinkRelationTypes.class)
+                .get();
         // when
         final Collection<ResourceLink> resourceLinks = jsonHome.getResources().values();
         // then
@@ -211,7 +258,7 @@ public class JsonHomeGeneratorTest {
                 ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class,
                 AnotherControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class
         );
-        final JsonHome foo = jsonHomeFor(create("http://example.org")).with(controller);
+        final JsonHome foo = jsonHomeFor(create("http://example.org")).with(controller).get();
         // when
         final Collection<ResourceLink> resourceLinks = foo.getResources().values();
         // then
@@ -222,7 +269,7 @@ public class JsonHomeGeneratorTest {
     @Test
     public void shouldHaveAcceptPostHintIfPostSupportsDifferentMediaTypeThanGet() {
         // given
-        final JsonHome foo = jsonHomeFor(ROOT_URI).with(ControllerWithAcceptPutAndAcceptPost.class);
+        final JsonHome foo = jsonHomeFor(ROOT_URI).with(ControllerWithAcceptPutAndAcceptPost.class).get();
         // when
         final Collection<ResourceLink> resourceLinks = foo.getResources().values();
         // then
@@ -237,7 +284,7 @@ public class JsonHomeGeneratorTest {
     @Test
     public void templatedResourceLinkShouldHavePathAndQueryVar() {
         // given
-        final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ControllerWithTemplatedResourceLink.class);
+        final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ControllerWithTemplatedResourceLink.class).get();
         // when
         final TemplatedLink templatedLink = jsonHome.getResourceFor(create(ROOT_URI + "/rel/foo")).asTemplatedLink();
         // then
@@ -254,7 +301,7 @@ public class JsonHomeGeneratorTest {
     @Test
     public void templatedResourceLinkShouldHavePathAndQueryVars() {
         // given
-        final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ControllerWithTemplatedResourceLink.class);
+        final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ControllerWithTemplatedResourceLink.class).get();
         // when
         final TemplatedLink templatedLink = jsonHome.getResourceFor(create(ROOT_URI + "/rel/foobar")).asTemplatedLink();
         // then

@@ -38,10 +38,16 @@ public class JsonHomeControllerBase {
     private volatile JsonHome jsonHome = null;
     private Set<Class<?>> controllerTypes;
     private URI rootUri;
+    private URI relationTypeRootUri;
 
     @Value("${rootUri}")
     public void setRootUri(final String rootUri) {
         this.rootUri = URI.create(rootUri);
+    }
+
+    @Value("${relationTypeRootUri}")
+    public void setRelationTypeRootUri(final String uri) {
+        this.relationTypeRootUri = URI.create(uri);
     }
 
     @Resource
@@ -80,7 +86,12 @@ public class JsonHomeControllerBase {
 
     private synchronized void generateJsonHome() {
         if (jsonHome == null) {
-            jsonHome = JsonHomeGenerator.jsonHomeFor(rootUri).with(controllerTypes);
+            final JsonHomeGenerator generator = JsonHomeGenerator.jsonHomeFor(rootUri).with(controllerTypes);
+            if (relationTypeRootUri != null) {
+                generator.withRelationTypeRoot(relationTypeRootUri);
+            }
+            jsonHome = generator.get();
         }
     }
+
 }
