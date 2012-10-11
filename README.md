@@ -45,7 +45,7 @@ An example from the draft specification:
 ## More Features
 
 The json-home format is nice for automatic discovery of RESTful services. Generating this format directly from source
-code is nice, because it will always be consistent with your application. Being consistent is also important for≤
+code is nice, because it will always be consistent with your application. Being consistent is also important for
 human-readable documentation - and the information needed to generate such kind of documentation is more or less
 available in your source code.
 
