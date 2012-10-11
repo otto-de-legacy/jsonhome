@@ -19,18 +19,13 @@ import java.net.URI;
 import java.util.Map;
 
 /**
+ * A direct or templated resource link.
+ *
  * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02">http://tools.ietf.org/html/draft-nottingham-json-home-02</a>
  * @author Guido Steinacker
  * @since 16.09.12
  */
 public interface ResourceLink {
-
-    /**
-     * Human-readable documentation of a ResourceLink.
-     *
-     * @return Documentation
-     */
-    public Documentation getDocumentation();
 
     /**
      * The link-relation type of the resource link
@@ -39,6 +34,13 @@ public interface ResourceLink {
      * @see <a href="http://tools.ietf.org/html/rfc5988">http://tools.ietf.org/html/rfc5988</a>
      */
     public URI getLinkRelationType();
+
+    /**
+     * Human-readable documentation of a ResourceLink.
+     *
+     * @return Documentation
+     */
+    public Documentation getDocumentation();
 
     /**
      * Returns the hints of a ResourceLink object.
