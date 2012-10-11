@@ -112,7 +112,7 @@ public class ControllerFixtures {
     }
 
     @Controller
-    @Doc("controller value")
+    @Doc(value = "controller value", link = "http://example.org/doc/foo")
     public static class ControllerWithDocumentation {
         public
         @Rel("/rel/foo")

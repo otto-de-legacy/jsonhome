@@ -22,10 +22,8 @@ import java.util.Collections;
 import java.util.Map;
 
 import static de.otto.jsonhome.fixtures.LinkFixtures.*;
-import static de.otto.jsonhome.model.Allow.GET;
-import static de.otto.jsonhome.model.Allow.POST;
-import static de.otto.jsonhome.model.Allow.PUT;
-import static de.otto.jsonhome.model.Documentation.emptyDocumentation;
+import static de.otto.jsonhome.model.Allow.*;
+import static de.otto.jsonhome.model.Docs.emptyDocumentation;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonMap;
@@ -181,7 +179,8 @@ public class TemplatedLinkTest {
                         of(GET, PUT),
                         asList("application/foo"),
                         asList("application/json"),
-                        Collections.<String>emptyList()
+                        Collections.<String>emptyList(),
+                        emptyDocumentation()
                 )
         );
         final TemplatedLink thatTemplatedLink = templatedLink(
@@ -192,7 +191,8 @@ public class TemplatedLinkTest {
                         of(GET, PUT),
                         asList("application/foo"),
                         asList("application/foo"),
-                        Collections.<String>emptyList()
+                        Collections.<String>emptyList(),
+                        emptyDocumentation()
                 )
         );
         // when
@@ -214,7 +214,8 @@ public class TemplatedLinkTest {
                         of(GET, POST),
                         asList("application/foo"),
                         Collections.<String>emptyList(),
-                        asList("application/json")
+                        asList("application/json"),
+                        emptyDocumentation()
                 )
         );
         final TemplatedLink thatTemplatedLink = templatedLink(
@@ -225,7 +226,8 @@ public class TemplatedLinkTest {
                         of(GET, POST),
                         asList("application/foo"),
                         Collections.<String>emptyList(),
-                        asList("application/foo")
+                        asList("application/foo"),
+                        emptyDocumentation()
                 )
         );
         // when

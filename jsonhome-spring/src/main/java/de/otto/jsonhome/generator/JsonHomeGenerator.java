@@ -15,8 +15,6 @@
  */
 package de.otto.jsonhome.generator;
 
-import de.otto.jsonhome.annotation.Rel;
-import de.otto.jsonhome.model.Documentation;
 import de.otto.jsonhome.model.Hints;
 import de.otto.jsonhome.model.JsonHome;
 import de.otto.jsonhome.model.ResourceLink;
@@ -29,14 +27,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static de.otto.jsonhome.generator.DocumentationGenerator.documentationFrom;
 import static de.otto.jsonhome.generator.HrefVarsGenerator.hrefVarsFor;
 import static de.otto.jsonhome.generator.MethodHelper.queryTemplateFrom;
 import static de.otto.jsonhome.generator.RelationTypeGenerator.relationTypeFrom;
 import static de.otto.jsonhome.model.DirectLink.directLink;
-import static de.otto.jsonhome.model.JsonHome.emptyJsonHome;
 import static de.otto.jsonhome.model.JsonHome.jsonHome;
-import static de.otto.jsonhome.model.JsonHomeBuilder.jsonHomeBuilder;
 import static de.otto.jsonhome.model.ResourceLinkHelper.mergeResources;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 import static java.util.Arrays.asList;
@@ -132,22 +127,19 @@ public class JsonHomeGenerator {
                     final String resourcePath = rootUri + resourcePathPrefix + resourcePathSuffix + queryTemplateFrom(method);
                     final URI relationType = relationTypeFrom(relationTypeRootUri, controller, method);
                     if (relationType != null) {
-                        final Documentation documentation = documentationFrom(controller, method);
-                        final Hints hints = HintsGenerator.hintsOf(method);
+                        final Hints hints = HintsGenerator.hintsOf(controller, method);
                         if (resourcePath.matches(".*\\{.*\\}")) {
                             resourceLinks.add(templatedLink(
                                     relationType,
                                     resourcePath,
                                     hrefVarsFor(relationType, method, hints),
-                                    hints,
-                                    documentation
+                                    hints
                             ));
                         } else {
                             resourceLinks.add(directLink(
                                     relationType,
                                     URI.create(resourcePath),
-                                    hints,
-                                    documentation
+                                    hints
                             ));
                         }
                     }

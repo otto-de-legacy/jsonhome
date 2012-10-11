@@ -22,9 +22,12 @@
                 <th>Rel</th>
                 <td>${resource.linkRelationType}</td>
                 <td>
-<#list resource.documentation.description as doc>
-                    ${doc}<br/>
+<#list resource.hints.docs.description as descr>
+                    ${descr}<br/>
 </#list>
+<#if resource.hints.docs.link?has_content>
+    See <a href="${resource.hints.docs.link}">${resource.hints.docs.link}</a>
+</#if>
                 </td>
         </tr>
         <tr>
@@ -46,10 +49,14 @@
                         <th>${hrefVar.var}</th>
                         <td>${hrefVar.varType}</td>
                         <td>
-    <#list hrefVar.documentation.description as doc>
-
-                            ${doc}<br/>
-    </#list>
+    <#if hrefVar.docs.hasDescription()>
+        <#list hrefVar.docs.description as descr>
+                            ${descr}<br/>
+        </#list>
+    </#if>
+    <#if hrefVar.docs.hasLink()>
+                            See <a href="${hrefVar.docs.link}">${hrefVar.docs.link}</a>
+    </#if>
                         </td>
                     </tr>
 </#list>
@@ -58,6 +65,11 @@
         </tr>
         <#include "hints-rows.ftl">
         </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        </tfoot>
     </table>
 </body>
 </html>

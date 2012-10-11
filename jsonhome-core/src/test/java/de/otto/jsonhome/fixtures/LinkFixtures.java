@@ -15,14 +15,16 @@
  */
 package de.otto.jsonhome.fixtures;
 
-import de.otto.jsonhome.model.*;
+import de.otto.jsonhome.model.DirectLink;
+import de.otto.jsonhome.model.Hints;
+import de.otto.jsonhome.model.HrefVar;
+import de.otto.jsonhome.model.TemplatedLink;
 
 import java.net.URI;
-import java.util.EnumSet;
 
 import static de.otto.jsonhome.model.Allow.GET;
 import static de.otto.jsonhome.model.DirectLink.directLink;
-import static de.otto.jsonhome.model.Documentation.emptyDocumentation;
+import static de.otto.jsonhome.model.Docs.emptyDocumentation;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
 

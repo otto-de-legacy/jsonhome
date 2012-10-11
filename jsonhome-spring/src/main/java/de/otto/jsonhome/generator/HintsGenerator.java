@@ -23,10 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static de.otto.jsonhome.generator.DocumentationGenerator.documentationFrom;
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.HintsBuilder.hints;
 import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
 import static java.util.EnumSet.of;
 
 public class HintsGenerator {
@@ -34,9 +34,9 @@ public class HintsGenerator {
     private HintsGenerator() {
     }
 
-    public static Hints hintsOf(final Method method) {
+    public static Hints hintsOf(final Class<?> controller, final Method method) {
         final Set<Allow> allows = allowedHttpMethodsOf(method);
-        final HintsBuilder hintsBuilder = hints().allowing(allows);
+        final HintsBuilder hintsBuilder = hints().allowing(allows).with(documentationFrom(controller, method));
         final List<String> supportedRepresentations = supportedRepresentationsOf(method);
         if (allows.contains(PUT)) {
             hintsBuilder.acceptingForPut(supportedRepresentations);

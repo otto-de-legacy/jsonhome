@@ -17,6 +17,7 @@ package de.otto.jsonhome.model;
 
 import java.util.*;
 
+import static de.otto.jsonhome.model.Docs.emptyDocumentation;
 import static java.util.Arrays.asList;
 
 /**
@@ -31,6 +32,7 @@ public class HintsBuilder {
     private final Set<String> representations = new LinkedHashSet<String>();
     private final Set<String> acceptPost = new LinkedHashSet<String>();
     private final Set<String> acceptPut = new LinkedHashSet<String>();
+    private Docs docs = emptyDocumentation();
 
     private HintsBuilder() {
     }
@@ -44,7 +46,8 @@ public class HintsBuilder {
                 .allowing(hints.getAllows())
                 .representedAs(hints.getRepresentations())
                 .acceptingForPut(hints.getAcceptPut())
-                .acceptingForPost(hints.getAcceptPost());
+                .acceptingForPost(hints.getAcceptPost())
+                .with(hints.getDocs());
     }
 
     public HintsBuilder allowing(final Set<Allow> allows) {
@@ -82,7 +85,17 @@ public class HintsBuilder {
         return this;
     }
 
+    public HintsBuilder with(Docs docs) {
+        this.docs = docs;
+        return this;
+    }
+
     public Hints build() {
-        return new Hints(allows, new ArrayList<String>(representations), new ArrayList<String>(acceptPut), new ArrayList<String>(acceptPost));
+        return new Hints(
+                allows,
+                new ArrayList<String>(representations),
+                new ArrayList<String>(acceptPut),
+                new ArrayList<String>(acceptPost),
+                docs);
     }
 }

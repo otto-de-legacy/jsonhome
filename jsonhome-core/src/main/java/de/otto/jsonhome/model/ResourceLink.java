@@ -36,13 +36,6 @@ public interface ResourceLink {
     public URI getLinkRelationType();
 
     /**
-     * Human-readable documentation of a ResourceLink.
-     *
-     * @return Documentation
-     */
-    public Documentation getDocumentation();
-
-    /**
      * Returns the hints of a ResourceLink object.
      *
      * @return hints

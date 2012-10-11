@@ -25,7 +25,7 @@ import static de.otto.jsonhome.fixtures.ControllerFixtures.*;
 import static de.otto.jsonhome.generator.JsonHomeGenerator.jsonHomeFor;
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.DirectLink.directLink;
-import static de.otto.jsonhome.model.Documentation.emptyDocumentation;
+import static de.otto.jsonhome.model.Docs.emptyDocumentation;
 import static de.otto.jsonhome.model.HrefVarFlags.REQUIRED;
 import static java.net.URI.create;
 import static java.util.Arrays.asList;
@@ -341,11 +341,11 @@ public class JsonHomeGeneratorTest {
         // when
         final ResourceLink resourceLink = jsonHome.getResourceFor(relationTypeURI);
         // then
-        final Documentation documentation = resourceLink.getDocumentation();
-        assertEquals(documentation.getDescription().get(0), "a value");
-        final Documentation var1Doc = resourceLink.asTemplatedLink().getHrefVars().get(0).getDocumentation();
+        final Docs docs = resourceLink.getHints().getDocs();
+        assertEquals(docs.getDescription().get(0), "a value");
+        final Docs var1Doc = resourceLink.asTemplatedLink().getHrefVars().get(0).getDocs();
         assertEquals(var1Doc.getDescription().get(0), "var value 1");
-        final Documentation var2Doc = resourceLink.asTemplatedLink().getHrefVars().get(1).getDocumentation();
+        final Docs var2Doc = resourceLink.asTemplatedLink().getHrefVars().get(1).getDocs();
         assertEquals(var2Doc.getDescription().get(0), "var value 2");
     }
 
@@ -357,11 +357,11 @@ public class JsonHomeGeneratorTest {
         // when
         final ResourceLink resourceLink = jsonHome.getResourceFor(relationTypeURI);
         // then
-        final Documentation documentation = resourceLink.getDocumentation();
-        assertEquals(documentation.getDescription().get(0), "controller value");
-        final Documentation var1Doc = resourceLink.asTemplatedLink().getHrefVars().get(0).getDocumentation();
+        final Docs docs = resourceLink.getHints().getDocs();
+        assertEquals(docs.getDescription().get(0), "controller value");
+        final Docs var1Doc = resourceLink.asTemplatedLink().getHrefVars().get(0).getDocs();
         assertEquals(var1Doc.getDescription().get(0), "var value 1");
-        final Documentation var2Doc = resourceLink.asTemplatedLink().getHrefVars().get(1).getDocumentation();
+        final Docs var2Doc = resourceLink.asTemplatedLink().getHrefVars().get(1).getDocs();
         assertEquals(var2Doc.getDescription().get(0), "var value 2");
     }
 

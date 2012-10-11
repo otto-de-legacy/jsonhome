@@ -15,15 +15,16 @@
  */
 package de.otto.jsonhome.generator;
 
-import de.otto.jsonhome.annotation.Doc;
-import de.otto.jsonhome.model.*;
+import de.otto.jsonhome.model.Docs;
+import de.otto.jsonhome.model.Hints;
+import de.otto.jsonhome.model.HrefVar;
+import de.otto.jsonhome.model.HrefVarFlags;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -31,10 +32,7 @@ import static de.otto.jsonhome.generator.DocumentationGenerator.documentationFor
 import static de.otto.jsonhome.generator.MethodHelper.getParameterInfos;
 import static de.otto.jsonhome.model.Allow.POST;
 import static de.otto.jsonhome.model.Allow.PUT;
-import static de.otto.jsonhome.model.Documentation.documentation;
-import static de.otto.jsonhome.model.Documentation.emptyDocumentation;
 import static de.otto.jsonhome.model.HrefVarFlags.*;
-import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
 
 public class HrefVarsGenerator {
@@ -52,10 +50,10 @@ public class HrefVarsGenerator {
         final List<HrefVar> hrefVars = new ArrayList<HrefVar>();
         for (final ParameterInfo parameterInfo : getParameterInfos(method)) {
             final URI relationType = rootRelationType.resolve("#" + parameterInfo.getName());
-            final Documentation documentation = documentationFor(parameterInfo);
+            final Docs docs = documentationFor(parameterInfo);
             if (parameterInfo.hasAnnotation(PathVariable.class)) {
                 hrefVars.add(new HrefVar(
-                        parameterInfo.getName(), relationType, documentation, of(REQUIRED))
+                        parameterInfo.getName(), relationType, docs, of(REQUIRED))
                 );
             } else  if (parameterInfo.hasAnnotation(RequestParam.class)) {
                 final EnumSet<HrefVarFlags> flags = EnumSet.noneOf(HrefVarFlags.class);
@@ -72,7 +70,7 @@ public class HrefVarsGenerator {
                     }
                 }
                 hrefVars.add(new HrefVar(
-                        parameterInfo.getName(), relationType, documentation, flags)
+                        parameterInfo.getName(), relationType, docs, flags)
                 );
             }
         }

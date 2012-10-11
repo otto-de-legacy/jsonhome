@@ -19,8 +19,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.otto.jsonhome.model.Documentation.emptyDocumentation;
-
 /**
  * A direct resource link.
  *
@@ -33,29 +31,26 @@ public final class DirectLink implements ResourceLink {
     private final URI relationType;
     private final URI href;
     private final Hints hints;
-    private final Documentation documentation;
 
     private DirectLink(final URI relationType,
                        final URI href,
-                       final Hints hints,
-                       final Documentation documentation) {
+                       final Hints hints) {
         this.relationType = relationType;
         this.href = href;
         this.hints = hints;
-        this.documentation = documentation;
     }
 
     public static DirectLink directLink(final URI relationType,
                                         final URI href,
                                         final Hints hints) {
-        return new DirectLink(relationType, href, hints, emptyDocumentation());
+        return new DirectLink(relationType, href, hints);
     }
 
     public static DirectLink directLink(final URI relationType,
                                         final URI href,
                                         final Hints hints,
-                                        final Documentation documentation) {
-        return new DirectLink(relationType, href, hints, documentation);
+                                        final Docs docs) {
+        return new DirectLink(relationType, href, hints);
     }
 
     @Override
@@ -70,11 +65,6 @@ public final class DirectLink implements ResourceLink {
     @Override
     public Hints getHints() {
         return hints;
-    }
-
-    @Override
-    public Documentation getDocumentation() {
-        return documentation;
     }
 
     @Override
@@ -109,8 +99,7 @@ public final class DirectLink implements ResourceLink {
         return new DirectLink(
                 relationType,
                 href,
-                hints.mergeWith(other.getHints()),
-                documentation.mergeWith(other.getDocumentation())
+                hints.mergeWith(other.getHints())
         );
     }
 
@@ -129,8 +118,6 @@ public final class DirectLink implements ResourceLink {
 
         DirectLink that = (DirectLink) o;
 
-        if (documentation != null ? !documentation.equals(that.documentation) : that.documentation != null)
-            return false;
         if (hints != null ? !hints.equals(that.hints) : that.hints != null) return false;
         if (href != null ? !href.equals(that.href) : that.href != null) return false;
         if (relationType != null ? !relationType.equals(that.relationType) : that.relationType != null) return false;
@@ -143,7 +130,6 @@ public final class DirectLink implements ResourceLink {
         int result = relationType != null ? relationType.hashCode() : 0;
         result = 31 * result + (href != null ? href.hashCode() : 0);
         result = 31 * result + (hints != null ? hints.hashCode() : 0);
-        result = 31 * result + (documentation != null ? documentation.hashCode() : 0);
         return result;
     }
 
@@ -153,7 +139,6 @@ public final class DirectLink implements ResourceLink {
                 "relationType=" + relationType +
                 ", href=" + href +
                 ", hints=" + hints +
-                ", documentation=" + documentation +
                 '}';
     }
 }

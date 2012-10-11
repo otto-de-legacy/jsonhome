@@ -41,8 +41,9 @@ import static java.util.Collections.singletonMap;
 @RequestMapping(value = "/products")
 @Doc(value = {
         "A single product.",
-        "This is a second paragraph, describing the link-relation type."
-})
+        "This is a second paragraph, describing the link-relation type."},
+     link = "http://de.wikipedia.org/wiki/Produkt_(Wirtschaft)"
+)
 public class ProductsController {
 
     @Autowired
@@ -110,7 +111,7 @@ public class ProductsController {
             method = RequestMethod.PUT,
             consumes = "application/json"
     )
-    @Rel("/rel/prduct")
+    @Rel("/rel/product")
     public ModelAndView putProduct(final @PathVariable long productId,
                                    final Map<String, String> productData,
                                    final HttpServletResponse response) {

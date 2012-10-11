@@ -19,14 +19,14 @@
 package de.otto.jsonhome.generator;
 
 import de.otto.jsonhome.annotation.Doc;
-import de.otto.jsonhome.model.Documentation;
+import de.otto.jsonhome.model.Docs;
 
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Collections;
 
-import static de.otto.jsonhome.model.Documentation.documentation;
-import static de.otto.jsonhome.model.Documentation.emptyDocumentation;
+import static de.otto.jsonhome.model.Docs.documentation;
+import static de.otto.jsonhome.model.Docs.emptyDocumentation;
 import static java.util.Arrays.asList;
 
 /**
@@ -38,7 +38,7 @@ public class DocumentationGenerator {
     private DocumentationGenerator() {
     }
 
-    public static Documentation documentationFrom(final Class<?> controller, final Method method) {
+    public static Docs documentationFrom(final Class<?> controller, final Method method) {
         Doc doc = method.getAnnotation(Doc.class);
         if (doc == null) {
             doc = controller.getAnnotation(Doc.class);
@@ -51,9 +51,7 @@ public class DocumentationGenerator {
         }
     }
 
-
-
-    public static Documentation documentationFor(final ParameterInfo parameterInfo) {
+    public static Docs documentationFor(final ParameterInfo parameterInfo) {
         if (parameterInfo.hasAnnotation(Doc.class)) {
             Doc doc = parameterInfo.getAnnotation(Doc.class);
             return documentationFrom(doc);
@@ -62,12 +60,12 @@ public class DocumentationGenerator {
         }
     }
 
-    private static Documentation documentationFrom(final Doc doc) {
+    private static Docs documentationFrom(final Doc doc) {
         final String link = doc.link();
         final String[] description = doc.value();
         return documentation(
                 description != null ? asList(description) : Collections.<String>emptyList(),
-                link != null ? URI.create(link) : null);
+                link != null && !link.isEmpty() ? URI.create(link) : null);
     }
 
 }

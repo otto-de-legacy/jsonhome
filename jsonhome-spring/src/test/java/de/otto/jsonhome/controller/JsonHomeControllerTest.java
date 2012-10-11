@@ -18,18 +18,15 @@ package de.otto.jsonhome.controller;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.testng.annotations.Test;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.otto.jsonhome.fixtures.ControllerFixtures.ControllerWithDocumentation;
 import static de.otto.jsonhome.fixtures.ControllerFixtures.ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel;
 import static de.otto.jsonhome.model.Allow.GET;
-import static java.net.URI.create;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 /**
  * @author Guido Steinacker
@@ -40,7 +37,7 @@ public class JsonHomeControllerTest {
     @Test
     public void testGetHomeDocument() throws Exception {
         // given
-        final JsonHomeController controller = jsonHomeController();
+        final JsonHomeController controller = jsonHomeController(ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class);
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String, ?> resourcesMap = controller.getHomeDocument(response);
@@ -60,7 +57,7 @@ public class JsonHomeControllerTest {
     @Test
     public void shouldUseRootLinkRelationTypeUri() throws Exception {
         // given
-        final JsonHomeController controller = jsonHomeController();
+        final JsonHomeController controller = jsonHomeController(ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class);
         controller.setRelationTypeRootUri("http://otto.de");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
@@ -71,9 +68,30 @@ public class JsonHomeControllerTest {
         assertNotNull(resources.get("http://otto.de/rel/foo"));
     }
 
-    private JsonHomeController jsonHomeController() {
+    @Test
+    public void shouldContainDocsHint() throws Exception {
+        // given
+        final JsonHomeController controller = jsonHomeController(ControllerWithDocumentation.class);
+        controller.setRelationTypeRootUri("http://otto.de");
+        // when
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        final Map<String, ?> resourcesMap = controller.getHomeDocument(response);
+        // then
+        @SuppressWarnings("unchecked")
+        final Map<String, Map<String, ?>> resources = (Map<String, Map<String, ?>>) resourcesMap.get("resources");
+        final Map<String, ?> relFoo = resources.get("http://otto.de/rel/foo");
+        assertNotNull(relFoo);
+        assertEquals(asMap(relFoo.get("hints")).get("docs"), "http://example.org/doc/foo");
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, ?> asMap(final Object obj) {
+        return (Map<String, ?>) obj;
+    }
+
+    private JsonHomeController jsonHomeController(Class<?> controllerType) {
         final JsonHomeController controller = new JsonHomeController();
-        controller.setControllerTypes(ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class);
+        controller.setControllerTypes(controllerType);
         controller.setRootUri("http://example.org");
         return controller;
     }

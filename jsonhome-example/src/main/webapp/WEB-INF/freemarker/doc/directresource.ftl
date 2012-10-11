@@ -22,9 +22,14 @@
                 <th>Rel</th>
                 <td>${resource.linkRelationType}</td>
                 <td>
-<#list resource.documentation.description as doc>
+<#if resource.hints.docs.hasDescription()>
+    <#list resource.hints.docs.description as doc>
                     ${doc}<br/>
-</#list>
+    </#list>
+</#if>
+<#if resource.hints.docs.hasLink()>
+                    See <a href="${resource.hints.docs.link}">${resource.hints.docs.link}</a>
+</#if>
                 </td>
         </tr>
         <tr>

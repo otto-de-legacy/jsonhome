@@ -33,24 +33,24 @@ public final class HrefVar {
 
     private final String var;
     private final URI varType;
-    private final Documentation documentation;
+    private final Docs docs;
     private final EnumSet<HrefVarFlags> flags;
 
 
-    public HrefVar(final String var, final URI varType, final Documentation documentation) {
+    public HrefVar(final String var, final URI varType, final Docs docs) {
         this.var = var;
         this.varType = varType;
-        this.documentation = documentation;
+        this.docs = docs;
         this.flags = noneOf(HrefVarFlags.class);
     }
 
     public HrefVar(final String var,
                    final URI varType,
-                   final Documentation documentation,
+                   final Docs docs,
                    final EnumSet<HrefVarFlags> flags) {
         this.var = var;
         this.varType = varType;
-        this.documentation = documentation;
+        this.docs = docs;
         this.flags = flags;
     }
 
@@ -73,12 +73,12 @@ public final class HrefVar {
     }
 
     /**
-     * Human-readable documentation of the HrefVar.
+     * Human-readable docs of the HrefVar.
      *
      * @return documenation
      */
-    public Documentation getDocumentation() {
-        return documentation;
+    public Docs getDocs() {
+        return docs;
     }
 
     /**
@@ -106,7 +106,7 @@ public final class HrefVar {
 
         HrefVar hrefVar = (HrefVar) o;
 
-        if (documentation != null ? !documentation.equals(hrefVar.documentation) : hrefVar.documentation != null)
+        if (docs != null ? !docs.equals(hrefVar.docs) : hrefVar.docs != null)
             return false;
         if (flags != null ? !flags.equals(hrefVar.flags) : hrefVar.flags != null) return false;
         if (var != null ? !var.equals(hrefVar.var) : hrefVar.var != null) return false;
@@ -119,7 +119,7 @@ public final class HrefVar {
     public int hashCode() {
         int result = var != null ? var.hashCode() : 0;
         result = 31 * result + (varType != null ? varType.hashCode() : 0);
-        result = 31 * result + (documentation != null ? documentation.hashCode() : 0);
+        result = 31 * result + (docs != null ? docs.hashCode() : 0);
         result = 31 * result + (flags != null ? flags.hashCode() : 0);
         return result;
     }
@@ -129,7 +129,7 @@ public final class HrefVar {
         return "HrefVar{" +
                 "var='" + var + '\'' +
                 ", varType=" + varType +
-                ", documentation=" + documentation +
+                ", docs=" + docs +
                 ", flags=" + flags +
                 '}';
     }

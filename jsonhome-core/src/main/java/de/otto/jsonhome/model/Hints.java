@@ -17,7 +17,7 @@ package de.otto.jsonhome.model;
 
 import java.util.*;
 
-import static java.util.Collections.emptyList;
+import static de.otto.jsonhome.model.Docs.emptyDocumentation;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableSet;
 
@@ -33,15 +33,17 @@ public final class Hints {
     private final List<String> representations;
     private final List<String> acceptPut;
     private final List<String> acceptPost;
+    private final Docs docs;
 
     public Hints(final Set<Allow> allows, final List<String> representations) {
-        this(allows, representations, Collections.<String>emptyList(), Collections.<String>emptyList());
+        this(allows, representations, Collections.<String>emptyList(), Collections.<String>emptyList(), emptyDocumentation());
     }
 
     public Hints(final Set<Allow> allows,
                  final List<String> representations,
                  final List<String> acceptPut,
-                 final List<String> acceptPost) {
+                 final List<String> acceptPost,
+                 final Docs docs) {
         if (!acceptPost.isEmpty() && !allows.contains(Allow.POST)) {
             throw new IllegalArgumentException("POST is not allowed but accept-post is provided.");
         }
@@ -52,6 +54,7 @@ public final class Hints {
         this.representations = unmodifiableList(new ArrayList<String>(representations));
         this.acceptPut = acceptPut;
         this.acceptPost = acceptPost;
+        this.docs = docs;
     }
 
     /**
@@ -85,6 +88,15 @@ public final class Hints {
     }
 
     /**
+     * Human-readable documentation of a ResourceLink.
+     *
+     * @return Docs
+     */
+    public Docs getDocs() {
+        return docs;
+    }
+
+    /**
      * Merges the hints of two resource links..
      *
      * @param other the hints of the other resource link
@@ -99,7 +111,12 @@ public final class Hints {
         acceptPut.addAll(other.getAcceptPut());
         final Set<String> acceptPost = new LinkedHashSet<String>(this.acceptPost);
         acceptPost.addAll(other.getAcceptPost());
-        return new Hints(allows, new ArrayList<String>(representations), new ArrayList<String>(acceptPut), new ArrayList<String>(acceptPost));
+        return new Hints(
+                allows,
+                new ArrayList<String>(representations),
+                new ArrayList<String>(acceptPut),
+                new ArrayList<String>(acceptPost),
+                docs.mergeWith(other.getDocs()));
     }
 
     /**
@@ -115,6 +132,9 @@ public final class Hints {
         if (!acceptPost.isEmpty()) {
             jsonHints.put("accept-post", acceptPost);
         }
+        if (docs.hasLink()) {
+            jsonHints.put("docs", docs.getLink().toString());
+        }
         return jsonHints;
     }
 
@@ -125,7 +145,11 @@ public final class Hints {
 
         Hints hints = (Hints) o;
 
+        if (acceptPost != null ? !acceptPost.equals(hints.acceptPost) : hints.acceptPost != null) return false;
+        if (acceptPut != null ? !acceptPut.equals(hints.acceptPut) : hints.acceptPut != null) return false;
         if (allows != null ? !allows.equals(hints.allows) : hints.allows != null) return false;
+        if (docs != null ? !docs.equals(hints.docs) : hints.docs != null)
+            return false;
         if (representations != null ? !representations.equals(hints.representations) : hints.representations != null)
             return false;
 
@@ -136,6 +160,9 @@ public final class Hints {
     public int hashCode() {
         int result = allows != null ? allows.hashCode() : 0;
         result = 31 * result + (representations != null ? representations.hashCode() : 0);
+        result = 31 * result + (acceptPut != null ? acceptPut.hashCode() : 0);
+        result = 31 * result + (acceptPost != null ? acceptPost.hashCode() : 0);
+        result = 31 * result + (docs != null ? docs.hashCode() : 0);
         return result;
     }
 
@@ -144,6 +171,9 @@ public final class Hints {
         return "Hints{" +
                 "allows=" + allows +
                 ", representations=" + representations +
+                ", acceptPut=" + acceptPut +
+                ", acceptPost=" + acceptPost +
+                ", docs=" + docs +
                 '}';
     }
 }
