@@ -110,7 +110,7 @@ public final class DirectLink implements ResourceLink {
                 relationType,
                 href,
                 hints.mergeWith(other.getHints()),
-                documentation
+                documentation.mergeWith(other.getDocumentation())
         );
     }
 

@@ -21,17 +21,11 @@
         <tr>
                 <th>Rel</th>
                 <td>${resource.linkRelationType}</td>
-                <td>The link-relation type of the resource.</td>
-        </tr>
-        <tr>
-            <th>Documentation</th>
-            <td colspan="2">
-                    <pre>
-                    <#list resource.documentation.description as d>
-                        ${d}<br/>
-                    </#list>
-                    </pre>
-            </td>
+                <td>
+<#list resource.documentation.description as doc>
+                    ${doc}<br/>
+</#list>
+                </td>
         </tr>
         <tr>
                 <th>Href</th>
@@ -42,7 +36,7 @@
         </tbody>
         <tfoot>
         <tr>
-
+            <td colspan="3">&nbsp;</td>
         </tr>
         </tfoot>
     </table>

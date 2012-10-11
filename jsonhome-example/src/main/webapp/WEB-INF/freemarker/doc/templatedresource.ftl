@@ -21,22 +21,16 @@
         <tr>
                 <th>Rel</th>
                 <td>${resource.linkRelationType}</td>
-                <td>The link-relation type of the resource.</td>
-        </tr>
-        <tr>
-            <th>Documentation</th>
-            <td colspan="2">
-                <pre>
-<#list resource.documentation.description as d>
-                ${d}<br/>
+                <td>
+<#list resource.documentation.description as doc>
+                    ${doc}<br/>
 </#list>
-                </pre>
-            </td>
+                </td>
         </tr>
         <tr>
                 <th>Href-template</th>
                 <td>${resource.hrefTemplate}</td>
-                <td>The href-template to create links to the resource.</td>
+                <td>The href-template used to build links to the resource.</td>
         </tr>
         <tr>
             <th>Href-vars</th>
@@ -52,12 +46,10 @@
                         <th>${hrefVar.var}</th>
                         <td>${hrefVar.varType}</td>
                         <td>
-                            <pre>
-    <#list hrefVar.documentation.description as d>
+    <#list hrefVar.documentation.description as doc>
 
-                            ${d}<br/>
+                            ${doc}<br/>
     </#list>
-                            </pre>
                         </td>
                     </tr>
 </#list>

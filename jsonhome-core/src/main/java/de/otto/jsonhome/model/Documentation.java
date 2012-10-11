@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
 /**
@@ -66,6 +65,13 @@ public final class Documentation {
 
     public URI getLink() {
         return link;
+    }
+
+    public Documentation mergeWith(final Documentation other) {
+        return new Documentation(
+                description.isEmpty() ? other.description : description,
+                link == null ? other.getLink() : link
+        );
     }
 
     @Override

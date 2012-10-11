@@ -22,7 +22,7 @@
             <td><a href="${resource.linkRelationType}">${resource.linkRelationType}</a></td>
             <td>
     <#list resource.documentation.description as doc>
-                <p>${doc}</p>
+                ${doc}<br/>
     </#list>
 
             </td>

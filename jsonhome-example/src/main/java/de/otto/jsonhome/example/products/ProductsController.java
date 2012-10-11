@@ -110,7 +110,7 @@ public class ProductsController {
             method = RequestMethod.PUT,
             consumes = "application/json"
     )
-    @Rel("/rel/product")
+    @Rel("/rel/prduct")
     public ModelAndView putProduct(final @PathVariable long productId,
                                    final Map<String, String> productData,
                                    final HttpServletResponse response) {

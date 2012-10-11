@@ -122,7 +122,7 @@ public final class TemplatedLink implements ResourceLink {
                     hrefTemplate,
                     hrefVars,
                     hints.mergeWith(other.getHints()),
-                    documentation
+                    documentation.mergeWith(other.getDocumentation())
             );
         }
         if (otherTemplatedLink.getHrefTemplate().startsWith(hrefTemplate)) {
@@ -131,7 +131,7 @@ public final class TemplatedLink implements ResourceLink {
                     otherTemplatedLink.getHrefTemplate(),
                     otherTemplatedLink.getHrefVars(),
                     hints.mergeWith(otherTemplatedLink.getHints()),
-                    documentation
+                    documentation.mergeWith(other.getDocumentation())
             );
         }
         throw new IllegalArgumentException(format(
