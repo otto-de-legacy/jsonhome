@@ -47,7 +47,7 @@ public class JsonHomeControllerBase {
 
     @Value("${relationTypeRootUri}")
     public void setRelationTypeRootUri(final String uri) {
-        this.relationTypeRootUri = URI.create(uri);
+        this.relationTypeRootUri = uri.isEmpty() ? null : URI.create(uri);
     }
 
     @Resource

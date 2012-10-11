@@ -16,6 +16,7 @@
 package de.otto.jsonhome.generator;
 
 import de.otto.jsonhome.annotation.Rel;
+import de.otto.jsonhome.model.Documentation;
 import de.otto.jsonhome.model.Hints;
 import de.otto.jsonhome.model.JsonHome;
 import de.otto.jsonhome.model.ResourceLink;
@@ -28,7 +29,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static de.otto.jsonhome.generator.DocumentationGenerator.documentationFrom;
+import static de.otto.jsonhome.generator.HrefVarsGenerator.hrefVarsFor;
 import static de.otto.jsonhome.generator.MethodHelper.queryTemplateFrom;
+import static de.otto.jsonhome.generator.RelationTypeGenerator.relationTypeFrom;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.JsonHome.emptyJsonHome;
 import static de.otto.jsonhome.model.JsonHome.jsonHome;
@@ -47,8 +51,6 @@ import static java.util.Collections.emptyList;
 
 public class JsonHomeGenerator {
 
-    private final HrefVarsGenerator hrefVarsGenerator = new HrefVarsGenerator();
-    private final HintsGenerator hintsGenerator = new HintsGenerator();
     private final Collection<Class<?>> controllers;
     private URI rootUri;
     private URI relationTypeRootUri;
@@ -128,21 +130,24 @@ public class JsonHomeGenerator {
                         : new String[] {""};
                 for (String resourcePathSuffix : resourcePathSuffixes) {
                     final String resourcePath = rootUri + resourcePathPrefix + resourcePathSuffix + queryTemplateFrom(method);
-                    final URI relationType = relationTypeFrom(controller, method);
+                    final URI relationType = relationTypeFrom(relationTypeRootUri, controller, method);
                     if (relationType != null) {
-                        final Hints hints = hintsGenerator.hintsOf(method);
+                        final Documentation documentation = documentationFrom(controller, method);
+                        final Hints hints = HintsGenerator.hintsOf(method);
                         if (resourcePath.matches(".*\\{.*\\}")) {
                             resourceLinks.add(templatedLink(
                                     relationType,
                                     resourcePath,
-                                    hrefVarsGenerator.hrefVarsFor(relationType, method, hints),
-                                    hints
+                                    hrefVarsFor(relationType, method, hints),
+                                    hints,
+                                    documentation
                             ));
                         } else {
                             resourceLinks.add(directLink(
                                     relationType,
                                     URI.create(resourcePath),
-                                    hints
+                                    hints,
+                                    documentation
                             ));
                         }
                     }
@@ -169,31 +174,6 @@ public class JsonHomeGenerator {
         return resourcePathPrefixes;
     }
 
-    /**
-     * Analyses a method of a controller and returns the fully qualified URI of the link-relation type.
-     *
-     * If the neither the method, nor the controller is annotated with Rel, null is returned.
-     *
-     * The Rel of the method is overriding the Rel of the Controller.
-     *
-     * @param controller the controller
-     * @param method the method
-     * @return URI of the link-relation type, or null
-     */
-    protected URI relationTypeFrom(final Class<?> controller, final Method method) {
-        final Rel controllerRel = controller.getAnnotation(Rel.class);
-        final Rel methodRel = method.getAnnotation(Rel.class);
-        if (controllerRel == null && methodRel == null) {
-            return null;
-        } else {
-            final String linkRelationType = methodRel != null
-                    ? methodRel.value()
-                    : controllerRel.value();
-            return URI.create(linkRelationType.startsWith("http://")
-                    ? linkRelationType
-                    : relationTypeRootUri + linkRelationType);
-        }
-    }
 
     private boolean isSpringController(final Class<?> controller) {
         return controller.getAnnotation(Controller.class) != null;

@@ -33,23 +33,24 @@ public final class HrefVar {
 
     private final String var;
     private final URI varType;
-    private final String description;
+    private final Documentation documentation;
     private final EnumSet<HrefVarFlags> flags;
 
-    public HrefVar(final String var, final URI varType, final String description) {
+
+    public HrefVar(final String var, final URI varType, final Documentation documentation) {
         this.var = var;
         this.varType = varType;
-        this.description = description;
-        flags = noneOf(HrefVarFlags.class);
+        this.documentation = documentation;
+        this.flags = noneOf(HrefVarFlags.class);
     }
 
     public HrefVar(final String var,
                    final URI varType,
-                   final String description,
+                   final Documentation documentation,
                    final EnumSet<HrefVarFlags> flags) {
         this.var = var;
         this.varType = varType;
-        this.description = description;
+        this.documentation = documentation;
         this.flags = flags;
     }
 
@@ -72,12 +73,12 @@ public final class HrefVar {
     }
 
     /**
-     * A human-readable description of the href-var.
+     * Human-readable documentation of the HrefVar.
      *
-     * @return description
+     * @return documenation
      */
-    public String getDescription() {
-        return description;
+    public Documentation getDocumentation() {
+        return documentation;
     }
 
     /**
@@ -105,7 +106,9 @@ public final class HrefVar {
 
         HrefVar hrefVar = (HrefVar) o;
 
-        if (description != null ? !description.equals(hrefVar.description) : hrefVar.description != null) return false;
+        if (documentation != null ? !documentation.equals(hrefVar.documentation) : hrefVar.documentation != null)
+            return false;
+        if (flags != null ? !flags.equals(hrefVar.flags) : hrefVar.flags != null) return false;
         if (var != null ? !var.equals(hrefVar.var) : hrefVar.var != null) return false;
         if (varType != null ? !varType.equals(hrefVar.varType) : hrefVar.varType != null) return false;
 
@@ -116,7 +119,8 @@ public final class HrefVar {
     public int hashCode() {
         int result = var != null ? var.hashCode() : 0;
         result = 31 * result + (varType != null ? varType.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (documentation != null ? documentation.hashCode() : 0);
+        result = 31 * result + (flags != null ? flags.hashCode() : 0);
         return result;
     }
 
@@ -125,7 +129,8 @@ public final class HrefVar {
         return "HrefVar{" +
                 "var='" + var + '\'' +
                 ", varType=" + varType +
-                ", description='" + description + '\'' +
+                ", documentation=" + documentation +
+                ", flags=" + flags +
                 '}';
     }
 }

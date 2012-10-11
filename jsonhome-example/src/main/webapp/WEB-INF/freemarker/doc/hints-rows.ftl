@@ -1,6 +1,6 @@
 <#assign hints = resource.hints>
     <tr>
-        <th>Allows:</th>
+        <th>Allows</th>
         <td>
             <ul>
 <#list hints.allows as allow>
@@ -11,7 +11,7 @@
         <td>The allowed http methods.</td>
     </tr>
     <tr>
-        <th>Representations:</th>
+        <th>Representations</th>
         <td>
             <ul>
 <#list hints.representations as representation>
@@ -22,7 +22,7 @@
         <td>Available representations of the resource.</td>
     </tr>
     <tr>
-        <th>Accept-Put:</th>
+        <th>Accept-Put</th>
         <td>
             <ul>
 <#list hints.acceptPut as acceptPut>
@@ -33,7 +33,7 @@
         <td>Available representations of the resource supported for PUT.</td>
     </tr>
     <tr>
-        <th>Accept-Post:</th>
+        <th>Accept-Post</th>
         <td>
             <ul>
 <#list hints.acceptPost as acceptPost>

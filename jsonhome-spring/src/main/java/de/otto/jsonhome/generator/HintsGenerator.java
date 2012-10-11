@@ -31,7 +31,10 @@ import static java.util.EnumSet.of;
 
 public class HintsGenerator {
 
-    public Hints hintsOf(final Method method) {
+    private HintsGenerator() {
+    }
+
+    public static Hints hintsOf(final Method method) {
         final Set<Allow> allows = allowedHttpMethodsOf(method);
         final HintsBuilder hintsBuilder = hints().allowing(allows);
         final List<String> supportedRepresentations = supportedRepresentationsOf(method);
@@ -57,7 +60,7 @@ public class HintsGenerator {
      * @return list of allowed HTTP methods.
      * @throws NullPointerException if method is not annotated with @RequestMapping.
      */
-    protected Set<Allow> allowedHttpMethodsOf(final Method method) {
+    protected static Set<Allow> allowedHttpMethodsOf(final Method method) {
         final RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
         final Set<Allow> allows = listOfStringsFrom(methodRequestMapping.method());
         if (allows.isEmpty()) {
@@ -78,7 +81,7 @@ public class HintsGenerator {
      * @return list of allowed HTTP methods.
      * @throws NullPointerException if method is not annotated with @RequestMapping.
      */
-    protected List<String> supportedRepresentationsOf(final Method method) {
+    protected static List<String> supportedRepresentationsOf(final Method method) {
         final RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
         final LinkedHashSet<String> representations = new LinkedHashSet<String>();
         final String[] produces = methodRequestMapping.produces();
@@ -106,7 +109,7 @@ public class HintsGenerator {
         return new ArrayList<String>(representations);
     }
 
-    private Set<Allow> listOfStringsFrom(Object[] array) {
+    private static Set<Allow> listOfStringsFrom(Object[] array) {
         final Set<Allow> result = EnumSet.noneOf(Allow.class);
         for (Object o : array) {
             result.add(Allow.valueOf(o.toString()));

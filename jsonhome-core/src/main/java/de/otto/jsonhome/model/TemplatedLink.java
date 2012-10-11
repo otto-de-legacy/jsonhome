@@ -18,7 +18,7 @@ package de.otto.jsonhome.model;
 import java.net.URI;
 import java.util.*;
 
-import static de.otto.jsonhome.model.NamingHelper.toName;
+import static de.otto.jsonhome.model.Documentation.emptyDocumentation;
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableList;
 
@@ -32,6 +32,7 @@ import static java.util.Collections.unmodifiableList;
 public final class TemplatedLink implements ResourceLink {
 
     private final URI relationType;
+    private final Documentation documentation;
     private final String hrefTemplate;
     private final List<HrefVar> hrefVars;
     private final Hints hints;
@@ -39,23 +40,33 @@ public final class TemplatedLink implements ResourceLink {
     private TemplatedLink(final URI relationType,
                           final String hrefTemplate,
                           final Collection<HrefVar> hrefVars,
-                          final Hints hints) {
+                          final Hints hints,
+                          final Documentation documentation) {
         this.relationType = relationType;
         this.hrefTemplate = hrefTemplate;
         this.hrefVars = unmodifiableList(new ArrayList<HrefVar>(hrefVars));
         this.hints = hints;
+        this.documentation = documentation;
     }
 
     public static TemplatedLink templatedLink(final URI relationType,
                                               final String hrefTemplate,
                                               final List<HrefVar> hrefVars,
                                               final Hints hints) {
-        return new TemplatedLink(relationType, hrefTemplate, hrefVars, hints);
+        return new TemplatedLink(relationType, hrefTemplate, hrefVars, hints, emptyDocumentation());
+    }
+
+    public static TemplatedLink templatedLink(final URI relationType,
+                                              final String hrefTemplate,
+                                              final List<HrefVar> hrefVars,
+                                              final Hints hints,
+                                              final Documentation documentation) {
+        return new TemplatedLink(relationType, hrefTemplate, hrefVars, hints, documentation);
     }
 
     @Override
-    public String getName() {
-        return toName(relationType);
+    public Documentation getDocumentation() {
+        return documentation;
     }
 
     @Override
@@ -110,7 +121,8 @@ public final class TemplatedLink implements ResourceLink {
                     relationType,
                     hrefTemplate,
                     hrefVars,
-                    hints.mergeWith(other.getHints())
+                    hints.mergeWith(other.getHints()),
+                    documentation
             );
         }
         if (otherTemplatedLink.getHrefTemplate().startsWith(hrefTemplate)) {
@@ -118,7 +130,8 @@ public final class TemplatedLink implements ResourceLink {
                     relationType,
                     otherTemplatedLink.getHrefTemplate(),
                     otherTemplatedLink.getHrefVars(),
-                    hints.mergeWith(otherTemplatedLink.getHints())
+                    hints.mergeWith(otherTemplatedLink.getHints()),
+                    documentation
             );
         }
         throw new IllegalArgumentException(format(
@@ -146,6 +159,8 @@ public final class TemplatedLink implements ResourceLink {
 
         TemplatedLink that = (TemplatedLink) o;
 
+        if (documentation != null ? !documentation.equals(that.documentation) : that.documentation != null)
+            return false;
         if (hints != null ? !hints.equals(that.hints) : that.hints != null) return false;
         if (hrefTemplate != null ? !hrefTemplate.equals(that.hrefTemplate) : that.hrefTemplate != null) return false;
         if (hrefVars != null ? !hrefVars.equals(that.hrefVars) : that.hrefVars != null) return false;
@@ -157,6 +172,7 @@ public final class TemplatedLink implements ResourceLink {
     @Override
     public int hashCode() {
         int result = relationType != null ? relationType.hashCode() : 0;
+        result = 31 * result + (documentation != null ? documentation.hashCode() : 0);
         result = 31 * result + (hrefTemplate != null ? hrefTemplate.hashCode() : 0);
         result = 31 * result + (hrefVars != null ? hrefVars.hashCode() : 0);
         result = 31 * result + (hints != null ? hints.hashCode() : 0);
@@ -167,6 +183,7 @@ public final class TemplatedLink implements ResourceLink {
     public String toString() {
         return "TemplatedLink{" +
                 "relationType=" + relationType +
+                ", documentation=" + documentation +
                 ", hrefTemplate='" + hrefTemplate + '\'' +
                 ", hrefVars=" + hrefVars +
                 ", hints=" + hints +

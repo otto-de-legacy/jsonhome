@@ -7,7 +7,7 @@
     <link href="${contextpath}/resources/css/jsonhome.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <h1>${resource.name}</h1>
+    <h1>${resource.linkRelationType}</h1>
 
     <table>
         <thead>
@@ -19,9 +19,19 @@
         </thead>
         <tbody>
         <tr>
-                <th>Rel:</th>
+                <th>Rel</th>
                 <td>${resource.linkRelationType}</td>
                 <td>The link-relation type of the resource.</td>
+        </tr>
+        <tr>
+            <th>Documentation</th>
+            <td colspan="2">
+                    <pre>
+                    <#list resource.documentation.description as d>
+                        ${d}<br/>
+                    </#list>
+                    </pre>
+            </td>
         </tr>
         <tr>
                 <th>Href</th>

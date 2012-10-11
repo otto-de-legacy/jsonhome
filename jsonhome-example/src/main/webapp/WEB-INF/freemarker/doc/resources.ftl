@@ -12,15 +12,20 @@
     <table>
         <thead>
         <tr>
-            <th>Resource Name</th>
             <th>Link-Relation Type</th>
+            <th>Documentation</th>
         </tr>
         </thead>
         <tbody>
 <#list resources as resource>
         <tr>
-            <th>${resource.name}</th>
             <td><a href="${resource.linkRelationType}">${resource.linkRelationType}</a></td>
+            <td>
+    <#list resource.documentation.description as doc>
+                <p>${doc}</p>
+    </#list>
+
+            </td>
         </tr>
 </#list>
         </tbody>

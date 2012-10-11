@@ -25,6 +25,8 @@ import static de.otto.jsonhome.fixtures.ControllerFixtures.*;
 import static de.otto.jsonhome.generator.JsonHomeGenerator.jsonHomeFor;
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.DirectLink.directLink;
+import static de.otto.jsonhome.model.Documentation.emptyDocumentation;
+import static de.otto.jsonhome.model.HrefVarFlags.REQUIRED;
 import static java.net.URI.create;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -291,10 +293,10 @@ public class JsonHomeGeneratorTest {
         assertEquals(templatedLink.getHrefTemplate(), ROOT_URI + "/{bar}{?query}");
         assertEquals(templatedLink.getHrefVars().size(), 2);
         assertEquals(templatedLink.getHrefVars().get(0), new HrefVar(
-                "bar", create(ROOT_URI + "/rel/foo#bar"), ""
+                "bar", create(ROOT_URI + "/rel/foo#bar"), emptyDocumentation(), of(REQUIRED)
         ));
         assertEquals(templatedLink.getHrefVars().get(1), new HrefVar(
-                "query", create(ROOT_URI + "/rel/foo#query"), ""
+                "query", create(ROOT_URI + "/rel/foo#query"), emptyDocumentation(), of(REQUIRED)
         ));
     }
 
@@ -308,16 +310,16 @@ public class JsonHomeGeneratorTest {
         assertEquals(templatedLink.getHrefTemplate(), ROOT_URI + "/{bar}/{foobar}{?query,page}");
         assertEquals(templatedLink.getHrefVars().size(), 4);
         assertEquals(templatedLink.getHrefVars().get(0), new HrefVar(
-                "bar", create(ROOT_URI + "/rel/foobar#bar"), ""
+                "bar", create(ROOT_URI + "/rel/foobar#bar"), emptyDocumentation(), of(REQUIRED)
         ));
         assertEquals(templatedLink.getHrefVars().get(1), new HrefVar(
-                "foobar", create(ROOT_URI + "/rel/foobar#foobar"), ""
+                "foobar", create(ROOT_URI + "/rel/foobar#foobar"), emptyDocumentation(), of(REQUIRED)
         ));
         assertEquals(templatedLink.getHrefVars().get(2), new HrefVar(
-                "query", create(ROOT_URI + "/rel/foobar#query"), ""
+                "query", create(ROOT_URI + "/rel/foobar#query"), emptyDocumentation(), of(REQUIRED)
         ));
         assertEquals(templatedLink.getHrefVars().get(3), new HrefVar(
-                "page", create(ROOT_URI + "/rel/foobar#page"), ""
+                "page", create(ROOT_URI + "/rel/foobar#page"), emptyDocumentation(), of(REQUIRED)
         ));
     }
 
@@ -329,6 +331,38 @@ public class JsonHomeGeneratorTest {
     @Test(enabled = false)
     public void statusHintMustBeDeprecatedIfAllMethodsOfTheResourceAreDeprecated() {
         // TODO not yet implemented
+    }
+
+    @Test
+    public void shouldFindDocumentationAndOverrideDocFromController() {
+        // given
+        final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ControllerWithDocumentation.class).get();
+        final URI relationTypeURI = create(ROOT_URI.toString() + "/rel/bar");
+        // when
+        final ResourceLink resourceLink = jsonHome.getResourceFor(relationTypeURI);
+        // then
+        final Documentation documentation = resourceLink.getDocumentation();
+        assertEquals(documentation.getDescription().get(0), "a value");
+        final Documentation var1Doc = resourceLink.asTemplatedLink().getHrefVars().get(0).getDocumentation();
+        assertEquals(var1Doc.getDescription().get(0), "var value 1");
+        final Documentation var2Doc = resourceLink.asTemplatedLink().getHrefVars().get(1).getDocumentation();
+        assertEquals(var2Doc.getDescription().get(0), "var value 2");
+    }
+
+    @Test
+    public void shouldFindDocumentationAndInheritDocFromController() {
+        // given
+        final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ControllerWithDocumentation.class).get();
+        final URI relationTypeURI = create(ROOT_URI.toString() + "/rel/foo");
+        // when
+        final ResourceLink resourceLink = jsonHome.getResourceFor(relationTypeURI);
+        // then
+        final Documentation documentation = resourceLink.getDocumentation();
+        assertEquals(documentation.getDescription().get(0), "controller value");
+        final Documentation var1Doc = resourceLink.asTemplatedLink().getHrefVars().get(0).getDocumentation();
+        assertEquals(var1Doc.getDescription().get(0), "var value 1");
+        final Documentation var2Doc = resourceLink.asTemplatedLink().getHrefVars().get(1).getDocumentation();
+        assertEquals(var2Doc.getDescription().get(0), "var value 2");
     }
 
     private ResourceLink firstFrom(Collection<ResourceLink> resourceLinks) {

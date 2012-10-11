@@ -15,6 +15,7 @@
  */
 package de.otto.jsonhome.fixtures;
 
+import de.otto.jsonhome.annotation.Doc;
 import de.otto.jsonhome.annotation.Rel;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -108,6 +109,23 @@ public class ControllerFixtures {
     public static @Controller class ControllerWithTemplatedResourceLink {
         public @Rel("/rel/foo") @RequestMapping(value = "/{bar}") void find(@PathVariable String bar, @RequestParam String query) {}
         public @Rel("/rel/foobar") @RequestMapping(value = "/{bar}/{foobar}") void find(@PathVariable String bar, @PathVariable String foobar, @RequestParam String query, @RequestParam int page) {}
+    }
+
+    @Controller
+    @Doc("controller value")
+    public static class ControllerWithDocumentation {
+        public
+        @Rel("/rel/foo")
+        @RequestMapping(value = "/{foo}")
+        void foo(@PathVariable @Doc("var value 1") String foo,
+                 @RequestParam @Doc("var value 2") String requestParam) {}
+
+        public
+        @Rel("/rel/bar")
+        @Doc("a value")
+        @RequestMapping(value = "/{bar}")
+        void bar(@PathVariable @Doc("var value 1") String bar,
+                 @RequestParam @Doc("var value 2") String requestParam) {}
     }
 
 }

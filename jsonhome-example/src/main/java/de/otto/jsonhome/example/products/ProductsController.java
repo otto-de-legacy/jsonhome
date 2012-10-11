@@ -15,6 +15,7 @@
  */
 package de.otto.jsonhome.example.products;
 
+import de.otto.jsonhome.annotation.Doc;
 import de.otto.jsonhome.annotation.Rel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,6 +39,10 @@ import static java.util.Collections.singletonMap;
  */
 @Controller
 @RequestMapping(value = "/products")
+@Doc(value = {
+        "A single product.",
+        "This is a second paragraph, describing the link-relation type."
+})
 public class ProductsController {
 
     @Autowired
@@ -47,6 +52,10 @@ public class ProductsController {
             produces = "text/html"
     )
     @Rel("/rel/products")
+    @Doc(value = {
+            "The collection of products.",
+            "This is a second paragraph, describing the collection of products."
+    })
     public ModelAndView getProducts(final @RequestParam(required = false, defaultValue = "*") String query) {
         final List<Product> products = productService.findProducts(query);
         return new ModelAndView("example/products", singletonMap("products", products));
@@ -57,6 +66,11 @@ public class ProductsController {
             consumes = "application/x-www-form-urlencoded"
     )
     @Rel("/rel/product/form")
+    @Doc(value = {
+            "Service to create a product.",
+            "This is a second paragraph, describing the link-relation type."
+    })
+
     public ModelAndView addProduct(final @RequestParam String title,
                                    final @RequestParam String price,
                                    final HttpServletResponse response) {
@@ -73,7 +87,9 @@ public class ProductsController {
             produces = "text/html"
     )
     @Rel("/rel/product")
-    public ModelAndView getProductAsHtml(final @PathVariable long productId) {
+    public ModelAndView getProductAsHtml(@Doc({"The unique identifier of the requested product.",
+                                               "A second line of valuable documentation."})
+                                         @PathVariable final long productId) {
         final Product product = productService.findProduct(productId);
         return new ModelAndView("example/product", singletonMap("product", product));
     }

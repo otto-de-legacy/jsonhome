@@ -26,9 +26,11 @@ import java.util.Map;
 public interface ResourceLink {
 
     /**
-     * A human-readable name of the resource.
+     * Human-readable documentation of a ResourceLink.
+     *
+     * @return Documentation
      */
-    public String getName();
+    public Documentation getDocumentation();
 
     /**
      * The link-relation type of the resource link
