@@ -39,7 +39,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
  */
 @Controller
 @RequestMapping(value = "/rel")
-public class LinkRelationTypeController extends JsonHomeControllerBase {
+public class RelController extends JsonHomeControllerBase {
 
     @RequestMapping(
             value = "/**",
