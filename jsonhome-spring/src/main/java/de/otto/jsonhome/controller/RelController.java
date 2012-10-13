@@ -34,6 +34,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 
 /**
+ * This controller is handling the /rel resource: link-relation types.
+ *
  * @author Guido Steinacker
  * @since 15.09.12
  */
