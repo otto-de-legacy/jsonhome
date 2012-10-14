@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -114,15 +115,21 @@ public class ProductsController {
     @Rel("/rel/product")
     public ModelAndView putProduct(final @PathVariable long productId,
                                    final Map<String, String> productData,
-                                   final HttpServletResponse response) {
-        response.setStatus(201);
+                                   final HttpServletResponse response) throws IOException {
         final String title = productData.get("title");
         final String price = productData.get("price");
         final Product product;
         if (title != null && price != null) {
+            if (productService.findProduct(productId) != null) {
+                response.setStatus(200);
+            } else {
+                response.setStatus(201);
+            }
             product = productService.createOrUpdateProduct(productId, title, price);
         } else {
-            product = productService.findProduct(productId);
+            // In this case, we should provide some information
+            response.sendError(400, "Missing required query parameter");
+            product = null;
         }
         return new ModelAndView("example/product", singletonMap("product", product));
     }
