@@ -18,6 +18,7 @@ package de.otto.jsonhome.model;
 import java.net.URI;
 import java.util.*;
 
+import static de.otto.jsonhome.converter.HintsConverter.hintsToJsonHome;
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableList;
 
@@ -129,7 +130,7 @@ public final class TemplatedLink implements ResourceLink {
         final Map<String, Object> jsonTemplateVars = new HashMap<String, Object>();
         jsonTemplateVars.put("href-template", hrefTemplate);
         jsonTemplateVars.put("href-vars", jsonHrefVars);
-        jsonTemplateVars.put("hints", hints.toJson());
+        jsonTemplateVars.put("hints", hintsToJsonHome(hints));
         return jsonTemplateVars;
     }
 

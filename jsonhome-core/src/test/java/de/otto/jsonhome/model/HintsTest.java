@@ -17,12 +17,9 @@ package de.otto.jsonhome.model;
 
 import org.testng.annotations.Test;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static de.otto.jsonhome.model.Allow.*;
-import static de.otto.jsonhome.model.Docs.emptyDocumentation;
 import static de.otto.jsonhome.model.HintsBuilder.hints;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
@@ -52,32 +49,6 @@ public class HintsTest {
         // when
         hints().allowing(allows).representedAs("text/html").acceptingForPut(acceptPut).build();
         // then an exception is thrown
-    }
-
-    @Test
-    public void testToJson() throws Exception {
-        // given
-        final Set<Allow> allows = of(GET, POST, PUT);
-        final List<String> representations = asList("text/html", "text/plain");
-        final List<String> acceptPut = asList("foo/bar");
-        final List<String> acceptPost = asList("bar/foo");
-        final List<String> preconditions = asList("etag");
-        final Hints hints = hints()
-                .allowing(allows)
-                .representedAs(representations)
-                .acceptingForPut(acceptPut)
-                .acceptingForPost(acceptPost)
-                .with(emptyDocumentation())
-                .requiring(preconditions)
-                .build();
-        // when
-        final Map<String, ?> map = hints.toJson();
-        // then
-        assertEquals(map.get("allow"), allows);
-        assertEquals(map.get("representations"), representations);
-        assertEquals(map.get("accept-put"), acceptPut);
-        assertEquals(map.get("accept-post"), acceptPost);
-        assertEquals(map.get("precondition-req"), preconditions);
     }
 
     @Test

@@ -19,6 +19,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.otto.jsonhome.converter.HintsConverter.hintsToJsonHome;
+
 /**
  * A direct resource link.
  *
@@ -107,7 +109,7 @@ public final class DirectLink implements ResourceLink {
     public Map<String, ?> toJson() {
         final Map<String, Object> map = new HashMap<String, Object>();
         map.put("href", href.toString());
-        map.put("hints", hints.toJson());
+        map.put("hints", hintsToJsonHome(hints));
         return map;
     }
 

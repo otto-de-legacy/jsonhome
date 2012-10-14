@@ -137,28 +137,6 @@ public final class Hints {
                 new ArrayList<String>(preconditionReq));
     }
 
-    /**
-     * @return a Java representation of a JSON document used to serialize a JsonHome document into application-json format.
-     */
-    public Map<String, ?> toJson() {
-        final Map<String, Object> jsonHints = new HashMap<String, Object>();
-        jsonHints.put("allow", allows);
-        jsonHints.put("representations", representations);
-        if (!acceptPut.isEmpty()) {
-            jsonHints.put("accept-put", acceptPut);
-        }
-        if (!acceptPost.isEmpty()) {
-            jsonHints.put("accept-post", acceptPost);
-        }
-        if (docs.hasLink()) {
-            jsonHints.put("docs", docs.getLink().toString());
-        }
-        if (!preconditionReq.isEmpty()) {
-            jsonHints.put("precondition-req", preconditionReq);
-        }
-        return jsonHints;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
