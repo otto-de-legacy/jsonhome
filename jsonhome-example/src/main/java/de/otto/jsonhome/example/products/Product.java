@@ -15,9 +15,6 @@
  */
 package de.otto.jsonhome.example.products;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author Guido Steinacker
  * @since 29.09.12
@@ -49,11 +46,4 @@ public final class Product {
         return price;
     }
 
-    public Map<String, Object> toJson() {
-        final Map<String, Object> map = new HashMap<String, Object>();
-        map.put("id", id);
-        map.put("title", title);
-        map.put("price", price);
-        return map;
-    }
 }

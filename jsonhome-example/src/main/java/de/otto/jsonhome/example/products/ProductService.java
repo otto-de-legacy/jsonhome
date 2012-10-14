@@ -23,10 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.synchronizedList;
-import static java.util.Collections.unmodifiableList;
-
 /**
  * @author Guido Steinacker
  * @since 29.09.12
@@ -57,9 +53,7 @@ public final class ProductService {
         return PRODUCTS.get(id);
     }
 
-    public Product createOrUpdateProduct(final long id, final String title, final String price) {
-        final Product product = new Product(id, title, price);
-        PRODUCTS.put(id, product);
-        return product;
+    public Product createOrUpdateProduct(final Product product) {
+        return PRODUCTS.put(product.getId(), product);
     }
 }
