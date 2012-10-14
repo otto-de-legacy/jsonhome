@@ -16,10 +16,11 @@
 package de.otto.jsonhome.model;
 
 import java.net.URI;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-import static java.util.Collections.singletonMap;
-import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 
 /**
@@ -75,17 +76,6 @@ public final class JsonHome {
 
     public ResourceLink getResourceFor(final URI relationTypeURI) {
         return resources.get(relationTypeURI);
-    }
-
-    public Map<String, ?> toJson() {
-        final Map<String, Map<String, ?>> jsonResources = new HashMap<String, Map<String, ?>>();
-        for (final ResourceLink resource : this.resources.values()) {
-            jsonResources.put(resource.getLinkRelationType().toString(), resource.toJson());
-        }
-        return singletonMap(
-                "resources",
-                jsonResources
-        );
     }
 
     @Override

@@ -16,9 +16,10 @@
 package de.otto.jsonhome.model;
 
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import static de.otto.jsonhome.converter.HintsConverter.hintsToJsonHome;
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableList;
 
@@ -119,19 +120,6 @@ public final class TemplatedLink implements ResourceLink {
         throw new IllegalArgumentException(format(
                 "Templated resource-links with different uri templates can not be merged. "
                 + "\nTemplatedLink=%s, \nDirectLink=%s", this, other));
-    }
-
-    @Override
-    public Map<String, ?> toJson() {
-        final Map<String,String> jsonHrefVars = new LinkedHashMap<String, String>(hrefVars.size());
-        for (final HrefVar hrefVar : hrefVars) {
-            jsonHrefVars.put(hrefVar.getVar(), hrefVar.getVarType().toString());
-        }
-        final Map<String, Object> jsonTemplateVars = new HashMap<String, Object>();
-        jsonTemplateVars.put("href-template", hrefTemplate);
-        jsonTemplateVars.put("href-vars", jsonHrefVars);
-        jsonTemplateVars.put("hints", hintsToJsonHome(hints));
-        return jsonTemplateVars;
     }
 
     @Override

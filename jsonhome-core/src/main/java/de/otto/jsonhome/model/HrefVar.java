@@ -17,9 +17,7 @@ package de.otto.jsonhome.model;
 
 import java.net.URI;
 import java.util.EnumSet;
-import java.util.Map;
 
-import static java.util.Collections.singletonMap;
 import static java.util.EnumSet.noneOf;
 
 /**
@@ -88,15 +86,6 @@ public final class HrefVar {
      */
     public EnumSet<HrefVarFlags> getFlags() {
         return flags;
-    }
-
-    /**
-     * @return a Java representation of a JSON document used to serialize a JsonHome document into application-json format.
-     */
-    public Map<String, ?> toJson() {
-        return singletonMap(
-                var, varType.toString()
-        );
     }
 
     @Override

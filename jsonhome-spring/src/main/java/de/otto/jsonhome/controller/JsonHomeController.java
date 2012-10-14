@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.otto.jsonhome.converter.JsonHomeConverter.toJsonHome;
+
 
 /**
  * A Spring controller, serving a json-home document.
@@ -45,7 +47,7 @@ public class JsonHomeController extends JsonHomeControllerBase {
     public Map<String, ?> getHomeDocument(final HttpServletResponse response) {
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=3600");
-        return jsonHome().toJson();
+        return toJsonHome(jsonHome());
     }
 
     @RequestMapping(produces = "text/html")

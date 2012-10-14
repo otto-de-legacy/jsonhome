@@ -20,7 +20,7 @@ package de.otto.jsonhome.converter;
 
 import de.otto.jsonhome.model.Hints;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -37,7 +37,7 @@ public final class HintsConverter {
      * @return a Java representation of the hints of a JSON document.
      */
     public static Map<String, ?> hintsToJsonHome(final Hints hints) {
-        final Map<String, Object> jsonHints = new HashMap<String, Object>();
+        final Map<String, Object> jsonHints = new LinkedHashMap<String, Object>();
         jsonHints.put("allow", hints.getAllows());
         jsonHints.put("representations", hints.getRepresentations());
         if (!hints.getAcceptPut().isEmpty()) {
@@ -46,11 +46,11 @@ public final class HintsConverter {
         if (!hints.getAcceptPost().isEmpty()) {
             jsonHints.put("accept-post", hints.getAcceptPost());
         }
-        if (hints.getDocs().hasLink()) {
-            jsonHints.put("docs", hints.getDocs().getLink().toString());
-        }
         if (!hints.getPreconditionReq().isEmpty()) {
             jsonHints.put("precondition-req", hints.getPreconditionReq());
+        }
+        if (hints.getDocs().hasLink()) {
+            jsonHints.put("docs", hints.getDocs().getLink().toString());
         }
         return jsonHints;
     }

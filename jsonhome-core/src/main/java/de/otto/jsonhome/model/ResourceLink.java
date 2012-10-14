@@ -16,7 +16,6 @@
 package de.otto.jsonhome.model;
 
 import java.net.URI;
-import java.util.Map;
 
 /**
  * A direct or templated resource link.
@@ -81,8 +80,4 @@ public interface ResourceLink {
      */
     public ResourceLink mergeWith(ResourceLink other);
 
-    /**
-     * @return a Java representation of a JSON document used to serialize a JsonHome document into application-json format.
-     */
-    public Map<String, ?> toJson();
 }

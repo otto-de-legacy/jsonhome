@@ -18,9 +18,7 @@ package de.otto.jsonhome.model;
 import de.otto.jsonhome.fixtures.LinkFixtures;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Map;
 
 import static de.otto.jsonhome.fixtures.LinkFixtures.*;
 import static de.otto.jsonhome.model.Allow.GET;
@@ -31,28 +29,12 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.of;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 /**
  * @author Guido Steinacker
  * @since 16.09.12
  */
 public class DirectLinkTest {
-
-    @Test
-    public void shouldReturnValidJson() throws Exception {
-        // given
-        final DirectLink storefrontLink = STOREFRONT_LINK;
-        // when
-        final Map<String,?> json = storefrontLink.toJson();
-        // then
-        assertNotNull(json);
-        assertEquals(json.get("href"), ABS_STOREFRONT_HREF.toString());
-        final Map hints = (Map) json.get("hints");
-        assertNotNull(hints);
-        assertEquals(hints.get("allow"), of(GET));
-        assertEquals(hints.get("representations"), Arrays.asList("text/html", "application/json"));
-    }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void mergeWithShouldFailWithExceptionIfOtherDoesNotHaveSameRelationType() {

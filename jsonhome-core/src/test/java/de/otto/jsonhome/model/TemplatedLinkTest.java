@@ -17,42 +17,21 @@ package de.otto.jsonhome.model;
 
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Map;
 
 import static de.otto.jsonhome.fixtures.LinkFixtures.*;
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.Docs.emptyDocumentation;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonMap;
 import static java.util.EnumSet.of;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * @author Guido Steinacker
  * @since 16.09.12
  */
 public class TemplatedLinkTest {
-
-    @Test
-    public void shouldReturnValidJson() throws Exception {
-        // given
-        final TemplatedLink aboutPageLink = ABOUTPAGE_LINK;
-        // when
-        final Map<String, ?> json = aboutPageLink.toJson();
-        // then
-        assertNotNull(json);
-        assertNull(json.get("href"));
-        assertEquals(json.get("href-template"), REL_PAGE_HREF);
-        assertEquals(json.get("href-vars"), singletonMap("pageId", "http://example.org/json-home/vartype/shop/page/pageId"));
-        final Map hints = (Map) json.get("hints");
-        assertNotNull(hints);
-        assertEquals(hints.get("allow"), of(GET));
-        assertEquals(hints.get("representations"), Arrays.asList("text/html", "application/json"));
-
-    }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void mergeWithShouldFailWithExceptionIfOtherDoesNotHaveSameRelationType() {
