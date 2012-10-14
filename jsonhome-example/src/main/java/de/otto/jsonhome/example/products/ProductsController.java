@@ -145,9 +145,9 @@ public class ProductsController {
                                      final @RequestBody Map<String, String> document,
                                      final HttpServletRequest request,
                                      final HttpServletResponse response) throws IOException {
-        final String etag = request.getHeader("ETag");
+        final String expectedETag = request.getHeader("If-Match");
         final Product expected = productService.findProduct(productId);
-        if (expected == null || expected.getETag().equals(etag)) {
+        if (expected == null || expectedETag.equals("*") || expected.getETag().equals(expectedETag)) {
             final Product product = jsonToProduct(productId, document);
             final Product previous = productService.createOrUpdateProduct(product, expected);
             response.setStatus(previous == null ? SC_CREATED : SC_OK);
