@@ -10,7 +10,13 @@
     <mvc:annotation-driven>
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
-                    <property name="supportedMediaTypes" value="application/json-home" />
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>application/json-home</value>
+                            <value>application/example-product</value>
+                            <value>application/example-products</value>
+                        </list>
+                    </property>
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>

@@ -52,6 +52,7 @@ public class ProductsController {
     private ProductService productService;
 
     @RequestMapping(
+            method = RequestMethod.GET,
             produces = "text/html"
     )
     @Rel("/rel/products")
@@ -65,8 +66,10 @@ public class ProductsController {
     }
 
     @RequestMapping(
-            produces = "application/json"
+            method = RequestMethod.GET,
+            produces = {"application/example-products", "application/json"}
     )
+    @ResponseBody
     @Rel("/rel/products")
     @Doc(value = {
             "The collection of products.",
@@ -88,7 +91,6 @@ public class ProductsController {
             "Service to create a product.",
             "This is a second paragraph, describing the link-relation type."
     })
-
     public ModelAndView postProductUrlEncoded(final @RequestParam String title,
                                              final @RequestParam String price,
                                              final HttpServletRequest request,
@@ -118,8 +120,9 @@ public class ProductsController {
     @RequestMapping(
             value = "/{productId}",
             method = RequestMethod.GET,
-            produces = "application/json"
+            produces = {"application/example-product", "application/json"}
     )
+    @ResponseBody
     @Rel("/rel/product")
     public Map<String, Object> getProductAsJson(final @PathVariable long productId,
                                                 final HttpServletRequest request) {
@@ -129,11 +132,11 @@ public class ProductsController {
     @RequestMapping(
             value = "/{productId}",
             method = RequestMethod.PUT,
-            consumes = "application/json",
-            produces = "application/json"
+            consumes = {"application/example-product", "application/json"},
+            produces = {"application/example-product", "application/json"}
     )
-    @Rel("/rel/product")
     @ResponseBody
+    @Rel("/rel/product")
     public Map<String, ?> putProduct(final @PathVariable long productId,
                                      final @RequestBody Map<String, String> document,
                                      final HttpServletRequest request,
