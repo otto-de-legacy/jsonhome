@@ -16,12 +16,10 @@
 package de.otto.jsonhome.fixtures;
 
 import de.otto.jsonhome.annotation.Doc;
+import de.otto.jsonhome.annotation.Hints;
 import de.otto.jsonhome.annotation.Rel;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -89,6 +87,10 @@ public class ControllerFixtures {
 
     public static @Controller @RequestMapping(value = "/bar") @Rel("/rel/foo") class ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel {
         public @RequestMapping void getAFoo() {}
+    }
+
+    public static @Controller @RequestMapping(value = "/foo") @Rel("/rel/foo") class ControllerWithRequiredPrecondition {
+        public @RequestMapping(consumes = "text/plain") @Hints(preconditionReq = "etag") void putFoo(@RequestBody String body) {}
     }
 
     public static @Controller @RequestMapping(value = "/bar") @Rel("/rel/foo") class AnotherControllerWithRequestMappingAndLinkRelationTypeAtClassLevel {

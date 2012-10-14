@@ -31,8 +31,7 @@ import static java.net.URI.create;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.of;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 /**
  * @author Guido Steinacker
@@ -281,6 +280,17 @@ public class JsonHomeGeneratorTest {
         assertEquals(resourceLink.getHints().getRepresentations(), asList("text/plain"));
         assertEquals(resourceLink.getHints().getAcceptPost(), asList("foo/bar"));
         assertEquals(resourceLink.getHints().getAcceptPut(), asList("bar/foo"));
+    }
+
+    @Test
+    public void resourceWithRequiredPreconditionShouldHaveHintWithPreconditionReq() {
+        //
+        final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ControllerWithRequiredPrecondition.class).get();
+        // when
+        final Hints hints = jsonHome.getResourceFor(create("http://example.org/rel/foo")).getHints();
+        // then
+        assertFalse(hints.getPreconditionReq().isEmpty());
+        assertEquals(hints.getPreconditionReq(), asList("etag"));
     }
 
     @Test

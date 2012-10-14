@@ -34,6 +34,7 @@ public final class Hints {
     private final List<String> acceptPut;
     private final List<String> acceptPost;
     private final Docs docs;
+    private final List<String> preconditionReq;
 
     public Hints(final Set<Allow> allows, final List<String> representations) {
         this(allows, representations, Collections.<String>emptyList(), Collections.<String>emptyList(), emptyDocumentation());
@@ -44,6 +45,15 @@ public final class Hints {
                  final List<String> acceptPut,
                  final List<String> acceptPost,
                  final Docs docs) {
+        this(allows, representations, acceptPut, acceptPost, docs, Collections.<String>emptyList());
+    }
+    
+    public Hints(final Set<Allow> allows,
+                 final List<String> representations,
+                 final List<String> acceptPut,
+                 final List<String> acceptPost,
+                 final Docs docs,
+                 final List<String> preconditionReq) {
         if (!acceptPost.isEmpty() && !allows.contains(Allow.POST)) {
             throw new IllegalArgumentException("POST is not allowed but accept-post is provided.");
         }
@@ -55,6 +65,7 @@ public final class Hints {
         this.acceptPut = acceptPut;
         this.acceptPost = acceptPost;
         this.docs = docs;
+        this.preconditionReq = unmodifiableList(new ArrayList<String>(preconditionReq));
     }
 
     /**
@@ -96,6 +107,10 @@ public final class Hints {
         return docs;
     }
 
+    public List<String> getPreconditionReq() {
+        return preconditionReq;
+    }
+
     /**
      * Merges the hints of two resource links..
      *
@@ -111,12 +126,15 @@ public final class Hints {
         acceptPut.addAll(other.getAcceptPut());
         final Set<String> acceptPost = new LinkedHashSet<String>(this.acceptPost);
         acceptPost.addAll(other.getAcceptPost());
+        final Set<String> preconditionReq = new LinkedHashSet<String>(this.preconditionReq);
+        preconditionReq.addAll(other.getPreconditionReq());
         return new Hints(
                 allows,
                 new ArrayList<String>(representations),
                 new ArrayList<String>(acceptPut),
                 new ArrayList<String>(acceptPost),
-                docs.mergeWith(other.getDocs()));
+                docs.mergeWith(other.getDocs()),
+                new ArrayList<String>(preconditionReq));
     }
 
     /**
@@ -135,6 +153,9 @@ public final class Hints {
         if (docs.hasLink()) {
             jsonHints.put("docs", docs.getLink().toString());
         }
+        if (!preconditionReq.isEmpty()) {
+            jsonHints.put("precondition-req", preconditionReq);
+        }
         return jsonHints;
     }
 
@@ -148,7 +169,8 @@ public final class Hints {
         if (acceptPost != null ? !acceptPost.equals(hints.acceptPost) : hints.acceptPost != null) return false;
         if (acceptPut != null ? !acceptPut.equals(hints.acceptPut) : hints.acceptPut != null) return false;
         if (allows != null ? !allows.equals(hints.allows) : hints.allows != null) return false;
-        if (docs != null ? !docs.equals(hints.docs) : hints.docs != null)
+        if (docs != null ? !docs.equals(hints.docs) : hints.docs != null) return false;
+        if (preconditionReq != null ? !preconditionReq.equals(hints.preconditionReq) : hints.preconditionReq != null)
             return false;
         if (representations != null ? !representations.equals(hints.representations) : hints.representations != null)
             return false;
@@ -163,6 +185,7 @@ public final class Hints {
         result = 31 * result + (acceptPut != null ? acceptPut.hashCode() : 0);
         result = 31 * result + (acceptPost != null ? acceptPost.hashCode() : 0);
         result = 31 * result + (docs != null ? docs.hashCode() : 0);
+        result = 31 * result + (preconditionReq != null ? preconditionReq.hashCode() : 0);
         return result;
     }
 
@@ -174,6 +197,8 @@ public final class Hints {
                 ", acceptPut=" + acceptPut +
                 ", acceptPost=" + acceptPost +
                 ", docs=" + docs +
+                ", preconditionReq=" + preconditionReq +
                 '}';
     }
+
 }

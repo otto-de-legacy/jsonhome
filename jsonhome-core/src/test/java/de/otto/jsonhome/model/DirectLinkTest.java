@@ -19,19 +19,19 @@ import de.otto.jsonhome.fixtures.LinkFixtures;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
-import java.util.EnumSet;
+import java.util.Collections;
 import java.util.Map;
 
 import static de.otto.jsonhome.fixtures.LinkFixtures.*;
 import static de.otto.jsonhome.model.Allow.GET;
 import static de.otto.jsonhome.model.Allow.PUT;
 import static de.otto.jsonhome.model.DirectLink.directLink;
+import static de.otto.jsonhome.model.Docs.emptyDocumentation;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.of;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.fail;
 
 /**
  * @author Guido Steinacker
@@ -94,6 +94,19 @@ public class DirectLinkTest {
         final ResourceLink resourceLink = storeFrontLink.mergeWith(linkWithDifferentHref);
         // then
         assertEquals(resourceLink.getHints().getRepresentations(), asList("text/html", "application/json"));
+    }
+
+    @Test
+    public void mergeWithShouldMergeRequiredPreconditions() {
+        // given
+        final DirectLink storeFrontLink = STOREFRONT_LINK;
+        final DirectLink linkWithDifferentHref = directLink(LinkFixtures.RESOURCELINK_SHOP_STOREFRONT, LinkFixtures.ABS_STOREFRONT_HREF, new Hints(
+                of(GET), singletonList("application/json"), Collections.<String>emptyList(),
+                Collections.<String>emptyList(), emptyDocumentation(), asList("etag")));
+        // when
+        final ResourceLink resourceLink = storeFrontLink.mergeWith(linkWithDifferentHref);
+        // then
+        assertEquals(resourceLink.getHints().getPreconditionReq(), asList("etag"));
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)

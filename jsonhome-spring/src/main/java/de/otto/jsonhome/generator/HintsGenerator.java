@@ -26,6 +26,8 @@ import java.util.*;
 import static de.otto.jsonhome.generator.DocumentationGenerator.documentationFrom;
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.HintsBuilder.hints;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 import static java.util.EnumSet.of;
 
@@ -36,7 +38,10 @@ public class HintsGenerator {
 
     public static Hints hintsOf(final Class<?> controller, final Method method) {
         final Set<Allow> allows = allowedHttpMethodsOf(method);
-        final HintsBuilder hintsBuilder = hints().allowing(allows).with(documentationFrom(controller, method));
+        final HintsBuilder hintsBuilder = hints()
+                .allowing(allows)
+                .with(documentationFrom(controller, method))
+                .requiring(preconditionsFrom(method));
         final List<String> supportedRepresentations = supportedRepresentationsOf(method);
         if (allows.contains(PUT)) {
             hintsBuilder.acceptingForPut(supportedRepresentations);
@@ -52,6 +57,15 @@ public class HintsGenerator {
         return hintsBuilder.build();
     }
 
+    private static List<String> preconditionsFrom(final Method method) {
+        final de.otto.jsonhome.annotation.Hints annotation = method.getAnnotation(de.otto.jsonhome.annotation.Hints.class);
+        if (annotation != null && annotation.preconditionReq() != null) {
+            return asList(annotation.preconditionReq());
+        } else {
+            return emptyList();
+        }
+    }
+
     /**
      * Analyses the method with a RequestMapping and returns a list of allowed http methods (GET, PUT, etc.).
      * <p/>
@@ -62,7 +76,10 @@ public class HintsGenerator {
      */
     protected static Set<Allow> allowedHttpMethodsOf(final Method method) {
         final RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
-        final Set<Allow> allows = listOfStringsFrom(methodRequestMapping.method());
+        final Set<Allow> allows = EnumSet.noneOf(Allow.class);
+        for (Object o : methodRequestMapping.method()) {
+            allows.add(Allow.valueOf(o.toString()));
+        }
         if (allows.isEmpty()) {
             return of(GET);
         } else {
@@ -109,11 +126,4 @@ public class HintsGenerator {
         return new ArrayList<String>(representations);
     }
 
-    private static Set<Allow> listOfStringsFrom(Object[] array) {
-        final Set<Allow> result = EnumSet.noneOf(Allow.class);
-        for (Object o : array) {
-            result.add(Allow.valueOf(o.toString()));
-        }
-        return result;
-    }
 }

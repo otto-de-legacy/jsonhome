@@ -19,6 +19,7 @@ import java.util.*;
 
 import static de.otto.jsonhome.model.Docs.emptyDocumentation;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 /**
  * A builder used to build Hints instances.
@@ -33,6 +34,7 @@ public class HintsBuilder {
     private final Set<String> acceptPost = new LinkedHashSet<String>();
     private final Set<String> acceptPut = new LinkedHashSet<String>();
     private Docs docs = emptyDocumentation();
+    private List<String> preconditionReq = emptyList();
 
     private HintsBuilder() {
     }
@@ -90,12 +92,18 @@ public class HintsBuilder {
         return this;
     }
 
+    public HintsBuilder requiring(final List<String> preconditions) {
+        this.preconditionReq = preconditions;
+        return this;
+    }
+
     public Hints build() {
         return new Hints(
                 allows,
                 new ArrayList<String>(representations),
                 new ArrayList<String>(acceptPut),
                 new ArrayList<String>(acceptPost),
-                docs);
+                docs,
+                preconditionReq);
     }
 }
