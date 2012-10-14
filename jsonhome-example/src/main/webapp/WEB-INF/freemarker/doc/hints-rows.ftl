@@ -43,3 +43,14 @@
         </td>
         <td>Available representations of the resource supported for POST.</td>
     </tr>
+<tr>
+    <th>Precondition-Req</th>
+    <td>
+        <ul>
+        <#list hints.preconditionReq as precondition>
+            <li>${precondition}</li>
+        </#list>
+        </ul>
+    </td>
+    <td>The required preconditions for PUT, POST or PATCH.</td>
+</tr>
