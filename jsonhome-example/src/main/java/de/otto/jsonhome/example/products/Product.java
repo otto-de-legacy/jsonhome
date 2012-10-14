@@ -15,6 +15,8 @@
  */
 package de.otto.jsonhome.example.products;
 
+import java.util.UUID;
+
 /**
  * @author Guido Steinacker
  * @since 29.09.12
@@ -23,11 +25,13 @@ public final class Product {
     private final long id;
     private final String title;
     private final String price;
+    private final String etag;
 
     public Product(final long id, final String title, final String price) {
         this.id = id;
         this.title = title;
         this.price = price;
+        this.etag = UUID.randomUUID().toString();
     }
 
     public long getId() {
@@ -46,4 +50,7 @@ public final class Product {
         return price;
     }
 
+    public String getETag() {
+        return etag;
+    }
 }

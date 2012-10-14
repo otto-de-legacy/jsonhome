@@ -33,6 +33,7 @@ public final class ProductConverter {
     public static final String ID = "id";
     public static final String TITLE = "title";
     public static final String PRICE = "price";
+    public static final String ETAG = "etag";
     public static final String HREF = "href";
     public static final String REL = "rel";
     public static final String LINK = "link";
@@ -46,6 +47,7 @@ public final class ProductConverter {
         json.put(ID, product.getId());
         json.put(TITLE, product.getTitle());
         json.put(PRICE, product.getPrice());
+        json.put(ETAG, product.getETag());
         final Map<String, String> link = new LinkedHashMap<String, String>();
         link.put(HREF, contextPath + "/products/" + product.getId());
         link.put(REL, contextPath + "/rel/product");

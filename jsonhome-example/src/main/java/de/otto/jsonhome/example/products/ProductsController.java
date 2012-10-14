@@ -16,6 +16,7 @@
 package de.otto.jsonhome.example.products;
 
 import de.otto.jsonhome.annotation.Doc;
+import de.otto.jsonhome.annotation.Hints;
 import de.otto.jsonhome.annotation.Rel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +35,7 @@ import static java.util.Collections.singletonMap;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.PRECONDITION_FAILED;
 
 
 /**
@@ -137,14 +140,21 @@ public class ProductsController {
     )
     @ResponseBody
     @Rel("/rel/product")
+    @Hints(preconditionReq = "etag")
     public Map<String, ?> putProduct(final @PathVariable long productId,
                                      final @RequestBody Map<String, String> document,
                                      final HttpServletRequest request,
                                      final HttpServletResponse response) throws IOException {
-        final Product product = jsonToProduct(productId, document);
-        final Product previous = productService.createOrUpdateProduct(product);
-        response.setStatus(previous == null ? SC_CREATED : SC_OK);
-        return productToJson(product, request.getContextPath());
+        final String etag = request.getHeader("ETag");
+        final Product expected = productService.findProduct(productId);
+        if (expected == null || expected.getETag().equals(etag)) {
+            final Product product = jsonToProduct(productId, document);
+            final Product previous = productService.createOrUpdateProduct(product, expected);
+            response.setStatus(previous == null ? SC_CREATED : SC_OK);
+            return productToJson(product, request.getContextPath());
+        } else {
+            throw new ConcurrentModificationException("product was concurrently modified.");
+        }
     }
 
     @ResponseStatus(value = BAD_REQUEST)
@@ -152,4 +162,8 @@ public class ProductsController {
     public void handleNotFound() throws IOException {
     }
 
+    @ResponseStatus(value = PRECONDITION_FAILED)
+    @ExceptionHandler({ConcurrentModificationException.class})
+    public void handleConcurrentModification() throws IOException {
+    }
 }

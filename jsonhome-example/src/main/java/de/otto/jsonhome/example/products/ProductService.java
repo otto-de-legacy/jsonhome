@@ -18,6 +18,7 @@ package de.otto.jsonhome.example.products;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -53,7 +54,12 @@ public final class ProductService {
         return PRODUCTS.get(id);
     }
 
-    public Product createOrUpdateProduct(final Product product) {
-        return PRODUCTS.put(product.getId(), product);
+    public Product createOrUpdateProduct(final Product product, final Product expected) {
+        final boolean replaced = PRODUCTS.replace(product.getId(), expected, product);
+        if (replaced) {
+            return expected;
+        } else {
+            throw new ConcurrentModificationException("Product was concurrently modified");
+        }
     }
 }
