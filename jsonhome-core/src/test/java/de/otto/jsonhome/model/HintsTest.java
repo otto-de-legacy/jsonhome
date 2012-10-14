@@ -15,6 +15,7 @@
  */
 package de.otto.jsonhome.model;
 
+import de.otto.jsonhome.annotation.Status;
 import org.testng.annotations.Test;
 
 import java.util.Set;
@@ -49,6 +50,30 @@ public class HintsTest {
         // when
         hints().allowing(allows).representedAs("text/html").acceptingForPut(acceptPut).build();
         // then an exception is thrown
+    }
+
+    @Test
+    public void shouldMergeStatusWithHigherOrder() {
+        // given
+        final Hints first = hints().withStatus(Status.OK).build();
+        final Hints second = hints().withStatus(Status.DEPRECATED).build();
+        final Hints third = hints().withStatus(Status.GONE).build();
+        // when
+        final Hints firstWithSecond = first.mergeWith(second);
+        final Hints firstWithThird = first.mergeWith(third);
+        final Hints secondWithFirst = second.mergeWith(first);
+        final Hints secondWithThird = second.mergeWith(third);
+        final Hints thirdWithFirst = third.mergeWith(first);
+        final Hints thirdWithSecond = third.mergeWith(second);
+        final Hints secondWithSecond = second.mergeWith(second);
+        // then
+        assertEquals(secondWithSecond, second);
+        assertEquals(firstWithSecond, secondWithFirst);
+        assertEquals(firstWithThird, thirdWithFirst);
+        assertEquals(secondWithThird, thirdWithSecond);
+        assertEquals(firstWithSecond.getStatus(), Status.DEPRECATED);
+        assertEquals(firstWithThird.getStatus(), Status.GONE);
+        assertEquals(secondWithThird.getStatus(), Status.GONE);
     }
 
     @Test

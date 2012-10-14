@@ -15,11 +15,13 @@
  */
 package de.otto.jsonhome.model;
 
+import de.otto.jsonhome.annotation.Precondition;
+import de.otto.jsonhome.annotation.Status;
+
 import java.util.*;
 
 import static de.otto.jsonhome.model.Docs.emptyDocumentation;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 
 /**
  * A builder used to build Hints instances.
@@ -33,8 +35,9 @@ public class HintsBuilder {
     private final Set<String> representations = new LinkedHashSet<String>();
     private final Set<String> acceptPost = new LinkedHashSet<String>();
     private final Set<String> acceptPut = new LinkedHashSet<String>();
+    private final List<Precondition> preconditionReq = new ArrayList<Precondition>();
     private Docs docs = emptyDocumentation();
-    private List<String> preconditionReq = emptyList();
+    private Status status = Status.OK;
 
     private HintsBuilder() {
     }
@@ -92,8 +95,13 @@ public class HintsBuilder {
         return this;
     }
 
-    public HintsBuilder requiring(final List<String> preconditions) {
-        this.preconditionReq = preconditions;
+    public HintsBuilder requiring(final List<Precondition> preconditions) {
+        this.preconditionReq.addAll(preconditions);
+        return this;
+    }
+
+    public HintsBuilder withStatus(final Status status) {
+        this.status = status;
         return this;
     }
 
@@ -103,7 +111,9 @@ public class HintsBuilder {
                 new ArrayList<String>(representations),
                 new ArrayList<String>(acceptPut),
                 new ArrayList<String>(acceptPost),
-                docs,
-                preconditionReq);
+                preconditionReq,
+                status,
+                docs
+        );
     }
 }

@@ -15,6 +15,8 @@
  */
 package de.otto.jsonhome.generator;
 
+import de.otto.jsonhome.annotation.Precondition;
+import de.otto.jsonhome.annotation.Status;
 import de.otto.jsonhome.model.Allow;
 import de.otto.jsonhome.model.Hints;
 import de.otto.jsonhome.model.HintsBuilder;
@@ -41,7 +43,8 @@ public class HintsGenerator {
         final HintsBuilder hintsBuilder = hints()
                 .allowing(allows)
                 .with(documentationFrom(controller, method))
-                .requiring(preconditionsFrom(method));
+                .requiring(preconditionsFrom(method))
+                .withStatus(statusFrom(method));
         final List<String> supportedRepresentations = supportedRepresentationsOf(method);
         if (allows.contains(PUT)) {
             hintsBuilder.acceptingForPut(supportedRepresentations);
@@ -57,12 +60,21 @@ public class HintsGenerator {
         return hintsBuilder.build();
     }
 
-    private static List<String> preconditionsFrom(final Method method) {
+    private static List<Precondition> preconditionsFrom(final Method method) {
         final de.otto.jsonhome.annotation.Hints annotation = method.getAnnotation(de.otto.jsonhome.annotation.Hints.class);
         if (annotation != null && annotation.preconditionReq() != null) {
             return asList(annotation.preconditionReq());
         } else {
             return emptyList();
+        }
+    }
+
+    private static Status statusFrom(final Method method) {
+        final de.otto.jsonhome.annotation.Hints annotation = method.getAnnotation(de.otto.jsonhome.annotation.Hints.class);
+        if (annotation != null && annotation.status() != null) {
+            return annotation.status();
+        } else {
+            return Status.OK;
         }
     }
 

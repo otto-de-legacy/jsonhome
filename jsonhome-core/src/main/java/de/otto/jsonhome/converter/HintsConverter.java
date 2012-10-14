@@ -18,6 +18,7 @@
 
 package de.otto.jsonhome.converter;
 
+import de.otto.jsonhome.annotation.Status;
 import de.otto.jsonhome.model.Hints;
 
 import java.util.LinkedHashMap;
@@ -48,6 +49,9 @@ public final class HintsConverter {
         }
         if (!hints.getPreconditionReq().isEmpty()) {
             jsonHints.put("precondition-req", hints.getPreconditionReq());
+        }
+        if (!hints.getStatus().equals(Status.OK)) {
+            jsonHints.put("status", hints.getStatus().name().toLowerCase());
         }
         if (hints.getDocs().hasLink()) {
             jsonHints.put("docs", hints.getDocs().getLink().toString());

@@ -15,6 +15,7 @@
  */
 package de.otto.jsonhome.model;
 
+import de.otto.jsonhome.annotation.Precondition;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -43,8 +44,7 @@ public class TemplatedLinkTest {
                 asList(new HrefVar("pageId", VAR_TYPE_PAGEID, emptyDocumentation())),
                 new Hints(
                         of(GET),
-                        asList("text/html")
-                ));
+                        asList("text/html")));
         // when
         aboutPageLink.mergeWith(otherTemplatedLink);
         // then an exception is thrown
@@ -61,7 +61,8 @@ public class TemplatedLinkTest {
                 new Hints(
                         of(GET),
                         asList("text/html")
-                ));
+                )
+        );
         // when
         aboutPageLink.mergeWith(otherTemplatedLink);
         // then an exception is thrown
@@ -159,6 +160,7 @@ public class TemplatedLinkTest {
                         asList("application/foo"),
                         asList("application/json"),
                         Collections.<String>emptyList(),
+                        Collections.<Precondition>emptyList(),
                         emptyDocumentation()
                 )
         );
@@ -171,6 +173,7 @@ public class TemplatedLinkTest {
                         asList("application/foo"),
                         asList("application/foo"),
                         Collections.<String>emptyList(),
+                        Collections.<Precondition>emptyList(),
                         emptyDocumentation()
                 )
         );
@@ -194,6 +197,7 @@ public class TemplatedLinkTest {
                         asList("application/foo"),
                         Collections.<String>emptyList(),
                         asList("application/json"),
+                        Collections.<Precondition>emptyList(),
                         emptyDocumentation()
                 )
         );
@@ -206,6 +210,7 @@ public class TemplatedLinkTest {
                         asList("application/foo"),
                         Collections.<String>emptyList(),
                         asList("application/foo"),
+                        Collections.<Precondition>emptyList(),
                         emptyDocumentation()
                 )
         );

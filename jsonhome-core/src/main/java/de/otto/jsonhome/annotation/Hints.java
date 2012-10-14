@@ -25,7 +25,7 @@ import java.lang.annotation.*;
  * @author Guido Steinacker
  * @since 15.09.12
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Hints {
@@ -44,6 +44,19 @@ public @interface Hints {
      * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#section-5.9">json-home spec</a>
      * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#ref-I-D.ietf-httpbis-p4-conditional">I-D.ietf-httpbis-p4-conditional</a>
      */
-    String[] preconditionReq() default "";
+    Precondition[] preconditionReq() default Precondition.NONE;
+
+    /**
+     * From the draft json-home spec:
+     * "Hints the status of the resource.
+     *
+     * Content MUST be a string; possible values are:
+     * o  "deprecated" - indicates that use of the resource is not recommended, but it is still available.
+     * o  "gone" - indicates that the resource is no longer available; i.e., it will return a 410 Gone
+     * HTTP status code if accessed."
+     * @return String
+     * * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#section-5.11">json-home spec</a>
+     */
+    Status status() default Status.OK;
 
 }

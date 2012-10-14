@@ -20,6 +20,7 @@ import org.testng.annotations.Test;
 
 import java.util.Collections;
 
+import static de.otto.jsonhome.annotation.Precondition.ETAG;
 import static de.otto.jsonhome.fixtures.LinkFixtures.*;
 import static de.otto.jsonhome.model.Allow.GET;
 import static de.otto.jsonhome.model.Allow.PUT;
@@ -82,13 +83,21 @@ public class DirectLinkTest {
     public void mergeWithShouldMergeRequiredPreconditions() {
         // given
         final DirectLink storeFrontLink = STOREFRONT_LINK;
-        final DirectLink linkWithDifferentHref = directLink(LinkFixtures.RESOURCELINK_SHOP_STOREFRONT, LinkFixtures.ABS_STOREFRONT_HREF, new Hints(
-                of(GET), singletonList("application/json"), Collections.<String>emptyList(),
-                Collections.<String>emptyList(), emptyDocumentation(), asList("etag")));
+        final DirectLink linkWithDifferentHref = directLink(
+                LinkFixtures.RESOURCELINK_SHOP_STOREFRONT,
+                LinkFixtures.ABS_STOREFRONT_HREF,
+                new Hints(
+                        of(GET), singletonList("application/json"),
+                        Collections.<String>emptyList(),
+                        Collections.<String>emptyList(),
+                        asList(ETAG),
+                        emptyDocumentation()
+                )
+        );
         // when
         final ResourceLink resourceLink = storeFrontLink.mergeWith(linkWithDifferentHref);
         // then
-        assertEquals(resourceLink.getHints().getPreconditionReq(), asList("etag"));
+        assertEquals(resourceLink.getHints().getPreconditionReq(), asList(ETAG));
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)

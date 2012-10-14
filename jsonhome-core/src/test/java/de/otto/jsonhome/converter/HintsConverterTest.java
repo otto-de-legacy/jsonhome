@@ -17,6 +17,8 @@
  */
 package de.otto.jsonhome.converter;
 
+import de.otto.jsonhome.annotation.Precondition;
+import de.otto.jsonhome.annotation.Status;
 import de.otto.jsonhome.model.Allow;
 import de.otto.jsonhome.model.Hints;
 import org.testng.annotations.Test;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static de.otto.jsonhome.annotation.Precondition.ETAG;
 import static de.otto.jsonhome.converter.HintsConverter.hintsToJsonHome;
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.Docs.emptyDocumentation;
@@ -46,7 +49,7 @@ public class HintsConverterTest {
         final List<String> representations = asList("text/html", "text/plain");
         final List<String> acceptPut = asList("foo/bar");
         final List<String> acceptPost = asList("bar/foo");
-        final List<String> preconditions = asList("etag");
+        final List<Precondition> preconditions = asList(ETAG);
         final Hints hints = hints()
                 .allowing(allows)
                 .representedAs(representations)
@@ -54,16 +57,47 @@ public class HintsConverterTest {
                 .acceptingForPost(acceptPost)
                 .with(emptyDocumentation())
                 .requiring(preconditions)
+                .withStatus(Status.DEPRECATED)
                 .build();
         // when
         final Map<String, ?> map = hintsToJsonHome(hints);
         // then
-        assertEquals(map.keySet().size(), 5);
+        assertEquals(map.keySet().size(), 6);
         assertEquals(map.get("allow"), allows);
         assertEquals(map.get("representations"), representations);
         assertEquals(map.get("accept-put"), acceptPut);
         assertEquals(map.get("accept-post"), acceptPost);
         assertEquals(map.get("precondition-req"), preconditions);
+        assertEquals(map.get("status"), "deprecated");
     }
 
+    @Test
+    public void testStatusDeprecated() throws Exception {
+        // given
+        final Hints hints = hints().withStatus(Status.DEPRECATED).build();
+        // when
+        final Map<String, ?> map = hintsToJsonHome(hints);
+        // then
+        assertEquals(map.get("status"), "deprecated");
+    }
+
+    @Test
+    public void testStatusGone() throws Exception {
+        // given
+        final Hints hints = hints().withStatus(Status.GONE).build();
+        // when
+        final Map<String, ?> map = hintsToJsonHome(hints);
+        // then
+        assertEquals(map.get("status"), "gone");
+    }
+
+    @Test
+    public void testStatusOK() throws Exception {
+        // given
+        final Hints hints = hints().withStatus(Status.OK).build();
+        // when
+        final Map<String, ?> map = hintsToJsonHome(hints);
+        // then
+        assertEquals(map.get("status"), null);
+    }
 }

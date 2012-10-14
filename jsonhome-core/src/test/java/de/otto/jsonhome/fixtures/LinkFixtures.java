@@ -15,12 +15,15 @@
  */
 package de.otto.jsonhome.fixtures;
 
+import de.otto.jsonhome.annotation.Precondition;
 import de.otto.jsonhome.model.DirectLink;
 import de.otto.jsonhome.model.Hints;
 import de.otto.jsonhome.model.HrefVar;
 import de.otto.jsonhome.model.TemplatedLink;
 
 import java.net.URI;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static de.otto.jsonhome.model.Allow.GET;
 import static de.otto.jsonhome.model.DirectLink.directLink;
@@ -42,9 +45,27 @@ public class LinkFixtures {
     public static final URI VAR_TYPE_PAGEID = URI.create("http://example.org/json-home/vartype/shop/page/pageId");
     public static final String REL_PAGE_HREF = "/pages/{pageId}";
 
-    public static final DirectLink STOREFRONT_LINK = directLink(RESOURCELINK_SHOP_STOREFRONT, ABS_STOREFRONT_HREF, new Hints(of(GET), asList("text/html", "application/json")));
+    public static final DirectLink STOREFRONT_LINK = directLink(
+            RESOURCELINK_SHOP_STOREFRONT,
+            ABS_STOREFRONT_HREF,
+            new Hints(of(GET),
+                    asList("text/html", "application/json"),
+                    Collections.<String>emptyList(),
+                    Collections.<String>emptyList(),
+                    Collections.<Precondition>emptyList(),
+                    emptyDocumentation()
+            ));
 
-    public static final DirectLink SHOPPAGES_LINK = directLink(RESOURCELINK_SHOP_PAGES, ABS_SHOPPAGES_HREF, new Hints(of(GET), asList("text/html", "application/json")));
+    public static final DirectLink SHOPPAGES_LINK = directLink(
+            RESOURCELINK_SHOP_PAGES,
+            ABS_SHOPPAGES_HREF,
+            new Hints(
+                    of(GET),
+                    asList("text/html", "application/json"),
+                    Collections.<String>emptyList(),
+                    Collections.<String>emptyList(),
+                    Collections.<Precondition>emptyList(),
+                    emptyDocumentation()));
 
     public static final TemplatedLink ABOUTPAGE_LINK = TemplatedLink.templatedLink(
             RESOURCELINK_SHOP_PAGE,
@@ -52,7 +73,11 @@ public class LinkFixtures {
             asList(new HrefVar("pageId", VAR_TYPE_PAGEID, emptyDocumentation())),
             new Hints(
                     of(GET),
-                    asList("text/html", "application/json")
+                    Arrays.<String>asList("text/html", "application/json"),
+                    Arrays.<String>asList(),
+                    Arrays.<String>asList(),
+                    Arrays.<Precondition>asList(),
+                    emptyDocumentation()
             )
     );
 

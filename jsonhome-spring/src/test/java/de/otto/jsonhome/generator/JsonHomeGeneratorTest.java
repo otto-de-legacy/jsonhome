@@ -21,6 +21,7 @@ import org.testng.annotations.Test;
 import java.net.URI;
 import java.util.*;
 
+import static de.otto.jsonhome.annotation.Precondition.ETAG;
 import static de.otto.jsonhome.fixtures.ControllerFixtures.*;
 import static de.otto.jsonhome.generator.JsonHomeGenerator.jsonHomeFor;
 import static de.otto.jsonhome.model.Allow.*;
@@ -290,7 +291,7 @@ public class JsonHomeGeneratorTest {
         final Hints hints = jsonHome.getResourceFor(create("http://example.org/rel/foo")).getHints();
         // then
         assertFalse(hints.getPreconditionReq().isEmpty());
-        assertEquals(hints.getPreconditionReq(), asList("etag"));
+        assertEquals(hints.getPreconditionReq(), asList(ETAG));
     }
 
     @Test

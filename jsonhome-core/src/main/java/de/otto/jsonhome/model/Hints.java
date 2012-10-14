@@ -15,11 +15,16 @@
  */
 package de.otto.jsonhome.model;
 
+import de.otto.jsonhome.annotation.Precondition;
+import de.otto.jsonhome.annotation.Status;
+
 import java.util.*;
 
 import static de.otto.jsonhome.model.Docs.emptyDocumentation;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableSet;
+import static java.util.EnumSet.copyOf;
+import static java.util.EnumSet.noneOf;
 
 /**
  *
@@ -33,39 +38,48 @@ public final class Hints {
     private final List<String> representations;
     private final List<String> acceptPut;
     private final List<String> acceptPost;
+    private final List<Precondition> preconditionReq;
+    private final Status status;
     private final Docs docs;
-    private final List<String> preconditionReq;
 
     public Hints(final Set<Allow> allows, final List<String> representations) {
-        this(allows, representations, Collections.<String>emptyList(), Collections.<String>emptyList(), emptyDocumentation());
+        this(allows,
+                representations,
+                Collections.<String>emptyList(),
+                Collections.<String>emptyList(),
+                Collections.<Precondition>emptyList(),
+                emptyDocumentation());
     }
 
     public Hints(final Set<Allow> allows,
                  final List<String> representations,
                  final List<String> acceptPut,
                  final List<String> acceptPost,
+                 final List<Precondition> preconditionReq,
                  final Docs docs) {
-        this(allows, representations, acceptPut, acceptPost, docs, Collections.<String>emptyList());
+        this(allows, representations, acceptPut, acceptPost, preconditionReq, Status.OK, docs);
     }
-    
+
     public Hints(final Set<Allow> allows,
                  final List<String> representations,
                  final List<String> acceptPut,
                  final List<String> acceptPost,
-                 final Docs docs,
-                 final List<String> preconditionReq) {
+                 final List<Precondition> preconditionReq,
+                 final Status status,
+                 final Docs docs) {
         if (!acceptPost.isEmpty() && !allows.contains(Allow.POST)) {
             throw new IllegalArgumentException("POST is not allowed but accept-post is provided.");
         }
         if (!acceptPut.isEmpty() && !allows.contains(Allow.PUT)) {
             throw new IllegalArgumentException("PUT is not allowed but accept-put is provided.");
         }
-        this.allows = unmodifiableSet(EnumSet.copyOf(allows));
+        this.allows = unmodifiableSet(copyOf(allows));
         this.representations = unmodifiableList(new ArrayList<String>(representations));
         this.acceptPut = acceptPut;
         this.acceptPost = acceptPost;
+        this.preconditionReq = unmodifiableList(new ArrayList<Precondition>(preconditionReq));
+        this.status = status;
         this.docs = docs;
-        this.preconditionReq = unmodifiableList(new ArrayList<String>(preconditionReq));
     }
 
     /**
@@ -98,6 +112,14 @@ public final class Hints {
         return acceptPost;
     }
 
+    public List<Precondition> getPreconditionReq() {
+        return preconditionReq;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
     /**
      * Human-readable documentation of a ResourceLink.
      *
@@ -107,10 +129,6 @@ public final class Hints {
         return docs;
     }
 
-    public List<String> getPreconditionReq() {
-        return preconditionReq;
-    }
-
     /**
      * Merges the hints of two resource links..
      *
@@ -118,7 +136,7 @@ public final class Hints {
      * @return a new, merged Hints instance
      */
     public Hints mergeWith(final Hints other) {
-        final EnumSet<Allow> allows = EnumSet.copyOf(this.allows);
+        final EnumSet<Allow> allows = this.allows.isEmpty() ? noneOf(Allow.class) : copyOf(this.allows);
         allows.addAll(other.getAllows());
         final Set<String> representations = new LinkedHashSet<String>(this.representations);
         representations.addAll(other.getRepresentations());
@@ -126,15 +144,17 @@ public final class Hints {
         acceptPut.addAll(other.getAcceptPut());
         final Set<String> acceptPost = new LinkedHashSet<String>(this.acceptPost);
         acceptPost.addAll(other.getAcceptPost());
-        final Set<String> preconditionReq = new LinkedHashSet<String>(this.preconditionReq);
+        final Set<Precondition> preconditionReq = new LinkedHashSet<Precondition>(this.preconditionReq);
         preconditionReq.addAll(other.getPreconditionReq());
         return new Hints(
                 allows,
                 new ArrayList<String>(representations),
                 new ArrayList<String>(acceptPut),
                 new ArrayList<String>(acceptPost),
-                docs.mergeWith(other.getDocs()),
-                new ArrayList<String>(preconditionReq));
+                new ArrayList<Precondition>(preconditionReq),
+                status.mergeWith(other.getStatus()),
+                docs.mergeWith(other.getDocs())
+        );
     }
 
     @Override
@@ -152,6 +172,7 @@ public final class Hints {
             return false;
         if (representations != null ? !representations.equals(hints.representations) : hints.representations != null)
             return false;
+        if (status != hints.status) return false;
 
         return true;
     }
@@ -162,8 +183,9 @@ public final class Hints {
         result = 31 * result + (representations != null ? representations.hashCode() : 0);
         result = 31 * result + (acceptPut != null ? acceptPut.hashCode() : 0);
         result = 31 * result + (acceptPost != null ? acceptPost.hashCode() : 0);
-        result = 31 * result + (docs != null ? docs.hashCode() : 0);
         result = 31 * result + (preconditionReq != null ? preconditionReq.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (docs != null ? docs.hashCode() : 0);
         return result;
     }
 
@@ -174,8 +196,9 @@ public final class Hints {
                 ", representations=" + representations +
                 ", acceptPut=" + acceptPut +
                 ", acceptPost=" + acceptPost +
-                ", docs=" + docs +
                 ", preconditionReq=" + preconditionReq +
+                ", status=" + status +
+                ", docs=" + docs +
                 '}';
     }
 

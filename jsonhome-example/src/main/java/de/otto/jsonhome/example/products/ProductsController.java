@@ -30,6 +30,7 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map;
 
+import static de.otto.jsonhome.annotation.Precondition.ETAG;
 import static de.otto.jsonhome.example.products.ProductConverter.*;
 import static java.util.Collections.singletonMap;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
@@ -140,7 +141,7 @@ public class ProductsController {
     )
     @ResponseBody
     @Rel("/rel/product")
-    @Hints(preconditionReq = "etag")
+    @Hints(preconditionReq = ETAG)
     public Map<String, ?> putProduct(final @PathVariable long productId,
                                      final @RequestBody Map<String, String> document,
                                      final HttpServletRequest request,
