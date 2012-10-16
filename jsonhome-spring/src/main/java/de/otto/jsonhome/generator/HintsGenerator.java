@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static de.otto.jsonhome.generator.DocumentationGenerator.documentationFrom;
+import static de.otto.jsonhome.generator.DocsGenerator.documentationFrom;
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.HintsBuilder.hints;
 import static java.util.Arrays.asList;

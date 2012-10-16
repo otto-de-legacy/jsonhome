@@ -33,9 +33,9 @@ import static java.util.Arrays.asList;
  * @author Guido Steinacker
  * @since 11.10.12
  */
-public class DocumentationGenerator {
+public class DocsGenerator {
 
-    private DocumentationGenerator() {
+    private DocsGenerator() {
     }
 
     public static Docs documentationFrom(final Class<?> controller, final Method method) {

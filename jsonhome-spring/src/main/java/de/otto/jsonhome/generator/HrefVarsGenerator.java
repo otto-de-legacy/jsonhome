@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import static de.otto.jsonhome.generator.DocumentationGenerator.documentationFor;
+import static de.otto.jsonhome.generator.DocsGenerator.documentationFor;
 import static de.otto.jsonhome.generator.MethodHelper.getParameterInfos;
 import static de.otto.jsonhome.model.Allow.POST;
 import static de.otto.jsonhome.model.Allow.PUT;
