@@ -41,25 +41,18 @@ public class RelationTypeGenerator {
      * @return URI of the link-relation type, or null
      */
     public static URI relationTypeFrom(final URI relationTypeRootUri, final Class<?> controller, final Method method) {
-        final String linkRelationType = relationTypeFrom(controller, method);
-        if (linkRelationType != null) {
-            return URI.create(linkRelationType.startsWith("http://")
-                    ? linkRelationType
-                    : relationTypeRootUri + linkRelationType);
-        } else {
-            return null;
-        }
-    }
-
-    public static String relationTypeFrom(final Class<?> controller, final Method method) {
         final Rel controllerRel = controller.getAnnotation(Rel.class);
         final Rel methodRel = method.getAnnotation(Rel.class);
         if (controllerRel == null && methodRel == null) {
             return null;
         } else {
-            return methodRel != null
+            final String linkRelationType = methodRel != null
                     ? methodRel.value()
                     : controllerRel.value();
+            return URI.create(linkRelationType.startsWith("http://")
+                    ? linkRelationType
+                    : relationTypeRootUri + linkRelationType);
         }
     }
+
 }
