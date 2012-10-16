@@ -20,6 +20,7 @@ import de.otto.jsonhome.model.JsonHome;
 import de.otto.jsonhome.model.ResourceLink;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -28,7 +29,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static de.otto.jsonhome.generator.HrefVarsGenerator.hrefVarsFor;
-import static de.otto.jsonhome.generator.MethodHelper.queryTemplateFrom;
+import static de.otto.jsonhome.generator.MethodHelper.getParameterInfos;
 import static de.otto.jsonhome.generator.RelationTypeGenerator.relationTypeFrom;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.JsonHome.jsonHome;
@@ -104,6 +105,31 @@ public class JsonHomeGenerator {
             resourceLinks = mergeResources(resourceLinks, resourceLinksForMethod(controller, method));
         }
         return resourceLinks;
+    }
+
+    /**
+     * Parses the method parameter annotations, looking for parameters annotated as @RequestParam, and returns the
+     * query part of a href-template.
+     *
+     * @param method method, optionally having parameters annotated as being a @RequestParam.
+     * @return query part of a href-template, like {?param1,param2,param3}
+     */
+    public static String queryTemplateFrom(final Method method) {
+        final StringBuilder sb = new StringBuilder();
+        final List<ParameterInfo> parameterInfos = getParameterInfos(method);
+        boolean first = true;
+        for (final ParameterInfo parameterInfo : parameterInfos) {
+            if (parameterInfo.hasAnnotation(RequestParam.class)) {
+                if (first) {
+                    first = false;
+                    sb.append("{?").append(parameterInfo.getName());
+                } else {
+                    sb.append(",").append(parameterInfo.getName());
+                }
+            }
+        }
+        final String s = sb.toString();
+        return s.isEmpty() ? s : s + "}";
     }
 
     /**
