@@ -114,7 +114,7 @@ public class JsonHomeGenerator {
      * @param method method, optionally having parameters annotated as being a @RequestParam.
      * @return query part of a href-template, like {?param1,param2,param3}
      */
-    public static String queryTemplateFrom(final Method method) {
+    protected String queryTemplateFrom(final Method method) {
         final StringBuilder sb = new StringBuilder();
         final List<ParameterInfo> parameterInfos = getParameterInfos(method);
         boolean first = true;
