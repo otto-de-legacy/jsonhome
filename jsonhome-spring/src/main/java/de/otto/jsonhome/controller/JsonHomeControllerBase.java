@@ -35,19 +35,19 @@ import java.util.Set;
  */
 public class JsonHomeControllerBase {
 
+    private JsonHomeGenerator jsonHomeGenerator;
     private volatile JsonHome jsonHome = null;
     private Set<Class<?>> controllerTypes;
-    private URI rootUri;
-    private URI relationTypeRootUri;
+    private URI applicationBaseUri;
 
-    @Value("${rootUri}")
-    public void setRootUri(final String rootUri) {
-        this.rootUri = URI.create(rootUri);
+    @Value("${applicationBaseUri}")
+    public void setApplicationBaseUri(final String baseUri) {
+        this.applicationBaseUri = URI.create(baseUri);
     }
 
-    @Value("${relationTypeRootUri}")
-    public void setRelationTypeRootUri(final String uri) {
-        this.relationTypeRootUri = uri.isEmpty() ? null : URI.create(uri);
+    @Resource
+    public void setJsonHomeGenerator(final JsonHomeGenerator jsonHomeGenerator) {
+        this.jsonHomeGenerator = jsonHomeGenerator;
     }
 
     @Resource
@@ -73,8 +73,8 @@ public class JsonHomeControllerBase {
         }
     }
 
-    public URI rootUri() {
-        return rootUri;
+    public URI baseUri() {
+        return applicationBaseUri;
     }
 
     public final JsonHome jsonHome() {
@@ -86,11 +86,7 @@ public class JsonHomeControllerBase {
 
     private synchronized void generateJsonHome() {
         if (jsonHome == null) {
-            final JsonHomeGenerator generator = JsonHomeGenerator.jsonHomeFor(rootUri).with(controllerTypes);
-            if (relationTypeRootUri != null) {
-                generator.withRelationTypeRoot(relationTypeRootUri);
-            }
-            jsonHome = generator.get();
+            jsonHome = jsonHomeGenerator.with(controllerTypes).generate();
         }
     }
 

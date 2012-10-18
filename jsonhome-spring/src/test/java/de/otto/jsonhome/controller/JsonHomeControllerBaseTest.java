@@ -15,6 +15,7 @@
  */
 package de.otto.jsonhome.controller;
 
+import de.otto.jsonhome.generator.*;
 import de.otto.jsonhome.model.JsonHome;
 import org.testng.annotations.Test;
 
@@ -30,12 +31,32 @@ public class JsonHomeControllerBaseTest {
     @Test
     public void shouldReturnJsonHomeInstance() {
         // given
-        final JsonHomeControllerBase jsonHomeConfiguration = new JsonHomeControllerBase();
-        jsonHomeConfiguration.setControllerTypes(ControllerWithoutResource.class);
-        jsonHomeConfiguration.setRootUri("http://example.org");
+        final JsonHomeControllerBase jsonHomeControllerBase = getJsonHomeControllerBase();
         // when
-        final JsonHome jsonHome = jsonHomeConfiguration.jsonHome();
+        final JsonHome jsonHome = jsonHomeControllerBase.jsonHome();
         // then
         assertNotNull(jsonHome);
+    }
+
+    private JsonHomeControllerBase getJsonHomeControllerBase() {
+        final JsonHomeControllerBase jsonHomeControllerBase = new JsonHomeControllerBase();
+        jsonHomeControllerBase.setControllerTypes(ControllerWithoutResource.class);
+        jsonHomeControllerBase.setApplicationBaseUri("http://example.org");
+        JsonHomeGenerator jsonHomeGenerator = getJsonHomeGenerator();
+        jsonHomeControllerBase.setJsonHomeGenerator(jsonHomeGenerator);
+        return jsonHomeControllerBase;
+    }
+
+    private JsonHomeGenerator getJsonHomeGenerator() {
+        JsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
+        jsonHomeGenerator.setResourceLinkGenerator(getResourceLinkGenerator());
+        return jsonHomeGenerator;
+    }
+
+    private ResourceLinkGenerator getResourceLinkGenerator() {
+        final ResourceLinkGenerator resourceLinkGenerator = new SpringResourceLinkGenerator();
+        resourceLinkGenerator.setRelationTypeBaseUri("http://example.org");
+        resourceLinkGenerator.setHintsGenerator(new SpringHintsGenerator());
+        return resourceLinkGenerator;
     }
 }

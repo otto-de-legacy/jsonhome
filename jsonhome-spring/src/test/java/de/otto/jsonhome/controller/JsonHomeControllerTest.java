@@ -15,6 +15,7 @@
  */
 package de.otto.jsonhome.controller;
 
+import de.otto.jsonhome.generator.*;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.testng.annotations.Test;
 
@@ -37,7 +38,10 @@ public class JsonHomeControllerTest {
     @Test
     public void testGetHomeDocument() throws Exception {
         // given
-        final JsonHomeController controller = jsonHomeController(ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class);
+        final JsonHomeController controller = jsonHomeController(
+                ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class,
+                "http://example.org",
+                null);
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String, ?> resourcesMap = controller.getHomeDocument(response);
@@ -57,8 +61,11 @@ public class JsonHomeControllerTest {
     @Test
     public void shouldUseRootLinkRelationTypeUri() throws Exception {
         // given
-        final JsonHomeController controller = jsonHomeController(ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class);
-        controller.setRelationTypeRootUri("http://otto.de");
+
+        final JsonHomeController controller = jsonHomeController(
+                ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class,
+                "http://example.org",
+                "http://otto.de");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String, ?> resourcesMap = controller.getHomeDocument(response);
@@ -71,8 +78,10 @@ public class JsonHomeControllerTest {
     @Test
     public void shouldContainDocsHint() throws Exception {
         // given
-        final JsonHomeController controller = jsonHomeController(ControllerWithDocumentation.class);
-        controller.setRelationTypeRootUri("http://otto.de");
+        final JsonHomeController controller = jsonHomeController(
+                ControllerWithDocumentation.class,
+                "http://example.org",
+                "http://otto.de");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String, ?> resourcesMap = controller.getHomeDocument(response);
@@ -89,11 +98,27 @@ public class JsonHomeControllerTest {
         return (Map<String, ?>) obj;
     }
 
-    private JsonHomeController jsonHomeController(Class<?> controllerType) {
+    private JsonHomeController jsonHomeController(final Class<?> controllerType,
+                                                  final String applicationBaseUri,
+                                                  final String relationTypeBaseUri) {
         final JsonHomeController controller = new JsonHomeController();
         controller.setControllerTypes(controllerType);
-        controller.setRootUri("http://example.org");
+        controller.setJsonHomeGenerator(
+                jsonHomeFor(applicationBaseUri, relationTypeBaseUri != null ? relationTypeBaseUri : applicationBaseUri)
+        );
+        controller.setApplicationBaseUri(applicationBaseUri);
         return controller;
     }
+
+    private JsonHomeGenerator jsonHomeFor(final String baseUri, final String relationTypeBaseUri) {
+        final ResourceLinkGenerator resourceLinkGenerator = new SpringResourceLinkGenerator();
+        resourceLinkGenerator.setRelationTypeBaseUri(relationTypeBaseUri);
+        final JsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
+        resourceLinkGenerator.setHintsGenerator(new SpringHintsGenerator());
+        jsonHomeGenerator.setResourceLinkGenerator(resourceLinkGenerator);
+        return jsonHomeGenerator;
+    }
+
+
 
 }
