@@ -40,13 +40,13 @@ import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 public abstract class ResourceLinkGenerator {
 
     private URI relationTypeBaseUri;
-    private AbstractHintsGenerator hintsGenerator;
+    private HintsGenerator hintsGenerator;
 
     public void setRelationTypeBaseUri(final String relationTypeBaseUri) {
         this.relationTypeBaseUri = URI.create(relationTypeBaseUri);
     }
 
-    public void setHintsGenerator(final AbstractHintsGenerator hintsGenerator) {
+    public void setHintsGenerator(final HintsGenerator hintsGenerator) {
         this.hintsGenerator = hintsGenerator;
     }
 

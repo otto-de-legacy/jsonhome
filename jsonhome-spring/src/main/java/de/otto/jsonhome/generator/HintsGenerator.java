@@ -41,7 +41,7 @@ import static java.util.Collections.singleton;
  * @author Guido Steinacker
  * @since 18.10.12
  */
-public abstract class AbstractHintsGenerator {
+public abstract class HintsGenerator {
 
     public final Hints hintsOf(final Method method) {
         final Set<Allow> allows = allowedHttpMethodsOf(method);

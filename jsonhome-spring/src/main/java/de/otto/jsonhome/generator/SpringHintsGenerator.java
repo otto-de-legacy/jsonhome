@@ -30,7 +30,7 @@ import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
 
 @Component
-public class SpringHintsGenerator extends AbstractHintsGenerator {
+public class SpringHintsGenerator extends HintsGenerator {
 
     /**
      * Analyses the method with a RequestMapping and returns a list of allowed http methods (GET, PUT, etc.).

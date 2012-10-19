@@ -54,7 +54,7 @@ public class SpringResourceLinkGenerator extends ResourceLinkGenerator {
     }
 
     @Autowired
-    public void setHintsGenerator(AbstractHintsGenerator hintsGenerator) {
+    public void setHintsGenerator(HintsGenerator hintsGenerator) {
         super.setHintsGenerator(hintsGenerator);
     }
 
