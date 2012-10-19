@@ -326,16 +326,6 @@ public class JsonHomeGeneratorTest {
         ));
     }
 
-    @Test(enabled = false)
-    public void statusHintMustBeDeprecatedIfTheControllerIsAnnotatedAsDeprecated() {
-        // TODO not yet implemented
-    }
-
-    @Test(enabled = false)
-    public void statusHintMustBeDeprecatedIfAllMethodsOfTheResourceAreDeprecated() {
-        // TODO not yet implemented
-    }
-
     @Test
     public void shouldFindDocumentationAndOverrideDocFromController() {
         // given
