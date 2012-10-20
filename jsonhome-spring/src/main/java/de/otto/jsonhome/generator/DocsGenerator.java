@@ -35,10 +35,7 @@ import static java.util.Arrays.asList;
  */
 public class DocsGenerator {
 
-    private DocsGenerator() {
-    }
-
-    public static Docs documentationFrom(final Class<?> controller, final Method method) {
+    public Docs documentationFrom(final Class<?> controller, final Method method) {
         Doc doc = method.getAnnotation(Doc.class);
         if (doc == null) {
             doc = controller.getAnnotation(Doc.class);
@@ -51,7 +48,7 @@ public class DocsGenerator {
         }
     }
 
-    public static Docs documentationFor(final ParameterInfo parameterInfo) {
+    public Docs documentationFor(final ParameterInfo parameterInfo) {
         if (parameterInfo.hasAnnotation(Doc.class)) {
             Doc doc = parameterInfo.getAnnotation(Doc.class);
             return documentationFrom(doc);
@@ -60,7 +57,7 @@ public class DocsGenerator {
         }
     }
 
-    private static Docs documentationFrom(final Doc doc) {
+    private Docs documentationFrom(final Doc doc) {
         final String link = doc.link();
         final String[] description = doc.value();
         return documentation(

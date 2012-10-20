@@ -17,7 +17,8 @@
  */
 package de.otto.jsonhome.controller;
 
-import de.otto.jsonhome.generator.*;
+import de.otto.jsonhome.generator.JsonHomeGenerator;
+import de.otto.jsonhome.generator.SpringJsonHomeGenerator;
 import de.otto.jsonhome.model.DirectLink;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -60,18 +61,11 @@ public class RelControllerTest {
     }
 
     private JsonHomeGenerator getJsonHomeGenerator() {
-        JsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
-        jsonHomeGenerator.setResourceLinkGenerator(getResourceLinkGenerator());
+        final SpringJsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
+        jsonHomeGenerator.setApplicationBaseUri("http://example.org");
+        jsonHomeGenerator.setRelationTypeBaseUri("http://example.org");
+        jsonHomeGenerator.postConstruct();
         return jsonHomeGenerator;
     }
-
-    private ResourceLinkGenerator getResourceLinkGenerator() {
-        final SpringResourceLinkGenerator resourceLinkgGenerator = new SpringResourceLinkGenerator();
-        resourceLinkgGenerator.setApplicationBaseUri("http://example.org");
-        resourceLinkgGenerator.setRelationTypeBaseUri("http://example.org");
-        resourceLinkgGenerator.setHintsGenerator(new SpringHintsGenerator());
-        return resourceLinkgGenerator;
-    }
-
 
 }

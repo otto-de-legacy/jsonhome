@@ -39,7 +39,7 @@ public abstract class JsonHomeGenerator {
     private final Collection<Class<?>> controllers = new ArrayList<Class<?>>();
     private ResourceLinkGenerator resourceLinkGenerator;
 
-    public void setResourceLinkGenerator(final ResourceLinkGenerator resourceLinkGenerator) {
+    protected void setResourceLinkGenerator(final ResourceLinkGenerator resourceLinkGenerator) {
         this.resourceLinkGenerator = resourceLinkGenerator;
     }
 

@@ -15,7 +15,8 @@
  */
 package de.otto.jsonhome.controller;
 
-import de.otto.jsonhome.generator.*;
+import de.otto.jsonhome.generator.JsonHomeGenerator;
+import de.otto.jsonhome.generator.SpringJsonHomeGenerator;
 import de.otto.jsonhome.model.JsonHome;
 import org.testng.annotations.Test;
 
@@ -48,15 +49,11 @@ public class JsonHomeControllerBaseTest {
     }
 
     private JsonHomeGenerator getJsonHomeGenerator() {
-        JsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
-        jsonHomeGenerator.setResourceLinkGenerator(getResourceLinkGenerator());
+        final SpringJsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
+        jsonHomeGenerator.setApplicationBaseUri("http://example.org");
+        jsonHomeGenerator.setRelationTypeBaseUri("http://example.org");
+        jsonHomeGenerator.postConstruct();
         return jsonHomeGenerator;
     }
 
-    private ResourceLinkGenerator getResourceLinkGenerator() {
-        final ResourceLinkGenerator resourceLinkGenerator = new SpringResourceLinkGenerator();
-        resourceLinkGenerator.setRelationTypeBaseUri("http://example.org");
-        resourceLinkGenerator.setHintsGenerator(new SpringHintsGenerator());
-        return resourceLinkGenerator;
-    }
 }

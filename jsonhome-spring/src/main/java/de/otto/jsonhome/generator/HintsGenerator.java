@@ -26,16 +26,13 @@ import de.otto.jsonhome.model.HintsBuilder;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import static de.otto.jsonhome.generator.DocsGenerator.documentationFrom;
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.HintsBuilder.hints;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singleton;
 
 /**
  * @author Guido Steinacker
@@ -43,25 +40,48 @@ import static java.util.Collections.singleton;
  */
 public abstract class HintsGenerator {
 
+    private final DocsGenerator docsGenerator = new DocsGenerator();
+
+    /**
+     * Analyses the method with a RequestMapping and returns the corresponding Hints.
+     * <p/>
+     * If the RequestMapping does not specify the produced or consumed representations,
+     * "text/html" is returned in a singleton list. In case of a POST method, the default representation
+     * is "application/x-www-form-urlencoded".
+     * <p/>
+     *
+     * @return Hints.
+     * @throws NullPointerException if method is not annotated with @RequestMapping.
+     */
+
     public final Hints hintsOf(final Method method) {
         final Set<Allow> allows = allowedHttpMethodsOf(method);
         final HintsBuilder hintsBuilder = hints()
                 .allowing(allows)
-                .with(documentationFrom(method.getDeclaringClass(), method))
+                .with(docsGenerator.documentationFrom(method.getDeclaringClass(), method))
                 .requiring(preconditionsFrom(method))
                 .withStatus(statusFrom(method));
-        final List<String> supportedRepresentations = supportedRepresentationsOf(method);
-        if (allows.contains(PUT)) {
-            hintsBuilder.acceptingForPut(supportedRepresentations);
-        }
-        if (allows.contains(POST)) {
-            hintsBuilder.acceptingForPost(supportedRepresentations);
-        }
-        if (allows.contains(GET) || allows.contains(HEAD)) {
-            hintsBuilder.representedAs(supportedRepresentations);
-        }
-        // TODO: PATCH
 
+        final List<String> produced = producedRepresentationsOf(method);
+        final List<String> consumed = consumedRepresentationsOf(method);
+        if (allows.contains(PUT)) {
+            hintsBuilder.acceptingForPut(consumed);
+            hintsBuilder.representedAs(produced);
+        } else if (allows.contains(POST)) {
+            hintsBuilder.acceptingForPost(consumed.isEmpty()
+                    ? asList("application/x-www-form-urlencoded")
+                    : consumed
+            );
+            hintsBuilder.representedAs(produced);
+        } else if (allows.contains(GET) || allows.contains(HEAD)) {
+            final List<String> representations = join(produced, consumed);
+            hintsBuilder.representedAs(representations.isEmpty()
+                    ? asList("text/html")
+                    : representations
+            );
+        } else {
+            hintsBuilder.representedAs(join(produced, consumed));
+        }
         return hintsBuilder.build();
     }
 
@@ -83,43 +103,37 @@ public abstract class HintsGenerator {
         }
     }
 
-    /**
-     * Analyses the method with a RequestMapping and returns a list of supported representations.
-     * <p/>
-     * If the RequestMapping does not specify the produced or consumed representations,
-     * "text/html" is returned in a singleton list.
-     * <p/>
-     * TODO: in case of a POST, text/html is not correct.
-     *
-     * @return list of allowed HTTP methods.
-     * @throws NullPointerException if method is not annotated with @RequestMapping.
-     */
-    protected List<String> supportedRepresentationsOf(final Method method) {
-        final LinkedHashSet<String> representations = new LinkedHashSet<String>();
-        representations.addAll(producedRepresentationsOf(method));
-        final List<String> consumes = consumedRepresentationsOf(method);
-        if (consumes.size() > 0) {
-            // preserve order from methodRequestMapping:
-            for (final String consumesRepresentation : consumes) {
-                if (!representations.contains(consumesRepresentation)) {
-                    representations.add(consumesRepresentation);
-                }
-            }
-        } else {
-            if (allowedHttpMethodsOf(method).equals(singleton(POST))) {
-                representations.add("application/x-www-form-urlencoded");
+    private List<String> join(final List<String> list, final List<String> other) {
+        final List<String> result = new ArrayList<String>(list);
+        for (final String s : other) {
+            if (!result.contains(s)) {
+                result.add(s);
             }
         }
-        // default is HTTP GET
-        if (representations.isEmpty()) {
-            representations.add("text/html");
-        }
-        return new ArrayList<String>(representations);
+        return result;
     }
 
+    /**
+     * Returns the Set of allowed HTTP methods of the given method.
+     *
+     * @return set of allowed HTTP methods.
+     * @throws NullPointerException if method is not annotated with @RequestMapping.
+     */
     protected abstract Set<Allow> allowedHttpMethodsOf(Method method);
 
+    /**
+     * Returns the produced representations of the method, or an empty list if no representations are produced.
+     *
+     * @param method the Method of a controller, possibly producing the representation of a REST resource.
+     * @return list of produced representations.
+     */
     protected abstract List<String> producedRepresentationsOf(Method method);
 
+    /**
+     * Returns the consumed (accepted) representations of the method, or an empty list if no representations are consumed.
+     *
+     * @param method the Method of a controller, possibly consuming a representation of a REST resource.
+     * @return list of consumed representations.
+     */
     protected abstract List<String> consumedRepresentationsOf(Method method);
 }

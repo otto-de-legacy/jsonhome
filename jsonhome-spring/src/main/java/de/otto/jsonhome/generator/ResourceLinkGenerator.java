@@ -28,7 +28,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.otto.jsonhome.generator.HrefVarsGenerator.hrefVarsFor;
 import static de.otto.jsonhome.generator.MethodHelper.getParameterInfos;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
@@ -39,14 +38,13 @@ import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
  */
 public abstract class ResourceLinkGenerator {
 
-    private URI relationTypeBaseUri;
-    private HintsGenerator hintsGenerator;
+    private final HrefVarsGenerator hrefVarsGenerator = new HrefVarsGenerator();
+    private final URI relationTypeBaseUri;
+    private final HintsGenerator hintsGenerator;
 
-    public void setRelationTypeBaseUri(final String relationTypeBaseUri) {
-        this.relationTypeBaseUri = URI.create(relationTypeBaseUri);
-    }
-
-    public void setHintsGenerator(final HintsGenerator hintsGenerator) {
+    protected ResourceLinkGenerator(final URI relationTypeBaseUri,
+                                    final HintsGenerator hintsGenerator) {
+        this.relationTypeBaseUri = relationTypeBaseUri;
         this.hintsGenerator = hintsGenerator;
     }
 
@@ -68,7 +66,7 @@ public abstract class ResourceLinkGenerator {
                         resourceLinks.add(templatedLink(
                                 relationType,
                                 resourcePath,
-                                hrefVarsFor(relationType, method, hints),
+                                hrefVarsGenerator.hrefVarsFor(relationType, method, hints),
                                 hints
                         ));
                     } else {

@@ -359,22 +359,18 @@ public class JsonHomeGeneratorTest {
     }
 
     private JsonHomeGenerator jsonHomeFor(final URI applicationBaseUri) {
-        final SpringResourceLinkGenerator resourceLinkGenerator = new SpringResourceLinkGenerator();
-        resourceLinkGenerator.setApplicationBaseUri(applicationBaseUri.toString());
-        resourceLinkGenerator.setRelationTypeBaseUri(applicationBaseUri.toString());
-        resourceLinkGenerator.setHintsGenerator(new SpringHintsGenerator());
-        final JsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
-        jsonHomeGenerator.setResourceLinkGenerator(resourceLinkGenerator);
+        final SpringJsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
+        jsonHomeGenerator.setApplicationBaseUri(applicationBaseUri.toString());
+        jsonHomeGenerator.setRelationTypeBaseUri(applicationBaseUri.toString());
+        jsonHomeGenerator.postConstruct();
         return jsonHomeGenerator;
     }
 
     private JsonHomeGenerator jsonHomeFor(final URI applicationBaseUri, final URI relationTypeBaseUri) {
-        final SpringResourceLinkGenerator resourceLinkGenerator = new SpringResourceLinkGenerator();
-        resourceLinkGenerator.setHintsGenerator(new SpringHintsGenerator());
-        resourceLinkGenerator.setApplicationBaseUri(applicationBaseUri.toString());
-        resourceLinkGenerator.setRelationTypeBaseUri(relationTypeBaseUri.toString());
-        final JsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
-        jsonHomeGenerator.setResourceLinkGenerator(resourceLinkGenerator);
+        final SpringJsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
+        jsonHomeGenerator.setApplicationBaseUri(applicationBaseUri.toString());
+        jsonHomeGenerator.setRelationTypeBaseUri(relationTypeBaseUri.toString());
+        jsonHomeGenerator.postConstruct();
         return jsonHomeGenerator;
     }
 

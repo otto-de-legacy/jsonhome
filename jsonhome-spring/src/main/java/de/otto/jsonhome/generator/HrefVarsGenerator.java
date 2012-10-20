@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import static de.otto.jsonhome.generator.DocsGenerator.documentationFor;
 import static de.otto.jsonhome.generator.MethodHelper.getParameterInfos;
 import static de.otto.jsonhome.model.Allow.POST;
 import static de.otto.jsonhome.model.Allow.PUT;
@@ -37,8 +36,7 @@ import static java.util.EnumSet.of;
 
 public class HrefVarsGenerator {
 
-    private HrefVarsGenerator() {
-    }
+    private final DocsGenerator docsGenerator = new DocsGenerator();
 
     /**
      * Analyses the method and returns a list of HrefVar instances, describing the variables of a templated resource.
@@ -46,11 +44,11 @@ public class HrefVarsGenerator {
      * @param method the method to analyse.
      * @return list of href-vars.
      */
-    public static List<HrefVar> hrefVarsFor(final URI rootRelationType, final Method method, final Hints hints) {
+    public List<HrefVar> hrefVarsFor(final URI relationTypeUri, final Method method, final Hints hints) {
         final List<HrefVar> hrefVars = new ArrayList<HrefVar>();
         for (final ParameterInfo parameterInfo : getParameterInfos(method)) {
-            final URI relationType = rootRelationType.resolve("#" + parameterInfo.getName());
-            final Docs docs = documentationFor(parameterInfo);
+            final URI relationType = relationTypeUri.resolve("#" + parameterInfo.getName());
+            final Docs docs = docsGenerator.documentationFor(parameterInfo);
             if (parameterInfo.hasAnnotation(PathVariable.class)) {
                 hrefVars.add(new HrefVar(
                         parameterInfo.getName(), relationType, docs, of(REQUIRED))

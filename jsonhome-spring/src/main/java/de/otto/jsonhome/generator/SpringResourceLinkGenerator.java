@@ -18,9 +18,6 @@
 
 package de.otto.jsonhome.generator;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.lang.reflect.Method;
@@ -38,24 +35,13 @@ import static java.util.Arrays.asList;
  * @author Guido Steinacker
  * @since 17.10.12
  */
-@Component
 public class SpringResourceLinkGenerator extends ResourceLinkGenerator {
 
-    private URI applicationBaseUri;
+    private final URI applicationBaseUri;
 
-    @Value("${applicationBaseUri}")
-    public void setApplicationBaseUri(final String applicationBaseUri) {
-        this.applicationBaseUri = URI.create(applicationBaseUri);
-    }
-
-    @Value("${relationTypeBaseUri}")
-    public void setRelationTypeBaseUri(final String relationTypeBaseUri) {
-        super.setRelationTypeBaseUri(relationTypeBaseUri);
-    }
-
-    @Autowired
-    public void setHintsGenerator(HintsGenerator hintsGenerator) {
-        super.setHintsGenerator(hintsGenerator);
+    public SpringResourceLinkGenerator(final URI applicationBaseUri, final URI relationTypeBaseUri) {
+        super(relationTypeBaseUri, new SpringHintsGenerator());
+        this.applicationBaseUri = applicationBaseUri;
     }
 
     /**

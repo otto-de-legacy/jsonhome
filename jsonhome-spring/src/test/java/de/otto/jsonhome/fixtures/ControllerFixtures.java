@@ -145,4 +145,5 @@ public class ControllerFixtures {
         @RequestMapping(value = "/bar")
         void bar() {}
     }
+
 }

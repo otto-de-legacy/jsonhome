@@ -18,9 +18,12 @@
 
 package de.otto.jsonhome.generator;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+
+import javax.annotation.PostConstruct;
+import java.net.URI;
 
 /**
  * @author Guido Steinacker
@@ -29,10 +32,22 @@ import org.springframework.stereotype.Controller;
 @Component
 public final class SpringJsonHomeGenerator extends JsonHomeGenerator {
 
-    @Override
-    @Autowired
-    public void setResourceLinkGenerator(ResourceLinkGenerator resourceLinkGenerator) {
-        super.setResourceLinkGenerator(resourceLinkGenerator);
+    private URI applicationBaseUri;
+    private URI relationTypeBaseUri;
+
+    @Value("${applicationBaseUri}")
+    public void setApplicationBaseUri(final String applicationBaseUri) {
+        this.applicationBaseUri = URI.create(applicationBaseUri);
+    }
+
+    @Value("${relationTypeBaseUri}")
+    public void setRelationTypeBaseUri(final String relationTypeBaseUri) {
+        this.relationTypeBaseUri = URI.create(relationTypeBaseUri);
+    }
+
+    @PostConstruct
+    public void postConstruct() {
+        setResourceLinkGenerator(new SpringResourceLinkGenerator(applicationBaseUri, relationTypeBaseUri));
     }
 
     @Override

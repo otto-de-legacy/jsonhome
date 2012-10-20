@@ -16,7 +16,6 @@
 package de.otto.jsonhome.generator;
 
 import de.otto.jsonhome.model.Allow;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.lang.reflect.Method;
@@ -29,7 +28,6 @@ import static de.otto.jsonhome.model.Allow.GET;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
 
-@Component
 public class SpringHintsGenerator extends HintsGenerator {
 
     /**
