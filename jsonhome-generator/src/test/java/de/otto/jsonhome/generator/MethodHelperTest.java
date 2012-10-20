@@ -15,7 +15,7 @@
  */
 package de.otto.jsonhome.generator;
 
-import org.springframework.beans.factory.annotation.Value;
+import de.otto.jsonhome.annotation.Doc;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
@@ -34,7 +34,7 @@ public class MethodHelperTest {
         public void methodWithoutParameter() {}
         public void methodWithSinglePrimitiveParam(int foo) {}
         public void methodWithNonPrimitivePlusGenericParam(Double foo, List<String> bar) {}
-        public void methodWithAnnotatedParam(@Value("test") int foo) {}
+        public void methodWithAnnotatedParam(@Doc("test") int foo) {}
     }
 
     @Test
@@ -88,6 +88,6 @@ public class MethodHelperTest {
         assertEquals(parameterInfos.get(0).getName(), "foo");
         assertEquals(parameterInfos.get(0).getType(), int.class);
         assertEquals(parameterInfos.get(0).getAnnotations().size(), 1);
-        assertEquals(parameterInfos.get(0).getAnnotations().get(0).annotationType(), Value.class);
+        assertEquals(parameterInfos.get(0).getAnnotations().get(0).annotationType(), Doc.class);
     }
 }

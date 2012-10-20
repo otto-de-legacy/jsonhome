@@ -26,7 +26,6 @@ import static de.otto.jsonhome.fixtures.ControllerFixtures.*;
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.Docs.emptyDocumentation;
-import static de.otto.jsonhome.model.HrefVarFlags.REQUIRED;
 import static java.net.URI.create;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -37,7 +36,7 @@ import static org.testng.Assert.*;
  * @author Guido Steinacker
  * @since 17.09.12
  */
-public class JsonHomeGeneratorTest {
+public class SpringJsonHomeGeneratorTest {
 
     public static final URI ROOT_URI = create("http://example.org");
 
@@ -296,11 +295,11 @@ public class JsonHomeGeneratorTest {
         assertEquals(templatedLink.getHrefTemplate(), ROOT_URI + "/{bar}{?query}");
         assertEquals(templatedLink.getHrefVars().size(), 2);
         assertEquals(templatedLink.getHrefVars().get(0), new HrefVar(
-                "bar", create(ROOT_URI + "/rel/foo#bar"), emptyDocumentation(), of(REQUIRED)
-        ));
+                "bar", create(ROOT_URI + "/rel/foo#bar"), emptyDocumentation())
+        );
         assertEquals(templatedLink.getHrefVars().get(1), new HrefVar(
-                "query", create(ROOT_URI + "/rel/foo#query"), emptyDocumentation(), of(REQUIRED)
-        ));
+                "query", create(ROOT_URI + "/rel/foo#query"), emptyDocumentation())
+        );
     }
 
     @Test
@@ -313,17 +312,17 @@ public class JsonHomeGeneratorTest {
         assertEquals(templatedLink.getHrefTemplate(), ROOT_URI + "/{bar}/{foobar}{?query,page}");
         assertEquals(templatedLink.getHrefVars().size(), 4);
         assertEquals(templatedLink.getHrefVars().get(0), new HrefVar(
-                "bar", create(ROOT_URI + "/rel/foobar#bar"), emptyDocumentation(), of(REQUIRED)
-        ));
+                "bar", create(ROOT_URI + "/rel/foobar#bar"), emptyDocumentation())
+        );
         assertEquals(templatedLink.getHrefVars().get(1), new HrefVar(
-                "foobar", create(ROOT_URI + "/rel/foobar#foobar"), emptyDocumentation(), of(REQUIRED)
-        ));
+                "foobar", create(ROOT_URI + "/rel/foobar#foobar"), emptyDocumentation())
+        );
         assertEquals(templatedLink.getHrefVars().get(2), new HrefVar(
-                "query", create(ROOT_URI + "/rel/foobar#query"), emptyDocumentation(), of(REQUIRED)
-        ));
+                "query", create(ROOT_URI + "/rel/foobar#query"), emptyDocumentation())
+        );
         assertEquals(templatedLink.getHrefVars().get(3), new HrefVar(
-                "page", create(ROOT_URI + "/rel/foobar#page"), emptyDocumentation(), of(REQUIRED)
-        ));
+                "page", create(ROOT_URI + "/rel/foobar#page"), emptyDocumentation())
+        );
     }
 
     @Test

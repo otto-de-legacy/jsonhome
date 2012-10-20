@@ -21,7 +21,6 @@ package de.otto.jsonhome.generator;
 import de.otto.jsonhome.annotation.Rel;
 import de.otto.jsonhome.model.Hints;
 import de.otto.jsonhome.model.ResourceLink;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -38,14 +37,16 @@ import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
  */
 public abstract class ResourceLinkGenerator {
 
-    private final HrefVarsGenerator hrefVarsGenerator = new HrefVarsGenerator();
     private final URI relationTypeBaseUri;
     private final HintsGenerator hintsGenerator;
+    private final HrefVarsGenerator hrefVarsGenerator;
 
     protected ResourceLinkGenerator(final URI relationTypeBaseUri,
-                                    final HintsGenerator hintsGenerator) {
+                                    final HintsGenerator hintsGenerator,
+                                    final HrefVarsGenerator hrefVarsGenerator) {
         this.relationTypeBaseUri = relationTypeBaseUri;
         this.hintsGenerator = hintsGenerator;
+        this.hrefVarsGenerator = hrefVarsGenerator;
     }
 
     /**
@@ -95,7 +96,7 @@ public abstract class ResourceLinkGenerator {
         final List<ParameterInfo> parameterInfos = getParameterInfos(method);
         boolean first = true;
         for (final ParameterInfo parameterInfo : parameterInfos) {
-            if (parameterInfo.hasAnnotation(RequestParam.class)) {
+            if (hrefVarsGenerator.hasRequestParam(parameterInfo)) {
                 if (first) {
                     first = false;
                     sb.append("{?").append(parameterInfo.getName());

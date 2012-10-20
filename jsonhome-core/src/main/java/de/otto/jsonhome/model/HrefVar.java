@@ -16,9 +16,6 @@
 package de.otto.jsonhome.model;
 
 import java.net.URI;
-import java.util.EnumSet;
-
-import static java.util.EnumSet.noneOf;
 
 /**
  * A single href-var used to describe the href-vars of templated resource links.
@@ -32,24 +29,12 @@ public final class HrefVar {
     private final String var;
     private final URI varType;
     private final Docs docs;
-    private final EnumSet<HrefVarFlags> flags;
 
 
     public HrefVar(final String var, final URI varType, final Docs docs) {
         this.var = var;
         this.varType = varType;
         this.docs = docs;
-        this.flags = noneOf(HrefVarFlags.class);
-    }
-
-    public HrefVar(final String var,
-                   final URI varType,
-                   final Docs docs,
-                   final EnumSet<HrefVarFlags> flags) {
-        this.var = var;
-        this.varType = varType;
-        this.docs = docs;
-        this.flags = flags;
     }
 
     /**
@@ -79,15 +64,6 @@ public final class HrefVar {
         return docs;
     }
 
-    /**
-     * Returns the HrefVarFlags of the href variable.
-     *
-     * @return set of flags
-     */
-    public EnumSet<HrefVarFlags> getFlags() {
-        return flags;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -97,7 +73,6 @@ public final class HrefVar {
 
         if (docs != null ? !docs.equals(hrefVar.docs) : hrefVar.docs != null)
             return false;
-        if (flags != null ? !flags.equals(hrefVar.flags) : hrefVar.flags != null) return false;
         if (var != null ? !var.equals(hrefVar.var) : hrefVar.var != null) return false;
         if (varType != null ? !varType.equals(hrefVar.varType) : hrefVar.varType != null) return false;
 
@@ -109,7 +84,6 @@ public final class HrefVar {
         int result = var != null ? var.hashCode() : 0;
         result = 31 * result + (varType != null ? varType.hashCode() : 0);
         result = 31 * result + (docs != null ? docs.hashCode() : 0);
-        result = 31 * result + (flags != null ? flags.hashCode() : 0);
         return result;
     }
 
@@ -119,7 +93,6 @@ public final class HrefVar {
                 "var='" + var + '\'' +
                 ", varType=" + varType +
                 ", docs=" + docs +
-                ", flags=" + flags +
                 '}';
     }
 }
