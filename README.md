@@ -1,6 +1,6 @@
-# JSONHOME4SPRING
+# JSONHOME
 
-A json-home generator for RESTful web applications.
+Libraries to publish and use json-home documents.
 
 ## Json-Home?
 
@@ -55,7 +55,7 @@ In order to consume json-home documents, a client-side library is needed. This w
 
 ## Work in Progress!
 
-* The project is in a very early state. Many details will change in the next weeks, possibly in an incompatible way.
+* The project is in an early state. Many details will change in the next weeks, possibly in an incompatible way.
 * The json-home specification is still a draft, it might change itself in the next months.
 * This library does not yet fully support the current draft specification.
 * But: it is already working. You can use it to easily generate json-home documents for your RESTful Spring application.
@@ -69,7 +69,11 @@ The project is released under version 2.0 of the Apache License. See LICENSE.txt
 
 Every kind of feedback - also negative - is appreciated. Even more appreciated are contributions to the code base.
 
+To contact us, please send an email to guido.steinacker@gmail.com
+
 ## Links and Documentation
+
+Have a look to the wiki pages.
 
 You can find information about json-home in the draft specification:
 Json-Home: http://tools.ietf.org/html/draft-nottingham-json-home-02
