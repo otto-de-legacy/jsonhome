@@ -18,6 +18,7 @@
 
 package de.otto.jsonhome.generator;
 
+import de.otto.jsonhome.annotation.Href;
 import de.otto.jsonhome.annotation.Rel;
 import de.otto.jsonhome.model.Hints;
 import de.otto.jsonhome.model.ResourceLink;
@@ -30,6 +31,7 @@ import java.util.List;
 import static de.otto.jsonhome.generator.MethodHelper.getParameterInfos;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
+import static java.util.Arrays.asList;
 
 /**
  * @author Guido Steinacker
@@ -37,13 +39,16 @@ import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
  */
 public abstract class ResourceLinkGenerator {
 
+    private final URI applicationBaseUri;
     private final URI relationTypeBaseUri;
     private final HintsGenerator hintsGenerator;
     private final HrefVarsGenerator hrefVarsGenerator;
 
-    protected ResourceLinkGenerator(final URI relationTypeBaseUri,
+    protected ResourceLinkGenerator(final URI applicationBaseUri,
+                                    final URI relationTypeBaseUri,
                                     final HintsGenerator hintsGenerator,
                                     final HrefVarsGenerator hrefVarsGenerator) {
+        this.applicationBaseUri = applicationBaseUri;
         this.relationTypeBaseUri = relationTypeBaseUri;
         this.hintsGenerator = hintsGenerator;
         this.hrefVarsGenerator = hrefVarsGenerator;
@@ -58,7 +63,7 @@ public abstract class ResourceLinkGenerator {
     public List<ResourceLink> resourceLinksFor(final Method method) {
         final List<ResourceLink> resourceLinks = new ArrayList<ResourceLink>();
         if (isCandidateForAnalysis(method)) {
-            final List<String> resourcePaths = resourcePathsFor(method);
+            final List<String> resourcePaths = overriddenOrCalculatedResourcePathsFor(method);
             for (final String resourcePath : resourcePaths) {
                 final URI relationType = relationTypeFrom(method);
                 if (relationType != null) {
@@ -83,6 +88,20 @@ public abstract class ResourceLinkGenerator {
         return resourceLinks;
     }
 
+    protected List<String> overriddenOrCalculatedResourcePathsFor(final Method method) {
+        final Href methodAnnotation = method.getAnnotation(Href.class);
+        if (methodAnnotation != null) {
+            final Href classAnnotation = method.getDeclaringClass().getAnnotation(Href.class);
+            if (classAnnotation == null || URI.create(methodAnnotation.value()).isAbsolute()) {
+                final String value = methodAnnotation.value();
+                return asList(applicationBaseUri.resolve(value).toString());
+            } else {
+                return asList(applicationBaseUri.resolve(classAnnotation.value() + methodAnnotation.value()).toString());
+            }
+        } else {
+            return resourcePathsFor(method);
+        }
+    }
 
     /**
      * Parses the method parameter annotations, looking for parameters annotated as @RequestParam, and returns the

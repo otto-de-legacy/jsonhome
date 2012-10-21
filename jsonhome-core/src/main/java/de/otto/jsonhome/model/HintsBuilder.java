@@ -55,6 +55,11 @@ public class HintsBuilder {
                 .with(hints.getDocs());
     }
 
+    public HintsBuilder allowing(final Allow... allows) {
+        this.allows.addAll(asList(allows));
+        return this;
+    }
+
     public HintsBuilder allowing(final Set<Allow> allows) {
         this.allows.addAll(allows);
         return this;
