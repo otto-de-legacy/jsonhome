@@ -25,7 +25,7 @@ import static de.otto.jsonhome.annotation.Precondition.ETAG;
 import static de.otto.jsonhome.fixtures.ControllerFixtures.*;
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.DirectLink.directLink;
-import static de.otto.jsonhome.model.Docs.emptyDocumentation;
+import static de.otto.jsonhome.model.Docs.emptyDocs;
 import static java.net.URI.create;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -295,10 +295,10 @@ public class SpringJsonHomeGeneratorTest {
         assertEquals(templatedLink.getHrefTemplate(), ROOT_URI + "/{bar}{?query}");
         assertEquals(templatedLink.getHrefVars().size(), 2);
         assertEquals(templatedLink.getHrefVars().get(0), new HrefVar(
-                "bar", create(ROOT_URI + "/rel/foo#bar"), emptyDocumentation())
+                "bar", create(ROOT_URI + "/rel/foo#bar"), emptyDocs())
         );
         assertEquals(templatedLink.getHrefVars().get(1), new HrefVar(
-                "query", create(ROOT_URI + "/rel/foo#query"), emptyDocumentation())
+                "query", create(ROOT_URI + "/rel/foo#query"), emptyDocs())
         );
     }
 
@@ -312,16 +312,16 @@ public class SpringJsonHomeGeneratorTest {
         assertEquals(templatedLink.getHrefTemplate(), ROOT_URI + "/{bar}/{foobar}{?query,page}");
         assertEquals(templatedLink.getHrefVars().size(), 4);
         assertEquals(templatedLink.getHrefVars().get(0), new HrefVar(
-                "bar", create(ROOT_URI + "/rel/foobar#bar"), emptyDocumentation())
+                "bar", create(ROOT_URI + "/rel/foobar#bar"), emptyDocs())
         );
         assertEquals(templatedLink.getHrefVars().get(1), new HrefVar(
-                "foobar", create(ROOT_URI + "/rel/foobar#foobar"), emptyDocumentation())
+                "foobar", create(ROOT_URI + "/rel/foobar#foobar"), emptyDocs())
         );
         assertEquals(templatedLink.getHrefVars().get(2), new HrefVar(
-                "query", create(ROOT_URI + "/rel/foobar#query"), emptyDocumentation())
+                "query", create(ROOT_URI + "/rel/foobar#query"), emptyDocs())
         );
         assertEquals(templatedLink.getHrefVars().get(3), new HrefVar(
-                "page", create(ROOT_URI + "/rel/foobar#page"), emptyDocumentation())
+                "page", create(ROOT_URI + "/rel/foobar#page"), emptyDocs())
         );
     }
 

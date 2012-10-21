@@ -19,6 +19,7 @@
 package de.otto.jsonhome.generator;
 
 import de.otto.jsonhome.annotation.Href;
+import de.otto.jsonhome.annotation.HrefTemplate;
 import de.otto.jsonhome.annotation.Rel;
 import de.otto.jsonhome.model.Hints;
 import de.otto.jsonhome.model.ResourceLink;
@@ -31,6 +32,7 @@ import java.util.List;
 import static de.otto.jsonhome.generator.MethodHelper.getParameterInfos;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
+import static java.net.URI.create;
 import static java.util.Arrays.asList;
 
 /**
@@ -72,13 +74,13 @@ public abstract class ResourceLinkGenerator {
                         resourceLinks.add(templatedLink(
                                 relationType,
                                 resourcePath,
-                                hrefVarsGenerator.hrefVarsFor(relationType, method, hints),
+                                hrefVarsGenerator.hrefVarsFor(relationType, method),
                                 hints
                         ));
                     } else {
                         resourceLinks.add(directLink(
                                 relationType,
-                                URI.create(resourcePath),
+                                create(resourcePath),
                                 hints
                         ));
                     }
@@ -89,17 +91,18 @@ public abstract class ResourceLinkGenerator {
     }
 
     protected List<String> overriddenOrCalculatedResourcePathsFor(final Method method) {
-        final Href methodAnnotation = method.getAnnotation(Href.class);
-        if (methodAnnotation != null) {
-            final Href classAnnotation = method.getDeclaringClass().getAnnotation(Href.class);
-            if (classAnnotation == null || URI.create(methodAnnotation.value()).isAbsolute()) {
-                final String value = methodAnnotation.value();
-                return asList(applicationBaseUri.resolve(value).toString());
-            } else {
-                return asList(applicationBaseUri.resolve(classAnnotation.value() + methodAnnotation.value()).toString());
-            }
+        final Href methodHrefAnnotation = method.getAnnotation(Href.class);
+        if (methodHrefAnnotation != null) {
+            return asList(applicationBaseUri.resolve(methodHrefAnnotation.value()).toString());
         } else {
-            return resourcePathsFor(method);
+            final HrefTemplate hrefTemplateAnnotation = method.getAnnotation(HrefTemplate.class);
+            if (hrefTemplateAnnotation != null) {
+                return asList(hrefTemplateAnnotation.value().startsWith("http://")
+                        ? hrefTemplateAnnotation.value()
+                        : applicationBaseUri.toString() + hrefTemplateAnnotation.value());
+            } else {
+                return resourcePathsFor(method);
+            }
         }
     }
 
@@ -147,7 +150,7 @@ public abstract class ResourceLinkGenerator {
             final String linkRelationType = methodRel != null
                     ? methodRel.value()
                     : controllerRel.value();
-            return URI.create(linkRelationType.startsWith("http://")
+            return create(linkRelationType.startsWith("http://")
                     ? linkRelationType
                     : relationTypeBaseUri + linkRelationType);
         }

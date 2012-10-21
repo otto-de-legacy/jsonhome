@@ -43,7 +43,7 @@ public final class Docs {
         this.link = link;
     }
 
-    public static Docs emptyDocumentation() {
+    public static Docs emptyDocs() {
         return new Docs(Collections.<String>emptyList(), null);
     }
 

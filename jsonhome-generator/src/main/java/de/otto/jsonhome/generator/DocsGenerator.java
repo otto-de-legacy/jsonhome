@@ -26,7 +26,7 @@ import java.net.URI;
 import java.util.Collections;
 
 import static de.otto.jsonhome.model.Docs.documentation;
-import static de.otto.jsonhome.model.Docs.emptyDocumentation;
+import static de.otto.jsonhome.model.Docs.emptyDocs;
 import static java.util.Arrays.asList;
 
 /**
@@ -44,7 +44,7 @@ public class DocsGenerator {
         if (doc != null) {
             return documentationFrom(doc);
         } else {
-            return emptyDocumentation();
+            return emptyDocs();
         }
     }
 
@@ -53,7 +53,7 @@ public class DocsGenerator {
             Doc doc = parameterInfo.getAnnotation(Doc.class);
             return documentationFrom(doc);
         } else {
-            return emptyDocumentation();
+            return emptyDocs();
         }
     }
 

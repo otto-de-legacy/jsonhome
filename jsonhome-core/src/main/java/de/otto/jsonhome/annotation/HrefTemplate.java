@@ -18,10 +18,10 @@ package de.otto.jsonhome.annotation;
 import java.lang.annotation.*;
 
 /**
- * Overrides the href of a direct resource link.
+ * Overrides the href-template and href-vars of a templated resource link.
  * <p/>
  * Use this annotation if you have to override the behaviour of the generator in use (like, for example,
- * the SpringJsonHomeGenerator). <strong>Generally, you should not use this annotation</strong>, because
+ * the SpringJsonHomeGenerator). <strong>Use this annotation with care</strong>, because
  * if you are specifying the wrong URI, the href link in your json-home will be resolvable by your application.
  *
  * @author Guido Steinacker
@@ -30,10 +30,15 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Href {
+public @interface HrefTemplate {
 
     /**
-     * The fully qualified or relative URI uniquely identifying the href of a linked resource.
+     * The templated URI uniquely identifying the href-template of a linked resource.
+     * <p/>
+     * The href-vars are parsed from the specified template.
+     * <p/>
+     * Because it is not possible to associate {@link Doc documentation} with the variables used in the
+     * href-template, you should consider adding some appropriate documentation to the resource link itself.
      *
      * @return URI of the linked resource
      */

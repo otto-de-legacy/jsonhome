@@ -20,7 +20,7 @@ import de.otto.jsonhome.annotation.Status;
 
 import java.util.*;
 
-import static de.otto.jsonhome.model.Docs.emptyDocumentation;
+import static de.otto.jsonhome.model.Docs.emptyDocs;
 import static java.util.Arrays.asList;
 
 /**
@@ -36,7 +36,7 @@ public class HintsBuilder {
     private final Set<String> acceptPost = new LinkedHashSet<String>();
     private final Set<String> acceptPut = new LinkedHashSet<String>();
     private final List<Precondition> preconditionReq = new ArrayList<Precondition>();
-    private Docs docs = emptyDocumentation();
+    private Docs docs = emptyDocs();
     private Status status = Status.OK;
 
     private HintsBuilder() {

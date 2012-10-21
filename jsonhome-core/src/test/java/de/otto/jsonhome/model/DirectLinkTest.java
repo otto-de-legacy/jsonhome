@@ -25,7 +25,7 @@ import static de.otto.jsonhome.fixtures.LinkFixtures.*;
 import static de.otto.jsonhome.model.Allow.GET;
 import static de.otto.jsonhome.model.Allow.PUT;
 import static de.otto.jsonhome.model.DirectLink.directLink;
-import static de.otto.jsonhome.model.Docs.emptyDocumentation;
+import static de.otto.jsonhome.model.Docs.emptyDocs;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.of;
@@ -91,7 +91,7 @@ public class DirectLinkTest {
                         Collections.<String>emptyList(),
                         Collections.<String>emptyList(),
                         asList(ETAG),
-                        emptyDocumentation()
+                        emptyDocs()
                 )
         );
         // when

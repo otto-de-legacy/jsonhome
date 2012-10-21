@@ -27,7 +27,7 @@ import java.util.Collections;
 
 import static de.otto.jsonhome.model.Allow.GET;
 import static de.otto.jsonhome.model.DirectLink.directLink;
-import static de.otto.jsonhome.model.Docs.emptyDocumentation;
+import static de.otto.jsonhome.model.Docs.emptyDocs;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
 
@@ -53,7 +53,7 @@ public class LinkFixtures {
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<Precondition>emptyList(),
-                    emptyDocumentation()
+                    emptyDocs()
             ));
 
     public static final DirectLink SHOPPAGES_LINK = directLink(
@@ -65,19 +65,19 @@ public class LinkFixtures {
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<Precondition>emptyList(),
-                    emptyDocumentation()));
+                    emptyDocs()));
 
     public static final TemplatedLink ABOUTPAGE_LINK = TemplatedLink.templatedLink(
             RESOURCELINK_SHOP_PAGE,
             REL_PAGE_HREF,
-            asList(new HrefVar("pageId", VAR_TYPE_PAGEID, emptyDocumentation())),
+            asList(new HrefVar("pageId", VAR_TYPE_PAGEID, emptyDocs())),
             new Hints(
                     of(GET),
                     Arrays.<String>asList("text/html", "application/json"),
                     Arrays.<String>asList(),
                     Arrays.<String>asList(),
                     Arrays.<Precondition>asList(),
-                    emptyDocumentation()
+                    emptyDocs()
             )
     );
 

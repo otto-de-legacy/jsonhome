@@ -30,7 +30,7 @@ import java.util.Set;
 import static de.otto.jsonhome.annotation.Precondition.ETAG;
 import static de.otto.jsonhome.converter.HintsConverter.hintsToJsonHome;
 import static de.otto.jsonhome.model.Allow.*;
-import static de.otto.jsonhome.model.Docs.emptyDocumentation;
+import static de.otto.jsonhome.model.Docs.emptyDocs;
 import static de.otto.jsonhome.model.HintsBuilder.hints;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
@@ -55,7 +55,7 @@ public class HintsConverterTest {
                 .representedAs(representations)
                 .acceptingForPut(acceptPut)
                 .acceptingForPost(acceptPost)
-                .with(emptyDocumentation())
+                .with(emptyDocs())
                 .requiring(preconditions)
                 .withStatus(Status.DEPRECATED)
                 .build();

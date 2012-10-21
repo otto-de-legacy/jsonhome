@@ -1,8 +1,10 @@
 package de.otto.jsonhome.generator;
 
 import de.otto.jsonhome.annotation.Href;
+import de.otto.jsonhome.annotation.HrefTemplate;
 import de.otto.jsonhome.annotation.Rel;
 import de.otto.jsonhome.model.Allow;
+import de.otto.jsonhome.model.HrefVar;
 import de.otto.jsonhome.model.ResourceLink;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +15,10 @@ import java.net.URI;
 import java.util.List;
 
 import static de.otto.jsonhome.model.DirectLink.directLink;
+import static de.otto.jsonhome.model.Docs.emptyDocs;
 import static de.otto.jsonhome.model.HintsBuilder.hints;
+import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -37,6 +42,12 @@ public class SpringResourceLinkGeneratorTest {
         public void getSomething() {}
         @RequestMapping("/foo2") @Href("/bar")
         public void getSomethingElse() {}
+    }
+
+    private static  @Controller @Rel("http://example.org/rel/bar")
+    class ControllerWithOverriddenRelativeTemplatedResourceLink {
+        @RequestMapping("/foo/**")  @HrefTemplate("http://example.org/bar{/var1*}")
+        public void getSomething() {}
     }
 
     @Test
@@ -100,4 +111,24 @@ public class SpringResourceLinkGeneratorTest {
         );
     }
 
+    @Test
+    public void shouldOverrideHrefTemplateUsingHrefTemplateAnnotation() throws Exception {
+        // given
+        final SpringResourceLinkGenerator generator = new SpringResourceLinkGenerator(BASE_URI, BASE_URI);
+        final Method method = ControllerWithOverriddenRelativeTemplatedResourceLink.class.getMethod("getSomething");
+        // when
+        final boolean isCandidateForAnalysis = generator.isCandidateForAnalysis(method);
+        final List<ResourceLink> resourceLinks = generator.resourceLinksFor(method);
+        // then
+        assertTrue(isCandidateForAnalysis);
+        assertEquals(resourceLinks, singletonList(templatedLink(
+                BASE_URI.resolve("/rel/bar"),
+                "http://example.org/bar{/var1*}",
+                asList(new HrefVar("var1", BASE_URI.resolve("/rel/bar#var1"), emptyDocs())),
+                hints()
+                        .representedAs("text/html")
+                        .allowing(Allow.GET)
+                        .build()))
+        );
+    }
 }

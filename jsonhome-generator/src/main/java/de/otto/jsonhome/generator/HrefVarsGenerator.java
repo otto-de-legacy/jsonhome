@@ -15,8 +15,8 @@
  */
 package de.otto.jsonhome.generator;
 
+import de.otto.jsonhome.annotation.HrefTemplate;
 import de.otto.jsonhome.model.Docs;
-import de.otto.jsonhome.model.Hints;
 import de.otto.jsonhome.model.HrefVar;
 
 import java.lang.reflect.Method;
@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.otto.jsonhome.generator.MethodHelper.getParameterInfos;
+import static de.otto.jsonhome.generator.UriTemplateHelper.variableNamesFrom;
+import static de.otto.jsonhome.model.Docs.emptyDocs;
 
 public abstract class HrefVarsGenerator {
 
@@ -36,13 +38,27 @@ public abstract class HrefVarsGenerator {
      * @param method the method to analyse.
      * @return list of href-vars.
      */
-    public final List<HrefVar> hrefVarsFor(final URI relationTypeUri, final Method method, final Hints hints) {
-        final List<HrefVar> hrefVars = new ArrayList<HrefVar>();
-        for (final ParameterInfo parameterInfo : getParameterInfos(method)) {
-            final URI relationType = relationTypeUri.resolve("#" + parameterInfo.getName());
-            final Docs docs = docsGenerator.documentationFor(parameterInfo);
-            if (hasPathVariable(parameterInfo) || hasRequestParam(parameterInfo)) {
-                hrefVars.add(new HrefVar(parameterInfo.getName(), relationType, docs));
+    public final List<HrefVar> hrefVarsFor(final URI relationTypeUri, final Method method) {
+        final List<HrefVar> hrefVars;
+        final HrefTemplate hrefTemplateAnnotation = method.getAnnotation(HrefTemplate.class);
+        if (hrefTemplateAnnotation != null) {
+            hrefVars = new ArrayList<HrefVar>();
+            final String template = hrefTemplateAnnotation.value();
+            for (String varName : variableNamesFrom(template)) {
+                final URI relationType = relationTypeUri.resolve("#" + varName);
+                hrefVars.add(new HrefVar(varName, relationType, emptyDocs()));
+            }
+            if(hrefVars.isEmpty()) {
+                throw new IllegalArgumentException("no variables found");
+            }
+        } else {
+            hrefVars = new ArrayList<HrefVar>();
+            for (final ParameterInfo parameterInfo : getParameterInfos(method)) {
+                final URI relationType = relationTypeUri.resolve("#" + parameterInfo.getName());
+                final Docs docs = docsGenerator.documentationFor(parameterInfo);
+                if (hasPathVariable(parameterInfo) || hasRequestParam(parameterInfo)) {
+                    hrefVars.add(new HrefVar(parameterInfo.getName(), relationType, docs));
+                }
             }
         }
         return hrefVars;

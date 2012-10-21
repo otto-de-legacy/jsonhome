@@ -20,7 +20,7 @@ import de.otto.jsonhome.annotation.Status;
 
 import java.util.*;
 
-import static de.otto.jsonhome.model.Docs.emptyDocumentation;
+import static de.otto.jsonhome.model.Docs.emptyDocs;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.EnumSet.copyOf;
@@ -48,7 +48,7 @@ public final class Hints {
                 Collections.<String>emptyList(),
                 Collections.<String>emptyList(),
                 Collections.<Precondition>emptyList(),
-                emptyDocumentation());
+                emptyDocs());
     }
 
     public Hints(final Set<Allow> allows,
