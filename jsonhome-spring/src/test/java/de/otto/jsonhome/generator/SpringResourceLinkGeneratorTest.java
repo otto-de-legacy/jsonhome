@@ -31,18 +31,12 @@ public class SpringResourceLinkGeneratorTest {
         public void getSomething() {}
     }
 
-    private static  @Controller @Rel("http://example.org/rel/bar") @Href("http://example.org/foobar")
+    private static  @Controller @Rel("http://example.org/rel/bar")
     class ControllerWithOverriddenFullyQualifiedResourceLink {
         @RequestMapping("/foo1")  @Href("http://example.org/bar")
         public void getSomething() {}
         @RequestMapping("/foo2") @Href("/bar")
         public void getSomethingElse() {}
-    }
-
-    private static  @Controller @Rel("http://example.org/rel/bar") @Href("/foobar")
-    class ControllerWithOverriddenRelativeResourceLink {
-        @RequestMapping("/foo")  @Href("/bar")
-        public void getSomething() {}
     }
 
     @Test
@@ -98,7 +92,7 @@ public class SpringResourceLinkGeneratorTest {
         assertTrue(isCandidateForAnalysis);
         assertEquals(resourceLinks, singletonList(directLink(
                 BASE_URI.resolve("/rel/bar"),
-                BASE_URI.resolve("/foobar/bar"),
+                BASE_URI.resolve("/bar"),
                 hints()
                         .representedAs("text/html")
                         .allowing(Allow.GET)
@@ -106,23 +100,4 @@ public class SpringResourceLinkGeneratorTest {
         );
     }
 
-    @Test
-    public void shouldOverrideHrefUriUsingRelativeHrefAnnotationAtClassAndMethodLevel() throws Exception {
-        // given
-        final SpringResourceLinkGenerator generator = new SpringResourceLinkGenerator(BASE_URI, BASE_URI);
-        final Method method = ControllerWithOverriddenRelativeResourceLink.class.getMethod("getSomething");
-        // when
-        final boolean isCandidateForAnalysis = generator.isCandidateForAnalysis(method);
-        final List<ResourceLink> resourceLinks = generator.resourceLinksFor(method);
-        // then
-        assertTrue(isCandidateForAnalysis);
-        assertEquals(resourceLinks, singletonList(directLink(
-                BASE_URI.resolve("/rel/bar"),
-                BASE_URI.resolve("/foobar/bar"),
-                hints()
-                        .representedAs("text/html")
-                        .allowing(Allow.GET)
-                        .build()))
-        );
-    }
 }

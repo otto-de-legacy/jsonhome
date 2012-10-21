@@ -23,7 +23,7 @@ import java.lang.annotation.*;
  * @author Guido Steinacker
  * @since 15.09.12
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Href {
