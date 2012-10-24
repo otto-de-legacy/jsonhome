@@ -1,16 +1,5 @@
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'maven'
-apply plugin: 'signing'
-
-group = 'de.otto'
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
-
     compile project(':jsonhome-core')
     compile project(':jsonhome-generator')
     compile 'org.springframework:spring-webmvc:3.1.2.RELEASE'
@@ -19,20 +8,6 @@ dependencies {
     compile 'com.thoughtworks.paranamer:paranamer:2.5.1'
     testCompile 'org.testng:testng:6.3.1'
     testCompile 'org.springframework:spring-test:3.1.2.RELEASE'
-}
-
-test {
-    useTestNG()
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from 'build/docs/javadoc'
-}
-
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    classifier = 'sources'
 }
 
 artifacts {
@@ -48,7 +23,7 @@ signing {
 uploadArchives {
     repositories {
         mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                 authentication(userName: sonatypeUsername, password: sonatypePassword)

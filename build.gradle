@@ -1,19 +1,33 @@
-allprojects {
+subprojects {
+    apply plugin: 'java'
     apply plugin: 'idea'
-    apply plugin: 'eclipse'
+    apply plugin: 'maven'
+    apply plugin: 'signing'
+
+    group = 'de.otto'
+    version = '0.2.0-SNAPSHOT'
 
     repositories {
         mavenCentral()
     }
-}
-
-subprojects {
-    apply plugin: 'java'
-
-    version = '0.2.0-SNAPSHOT'
 
     jar {
         manifest.attributes provider: 'gradle'
     }
 
+    test {
+        useTestNG()
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from 'build/docs/javadoc'
+    }
+
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.allSource
+        classifier = 'sources'
+    }
+
 }
+
