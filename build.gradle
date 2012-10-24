@@ -10,7 +10,7 @@ allprojects {
 subprojects {
     apply plugin: 'java'
 
-    version = '0.1'
+    version = '0.1.0'
 
     jar {
         manifest.attributes provider: 'gradle'
