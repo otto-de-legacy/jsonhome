@@ -65,6 +65,30 @@ The library is actively used (and developed) at otto (http://www.otto.de).
 
 The project is released under version 2.0 of the Apache License. See LICENSE.txt for details.
 
+## Maven, Gradle
+
+You can find all releases in the public Sonatype repository:
+
+https://oss.sonatype.org/content/repositories/releases
+
+The current release is 0.1.0:
+
+* de.otto:jsonhome-core:0.1.0
+* de.otto:jsonhome-generator:0.1.0
+* de.otto:jsonhome-spring:0.1.0
+
+Snapshot releases will be published here:
+
+https://oss.sonatype.org/content/repositories/snapshots
+
+The current snapshot-release is 0.2.0-SNAPSHOT:
+
+* de.otto:jsonhome-core:0.2.0-SNAPSHOT
+* de.otto:jsonhome-generator:0.2.0-SNAPSHOT
+* de.otto:jsonhome-spring:0.2.0-SNAPSHOT
+
+There is no de.otto:jsonhome-example:* because this is only an example, you should not depend on it.
+
 ## Feedback + Help Wanted
 
 Every kind of feedback - also negative - is appreciated. Even more appreciated are contributions to the code base.
@@ -73,7 +97,7 @@ To contact us, please send an email to guido.steinacker@gmail.com
 
 ## Links and Documentation
 
-Have a look to the wiki pages.
+Have a look at the wiki pages.
 
 You can find information about json-home in the draft specification:
 Json-Home: http://tools.ietf.org/html/draft-nottingham-json-home-02
