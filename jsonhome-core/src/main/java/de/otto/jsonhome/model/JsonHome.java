@@ -50,7 +50,7 @@ public final class JsonHome {
      * @param resources collection of resource links.
      * @return JsonHome
      */
-    public static JsonHome jsonHome(final Collection<ResourceLink> resources) {
+    public static JsonHome jsonHome(final Collection<? extends ResourceLink> resources) {
         final Map<URI, ResourceLink> resourceMap = new HashMap<URI, ResourceLink>(resources.size());
         for (final ResourceLink resource : resources) {
             if (resourceMap.containsKey(resource.getLinkRelationType())) {
