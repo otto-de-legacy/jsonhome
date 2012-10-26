@@ -1,0 +1,59 @@
+
+dependencies {
+    compile project(':jsonhome-core')
+    compile 'com.ning:async-http-client:1.7.5'
+    compile 'com.damnhandy:handy-uri-templates:1.1.5'
+    testCompile 'org.testng:testng:6.3.1'
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+            pom.project {
+                name 'jsonhome-client'
+                packaging 'jar'
+                description 'Generator library of the jsonhome project.'
+                url 'http://github.com/otto-de/jsonhome'
+
+                scm {
+                    url 'scm:git@github.com:otto-de/jsonhome.git'
+                    connection 'scm:git@github.com:otto-de/jsonhome.git'
+                    developerConnection 'scm:git@github.com:otto-de/jsonhome.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'gsteinacker'
+                        name 'Guido Steinacker'
+                    }
+                }
+            }
+        }
+    }
+}
