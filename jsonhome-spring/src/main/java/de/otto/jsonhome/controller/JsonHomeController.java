@@ -15,8 +15,6 @@
  */
 package de.otto.jsonhome.controller;
 
-import de.otto.jsonhome.annotation.Doc;
-import de.otto.jsonhome.annotation.Rel;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,8 +35,6 @@ import static de.otto.jsonhome.converter.JsonHomeConverter.toJsonHome;
  * @since 15.09.12
  */
 @Controller
-@Rel("/rel/json-home")
-@Doc(link = "http://tools.ietf.org/html/draft-nottingham-json-home-02")
 @RequestMapping(value = "/json-home")
 public class JsonHomeController extends JsonHomeControllerBase {
 
