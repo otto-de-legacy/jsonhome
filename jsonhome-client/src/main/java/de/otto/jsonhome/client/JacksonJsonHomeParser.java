@@ -118,7 +118,7 @@ public class JacksonJsonHomeParser implements JsonHomeParser {
             if (hints.has("precondition-req")) {
                 final Iterator<JsonNode> iterator = hints.get("precondition-req").getElements();
                 while (iterator.hasNext()) {
-                    builder.requiring(Precondition.valueOf(iterator.next().getTextValue()));
+                    builder.requiring(Precondition.valueOf(iterator.next().getTextValue().toUpperCase()));
                 }
             }
             if (hints.has("accept-put")) {
@@ -134,7 +134,7 @@ public class JacksonJsonHomeParser implements JsonHomeParser {
                 }
             }
             if (hints.has("status")) {
-                builder.withStatus(Status.valueOf(hints.get("status").getTextValue()));
+                builder.withStatus(Status.valueOf(hints.get("status").getTextValue().toUpperCase()));
             }
         }
         return builder.build();
