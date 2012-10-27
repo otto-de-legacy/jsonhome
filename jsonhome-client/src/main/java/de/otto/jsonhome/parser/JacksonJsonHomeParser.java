@@ -1,4 +1,4 @@
-package de.otto.jsonhome.client;
+package de.otto.jsonhome.parser;
 
 import de.otto.jsonhome.model.*;
 import org.codehaus.jackson.JsonNode;

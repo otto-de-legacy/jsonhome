@@ -1,4 +1,4 @@
-package de.otto.jsonhome.client;
+package de.otto.jsonhome.parser;
 
 import de.otto.jsonhome.model.JsonHome;
 import de.otto.jsonhome.model.Precondition;
@@ -52,18 +52,18 @@ public class JacksonJsonHomeParserTest {
                 .fromStream(new ByteArrayInputStream(jsonHomeDocument.getBytes()))
                 .parse();
         // then
-        assertEquals(jsonHome, jsonHome(
-                    directLink(
-                            URI.create("http://example.org/jsonhome-example/rel/storefront"),
-                            URI.create("http://example.org/jsonhome-example/storefront"),
-                            hintsBuilder()
-                                    .allowing(EnumSet.of(GET, HEAD))
-                                    .representedAs(asList("text/html", "text/plain"))
-                                    .with(docLink(URI.create("http://de.wikipedia.org/wiki/Homepage")))
-                                    .requiring(Precondition.ETAG)
-                                    .withStatus(Status.DEPRECATED)
-                                    .build()
-                    )
+        Assert.assertEquals(jsonHome, jsonHome(
+                directLink(
+                        URI.create("http://example.org/jsonhome-example/rel/storefront"),
+                        URI.create("http://example.org/jsonhome-example/storefront"),
+                        hintsBuilder()
+                                .allowing(EnumSet.of(GET, HEAD))
+                                .representedAs(asList("text/html", "text/plain"))
+                                .with(docLink(URI.create("http://de.wikipedia.org/wiki/Homepage")))
+                                .requiring(Precondition.ETAG)
+                                .withStatus(Status.DEPRECATED)
+                                .build()
+                )
         ));
     }
 
@@ -100,7 +100,7 @@ public class JacksonJsonHomeParserTest {
                 .fromStream(new ByteArrayInputStream(jsonHomeDocument.getBytes()))
                 .parse();
         // then
-        assertEquals(jsonHome, jsonHome(
+        Assert.assertEquals(jsonHome, jsonHome(
                 templatedLink(
                         URI.create("http://example.org/jsonhome-example/rel/product"),
                         "http://example.org/jsonhome-example/products/{productId}",

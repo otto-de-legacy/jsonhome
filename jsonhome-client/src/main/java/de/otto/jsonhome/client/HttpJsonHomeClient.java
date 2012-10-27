@@ -3,6 +3,7 @@ package de.otto.jsonhome.client;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
 import de.otto.jsonhome.model.JsonHome;
+import de.otto.jsonhome.parser.JacksonJsonHomeParser;
 
 import java.io.IOException;
 import java.io.InputStream;
