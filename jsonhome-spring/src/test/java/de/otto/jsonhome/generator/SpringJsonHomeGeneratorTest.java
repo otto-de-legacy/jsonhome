@@ -21,11 +21,11 @@ import org.testng.annotations.Test;
 import java.net.URI;
 import java.util.*;
 
-import static de.otto.jsonhome.annotation.Precondition.ETAG;
 import static de.otto.jsonhome.fixtures.ControllerFixtures.*;
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.HrefVar.hrefVar;
+import static de.otto.jsonhome.model.Precondition.ETAG;
 import static java.net.URI.create;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;

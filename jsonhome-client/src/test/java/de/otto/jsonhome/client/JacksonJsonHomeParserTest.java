@@ -1,8 +1,8 @@
 package de.otto.jsonhome.client;
 
-import de.otto.jsonhome.annotation.Precondition;
-import de.otto.jsonhome.annotation.Status;
 import de.otto.jsonhome.model.JsonHome;
+import de.otto.jsonhome.model.Precondition;
+import de.otto.jsonhome.model.Status;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;

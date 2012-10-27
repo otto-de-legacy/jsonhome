@@ -15,7 +15,6 @@
  */
 package de.otto.jsonhome.model;
 
-import de.otto.jsonhome.annotation.Precondition;
 import org.testng.annotations.Test;
 
 import java.util.Collections;

@@ -30,8 +30,8 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map;
 
-import static de.otto.jsonhome.annotation.Precondition.ETAG;
 import static de.otto.jsonhome.example.products.ProductConverter.*;
+import static de.otto.jsonhome.model.Precondition.ETAG;
 import static java.util.Collections.singletonMap;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_OK;

@@ -18,11 +18,7 @@
 
 package de.otto.jsonhome.generator;
 
-import de.otto.jsonhome.annotation.Precondition;
-import de.otto.jsonhome.annotation.Status;
-import de.otto.jsonhome.model.Allow;
-import de.otto.jsonhome.model.Hints;
-import de.otto.jsonhome.model.HintsBuilder;
+import de.otto.jsonhome.model.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

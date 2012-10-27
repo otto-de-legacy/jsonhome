@@ -16,20 +16,18 @@
  *
  */
 
-package de.otto.jsonhome.annotation;
+package de.otto.jsonhome.model;
 
 /**
 * @author Guido Steinacker
 * @since 15.10.12
 */
-public enum Status {
-    OK, DEPRECATED, GONE;
+public enum Precondition {
 
-    public Status mergeWith(final Status other) {
-        return  this.ordinal() > other.ordinal() ? this : other;
-    }
+    NONE, ETAG, LAST_MODIFIED;
 
     public String toString() {
         return name().toLowerCase();
     }
+
 }

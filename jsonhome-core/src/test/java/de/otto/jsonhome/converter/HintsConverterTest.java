@@ -17,21 +17,21 @@
  */
 package de.otto.jsonhome.converter;
 
-import de.otto.jsonhome.annotation.Precondition;
-import de.otto.jsonhome.annotation.Status;
 import de.otto.jsonhome.model.Allow;
 import de.otto.jsonhome.model.Hints;
+import de.otto.jsonhome.model.Precondition;
+import de.otto.jsonhome.model.Status;
 import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static de.otto.jsonhome.annotation.Precondition.ETAG;
 import static de.otto.jsonhome.converter.HintsConverter.hintsToJsonHome;
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.Docs.emptyDocs;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
+import static de.otto.jsonhome.model.Precondition.ETAG;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
 import static org.testng.Assert.assertEquals;

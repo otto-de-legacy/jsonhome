@@ -15,9 +15,6 @@
  */
 package de.otto.jsonhome.model;
 
-import de.otto.jsonhome.annotation.Precondition;
-import de.otto.jsonhome.annotation.Status;
-
 import java.util.*;
 
 import static de.otto.jsonhome.model.Docs.emptyDocs;

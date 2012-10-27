@@ -17,6 +17,9 @@
  */
 package de.otto.jsonhome.annotation;
 
+import de.otto.jsonhome.model.Precondition;
+import de.otto.jsonhome.model.Status;
+
 import java.lang.annotation.*;
 
 /**

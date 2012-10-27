@@ -21,8 +21,8 @@ import de.otto.jsonhome.annotation.Rel;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import static de.otto.jsonhome.annotation.Precondition.ETAG;
-import static de.otto.jsonhome.annotation.Status.DEPRECATED;
+import static de.otto.jsonhome.model.Precondition.ETAG;
+import static de.otto.jsonhome.model.Status.DEPRECATED;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**

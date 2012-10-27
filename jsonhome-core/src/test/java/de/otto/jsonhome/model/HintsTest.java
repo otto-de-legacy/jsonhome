@@ -15,7 +15,6 @@
  */
 package de.otto.jsonhome.model;
 
-import de.otto.jsonhome.annotation.Status;
 import org.testng.annotations.Test;
 
 import java.util.Set;

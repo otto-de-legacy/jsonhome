@@ -18,8 +18,8 @@
 
 package de.otto.jsonhome.converter;
 
-import de.otto.jsonhome.annotation.Status;
 import de.otto.jsonhome.model.Hints;
+import de.otto.jsonhome.model.Status;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

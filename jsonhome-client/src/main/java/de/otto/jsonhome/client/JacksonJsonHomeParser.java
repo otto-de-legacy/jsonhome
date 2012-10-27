@@ -1,7 +1,5 @@
 package de.otto.jsonhome.client;
 
-import de.otto.jsonhome.annotation.Precondition;
-import de.otto.jsonhome.annotation.Status;
 import de.otto.jsonhome.model.*;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;

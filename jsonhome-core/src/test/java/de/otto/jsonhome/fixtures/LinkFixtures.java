@@ -15,9 +15,9 @@
  */
 package de.otto.jsonhome.fixtures;
 
-import de.otto.jsonhome.annotation.Precondition;
 import de.otto.jsonhome.model.DirectLink;
 import de.otto.jsonhome.model.Hints;
+import de.otto.jsonhome.model.Precondition;
 import de.otto.jsonhome.model.TemplatedLink;
 
 import java.net.URI;
