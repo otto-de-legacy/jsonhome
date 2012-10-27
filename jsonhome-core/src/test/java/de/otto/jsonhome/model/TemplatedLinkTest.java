@@ -23,6 +23,7 @@ import java.util.Collections;
 import static de.otto.jsonhome.fixtures.LinkFixtures.*;
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.Docs.emptyDocs;
+import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
@@ -41,7 +42,7 @@ public class TemplatedLinkTest {
         final TemplatedLink otherTemplatedLink = TemplatedLink.templatedLink(
                 RESOURCELINK_SHOP_STOREFRONT,
                 REL_PAGE_HREF,
-                asList(new HrefVar("pageId", VAR_TYPE_PAGEID, emptyDocs())),
+                asList(hrefVar("pageId", VAR_TYPE_PAGEID, emptyDocs())),
                 new Hints(
                         of(GET),
                         asList("text/html")));
@@ -57,7 +58,7 @@ public class TemplatedLinkTest {
         final TemplatedLink otherTemplatedLink = templatedLink(
                 RESOURCELINK_SHOP_PAGE,
                 "/foo/{fooId}",
-                asList(new HrefVar("fooId", VAR_TYPE_PAGEID, emptyDocs())),
+                asList(hrefVar("fooId", VAR_TYPE_PAGEID, emptyDocs())),
                 new Hints(
                         of(GET),
                         asList("text/html")
@@ -75,7 +76,7 @@ public class TemplatedLinkTest {
         final TemplatedLink otherTemplatedLink = templatedLink(
                 RESOURCELINK_SHOP_PAGE,
                 REL_PAGE_HREF,
-                asList(new HrefVar("pageId", VAR_TYPE_PAGEID, emptyDocs())),
+                asList(hrefVar("pageId", VAR_TYPE_PAGEID, emptyDocs())),
                 new Hints(
                         of(PUT),
                         asList("text/html", "application/json")
@@ -94,7 +95,7 @@ public class TemplatedLinkTest {
         final TemplatedLink otherTemplatedLink = templatedLink(
                 RESOURCELINK_SHOP_PAGE,
                 REL_PAGE_HREF,
-                asList(new HrefVar("pageId", VAR_TYPE_PAGEID, emptyDocs())),
+                asList(hrefVar("pageId", VAR_TYPE_PAGEID, emptyDocs())),
                 new Hints(
                         of(GET),
                         asList("text/html", "application/foo")
@@ -119,7 +120,7 @@ public class TemplatedLinkTest {
         final TemplatedLink otherTemplatedLink = templatedLink(
                 RESOURCELINK_SHOP_PAGE,
                 "pages/foo/{pageId}",
-                asList(new HrefVar("pageId", VAR_TYPE_PAGEID, emptyDocs())),
+                asList(hrefVar("pageId", VAR_TYPE_PAGEID)),
                 new Hints(
                         of(GET),
                         asList("text/html", "application/json")
@@ -137,7 +138,7 @@ public class TemplatedLinkTest {
         final TemplatedLink otherTemplatedLink = templatedLink(
                 RESOURCELINK_SHOP_PAGE,
                 "pages/{pageId}",
-                asList(new HrefVar("foo", VAR_TYPE_PAGEID, emptyDocs())),
+                asList(hrefVar("foo", VAR_TYPE_PAGEID)),
                 new Hints(
                         of(GET),
                         asList("text/html", "application/json")
@@ -154,7 +155,7 @@ public class TemplatedLinkTest {
         final TemplatedLink thisTemplatedLink = templatedLink(
                 RESOURCELINK_SHOP_PAGE,
                 REL_PAGE_HREF,
-                asList(new HrefVar("pageId", VAR_TYPE_PAGEID, emptyDocs())),
+                asList(hrefVar("pageId", VAR_TYPE_PAGEID)),
                 new Hints(
                         of(GET, PUT),
                         asList("application/foo"),
@@ -167,7 +168,7 @@ public class TemplatedLinkTest {
         final TemplatedLink thatTemplatedLink = templatedLink(
                 RESOURCELINK_SHOP_PAGE,
                 REL_PAGE_HREF,
-                asList(new HrefVar("pageId", VAR_TYPE_PAGEID, emptyDocs())),
+                asList(hrefVar("pageId", VAR_TYPE_PAGEID)),
                 new Hints(
                         of(GET, PUT),
                         asList("application/foo"),
@@ -191,7 +192,7 @@ public class TemplatedLinkTest {
         final TemplatedLink thisTemplatedLink = templatedLink(
                 RESOURCELINK_SHOP_PAGE,
                 REL_PAGE_HREF,
-                asList(new HrefVar("pageId", VAR_TYPE_PAGEID, emptyDocs())),
+                asList(hrefVar("pageId", VAR_TYPE_PAGEID)),
                 new Hints(
                         of(GET, POST),
                         asList("application/foo"),
@@ -204,7 +205,7 @@ public class TemplatedLinkTest {
         final TemplatedLink thatTemplatedLink = templatedLink(
                 RESOURCELINK_SHOP_PAGE,
                 REL_PAGE_HREF,
-                asList(new HrefVar("pageId", VAR_TYPE_PAGEID, emptyDocs())),
+                asList(hrefVar("pageId", VAR_TYPE_PAGEID)),
                 new Hints(
                         of(GET, POST),
                         asList("application/foo"),

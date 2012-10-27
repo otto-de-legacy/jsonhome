@@ -16,8 +16,8 @@ import java.util.List;
 
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.Docs.docLink;
-import static de.otto.jsonhome.model.Docs.emptyDocs;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
+import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static de.otto.jsonhome.model.JsonHomeBuilder.jsonHomeBuilder;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 
@@ -89,7 +89,7 @@ public class JacksonJsonHomeParser implements JsonHomeParser {
             while (varNames.hasNext()) {
                 final String varName = varNames.next();
                 final JsonNode varRefNode = jsonNode.get(varName);
-                hrefVars.add(new HrefVar(varName, URI.create(varRefNode.getTextValue()), emptyDocs()));
+                hrefVars.add(hrefVar(varName, URI.create(varRefNode.getTextValue())));
             }
             return hrefVars;
         } else {

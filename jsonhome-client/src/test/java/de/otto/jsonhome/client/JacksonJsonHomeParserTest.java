@@ -2,7 +2,6 @@ package de.otto.jsonhome.client;
 
 import de.otto.jsonhome.annotation.Precondition;
 import de.otto.jsonhome.annotation.Status;
-import de.otto.jsonhome.model.Allow;
 import de.otto.jsonhome.model.JsonHome;
 import org.testng.annotations.Test;
 
@@ -10,11 +9,13 @@ import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.util.EnumSet;
 
-import static de.otto.jsonhome.model.Allow.GET;
+import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.Docs.docLink;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
+import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static de.otto.jsonhome.model.JsonHome.jsonHome;
+import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 
@@ -56,7 +57,7 @@ public class JacksonJsonHomeParserTest {
                             URI.create("http://example.org/jsonhome-example/rel/storefront"),
                             URI.create("http://example.org/jsonhome-example/storefront"),
                             hintsBuilder()
-                                    .allowing(EnumSet.of(GET, Allow.HEAD))
+                                    .allowing(EnumSet.of(GET, HEAD))
                                     .representedAs(asList("text/html", "text/plain"))
                                     .with(docLink(URI.create("http://de.wikipedia.org/wiki/Homepage")))
                                     .requiring(Precondition.ETAG)
@@ -66,4 +67,51 @@ public class JacksonJsonHomeParserTest {
         ));
     }
 
+    @Test
+    public void shouldParseTemplatedLink() throws Exception {
+        // given
+        final String jsonHomeDocument = "{\n" +
+                "  \"resources\" : {" +
+                "\"http://example.org/jsonhome-example/rel/product\" : {\n" +
+                "      \"href-template\" : \"http://example.org/jsonhome-example/products/{productId}\",\n" +
+                "      \"href-vars\" : {\n" +
+                "        \"productId\" : \"http://example.org/jsonhome-example/rel/product#productId\"\n" +
+                "      },\n" +
+                "      \"hints\" : {\n" +
+                "        \"allow\" : [\n" +
+                "          \"POST\",\n" +
+                "          \"PUT\"\n" +
+                "        ],\n" +
+                "        \"accept-put\" : [\n" +
+                "          \"application/example-product\",\n" +
+                "          \"application/json\"\n" +
+                "        ],\n" +
+                "        \"accept-post\" : [\n" +
+                "          \"application/json\"\n" +
+                "        ],\n" +
+                "        \"representations\" : [\n" +
+                "          \"application/json\"\n" +
+                "        ]\n" +
+                "      }\n" +
+                "    }\n" +
+                "    }}}";
+        // when
+        final JsonHome jsonHome = new JacksonJsonHomeParser()
+                .fromStream(new ByteArrayInputStream(jsonHomeDocument.getBytes()))
+                .parse();
+        // then
+        assertEquals(jsonHome, jsonHome(
+                templatedLink(
+                        URI.create("http://example.org/jsonhome-example/rel/product"),
+                        "http://example.org/jsonhome-example/products/{productId}",
+                        asList(hrefVar("productId", URI.create("http://example.org/jsonhome-example/rel/product#productId"))),
+                        hintsBuilder()
+                                .allowing(EnumSet.of(PUT, POST))
+                                .representedAs(asList("application/json"))
+                                .acceptingForPut(asList("application/example-product", "application/json"))
+                                .acceptingForPost("application/json")
+                                .build()
+                )
+        ));
+    }
 }

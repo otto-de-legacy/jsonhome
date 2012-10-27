@@ -27,6 +27,7 @@ import java.util.List;
 import static de.otto.jsonhome.generator.MethodHelper.getParameterInfos;
 import static de.otto.jsonhome.generator.UriTemplateHelper.variableNamesFrom;
 import static de.otto.jsonhome.model.Docs.emptyDocs;
+import static de.otto.jsonhome.model.HrefVar.hrefVar;
 
 public abstract class HrefVarsGenerator {
 
@@ -46,7 +47,7 @@ public abstract class HrefVarsGenerator {
             final String template = hrefTemplateAnnotation.value();
             for (String varName : variableNamesFrom(template)) {
                 final URI relationType = relationTypeUri.resolve("#" + varName);
-                hrefVars.add(new HrefVar(varName, relationType, emptyDocs()));
+                hrefVars.add(hrefVar(varName, relationType, emptyDocs()));
             }
             if(hrefVars.isEmpty()) {
                 throw new IllegalArgumentException("no variables found");
@@ -57,7 +58,7 @@ public abstract class HrefVarsGenerator {
                 final URI relationType = relationTypeUri.resolve("#" + parameterInfo.getName());
                 final Docs docs = docsGenerator.documentationFor(parameterInfo);
                 if (hasPathVariable(parameterInfo) || hasRequestParam(parameterInfo)) {
-                    hrefVars.add(new HrefVar(parameterInfo.getName(), relationType, docs));
+                    hrefVars.add(hrefVar(parameterInfo.getName(), relationType, docs));
                 }
             }
         }

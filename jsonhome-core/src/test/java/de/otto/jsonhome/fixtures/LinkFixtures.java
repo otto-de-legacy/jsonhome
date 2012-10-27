@@ -18,16 +18,16 @@ package de.otto.jsonhome.fixtures;
 import de.otto.jsonhome.annotation.Precondition;
 import de.otto.jsonhome.model.DirectLink;
 import de.otto.jsonhome.model.Hints;
-import de.otto.jsonhome.model.HrefVar;
 import de.otto.jsonhome.model.TemplatedLink;
 
 import java.net.URI;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static de.otto.jsonhome.model.Allow.GET;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.Docs.emptyDocs;
+import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
+import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
 
@@ -70,15 +70,11 @@ public class LinkFixtures {
     public static final TemplatedLink ABOUTPAGE_LINK = TemplatedLink.templatedLink(
             RESOURCELINK_SHOP_PAGE,
             REL_PAGE_HREF,
-            asList(new HrefVar("pageId", VAR_TYPE_PAGEID, emptyDocs())),
-            new Hints(
-                    of(GET),
-                    Arrays.<String>asList("text/html", "application/json"),
-                    Arrays.<String>asList(),
-                    Arrays.<String>asList(),
-                    Arrays.<Precondition>asList(),
-                    emptyDocs()
-            )
+            asList(hrefVar("pageId", VAR_TYPE_PAGEID)),
+            hintsBuilder()
+                    .allowing(GET)
+                    .representedAs("text/html", "application/json")
+                    .build()
     );
 
 }

@@ -4,7 +4,6 @@ import de.otto.jsonhome.annotation.Href;
 import de.otto.jsonhome.annotation.HrefTemplate;
 import de.otto.jsonhome.annotation.Rel;
 import de.otto.jsonhome.model.Allow;
-import de.otto.jsonhome.model.HrefVar;
 import de.otto.jsonhome.model.ResourceLink;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +14,8 @@ import java.net.URI;
 import java.util.List;
 
 import static de.otto.jsonhome.model.DirectLink.directLink;
-import static de.otto.jsonhome.model.Docs.emptyDocs;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
+import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -124,7 +123,7 @@ public class SpringResourceLinkGeneratorTest {
         assertEquals(resourceLinks, singletonList(templatedLink(
                 BASE_URI.resolve("/rel/bar"),
                 "http://example.org/bar{/var1*}",
-                asList(new HrefVar("var1", BASE_URI.resolve("/rel/bar#var1"), emptyDocs())),
+                asList(hrefVar("var1", BASE_URI.resolve("/rel/bar#var1"))),
                 hintsBuilder()
                         .representedAs("text/html")
                         .allowing(Allow.GET)
