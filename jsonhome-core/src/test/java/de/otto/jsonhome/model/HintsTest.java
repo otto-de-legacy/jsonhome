@@ -21,7 +21,7 @@ import org.testng.annotations.Test;
 import java.util.Set;
 
 import static de.otto.jsonhome.model.Allow.*;
-import static de.otto.jsonhome.model.HintsBuilder.hints;
+import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
 import static org.testng.Assert.assertEquals;
@@ -38,7 +38,7 @@ public class HintsTest {
         final Set<Allow> allows = of(GET, PUT);
         final String acceptPost = "text/plain";
         // when
-        hints().allowing(allows).representedAs("text/html").acceptingForPost(acceptPost).build();
+        hintsBuilder().allowing(allows).representedAs("text/html").acceptingForPost(acceptPost).build();
         // then an exception is thrown
     }
 
@@ -48,16 +48,16 @@ public class HintsTest {
         final Set<Allow> allows = of(GET, POST);
         final String acceptPut = "text/plain";
         // when
-        hints().allowing(allows).representedAs("text/html").acceptingForPut(acceptPut).build();
+        hintsBuilder().allowing(allows).representedAs("text/html").acceptingForPut(acceptPut).build();
         // then an exception is thrown
     }
 
     @Test
     public void shouldMergeStatusWithHigherOrder() {
         // given
-        final Hints first = hints().withStatus(Status.OK).build();
-        final Hints second = hints().withStatus(Status.DEPRECATED).build();
-        final Hints third = hints().withStatus(Status.GONE).build();
+        final Hints first = hintsBuilder().withStatus(Status.OK).build();
+        final Hints second = hintsBuilder().withStatus(Status.DEPRECATED).build();
+        final Hints third = hintsBuilder().withStatus(Status.GONE).build();
         // when
         final Hints firstWithSecond = first.mergeWith(second);
         final Hints firstWithThird = first.mergeWith(third);
@@ -79,12 +79,12 @@ public class HintsTest {
     @Test
     public void testMergeWith() {
         // given
-        final Hints firstHints = hints()
+        final Hints firstHints = hintsBuilder()
                 .allowing(of(GET, PUT))
                 .representedAs("text/html", "text/plain")
                 .acceptingForPut("bar/foo")
                 .build();
-        final Hints secondHints = hints()
+        final Hints secondHints = hintsBuilder()
                 .allowing(of(GET, POST, DELETE))
                 .representedAs("text/html", "application/json")
                 .acceptingForPost("foo/bar")

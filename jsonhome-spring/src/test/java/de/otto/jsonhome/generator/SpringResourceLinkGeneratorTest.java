@@ -16,7 +16,7 @@ import java.util.List;
 
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.Docs.emptyDocs;
-import static de.otto.jsonhome.model.HintsBuilder.hints;
+import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -64,7 +64,7 @@ public class SpringResourceLinkGeneratorTest {
         assertEquals(resourceLinks, singletonList(directLink(
                 BASE_URI.resolve("/rel/bar"),
                 BASE_URI.resolve("/foo"),
-                hints()
+                hintsBuilder()
                         .representedAs("text/html")
                         .allowing(Allow.GET)
                         .build()))
@@ -84,7 +84,7 @@ public class SpringResourceLinkGeneratorTest {
         assertEquals(resourceLinks, singletonList(directLink(
                 BASE_URI.resolve("/rel/bar"),
                 BASE_URI.resolve("/bar"),
-                hints()
+                hintsBuilder()
                         .representedAs("text/html")
                         .allowing(Allow.GET)
                         .build()))
@@ -104,7 +104,7 @@ public class SpringResourceLinkGeneratorTest {
         assertEquals(resourceLinks, singletonList(directLink(
                 BASE_URI.resolve("/rel/bar"),
                 BASE_URI.resolve("/bar"),
-                hints()
+                hintsBuilder()
                         .representedAs("text/html")
                         .allowing(Allow.GET)
                         .build()))
@@ -125,7 +125,7 @@ public class SpringResourceLinkGeneratorTest {
                 BASE_URI.resolve("/rel/bar"),
                 "http://example.org/bar{/var1*}",
                 asList(new HrefVar("var1", BASE_URI.resolve("/rel/bar#var1"), emptyDocs())),
-                hints()
+                hintsBuilder()
                         .representedAs("text/html")
                         .allowing(Allow.GET)
                         .build()))

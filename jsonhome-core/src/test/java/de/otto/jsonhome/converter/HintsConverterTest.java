@@ -31,7 +31,7 @@ import static de.otto.jsonhome.annotation.Precondition.ETAG;
 import static de.otto.jsonhome.converter.HintsConverter.hintsToJsonHome;
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.Docs.emptyDocs;
-import static de.otto.jsonhome.model.HintsBuilder.hints;
+import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
 import static org.testng.Assert.assertEquals;
@@ -50,7 +50,7 @@ public class HintsConverterTest {
         final List<String> acceptPut = asList("foo/bar");
         final List<String> acceptPost = asList("bar/foo");
         final List<Precondition> preconditions = asList(ETAG);
-        final Hints hints = hints()
+        final Hints hints = hintsBuilder()
                 .allowing(allows)
                 .representedAs(representations)
                 .acceptingForPut(acceptPut)
@@ -74,7 +74,7 @@ public class HintsConverterTest {
     @Test
     public void testStatusDeprecated() throws Exception {
         // given
-        final Hints hints = hints().withStatus(Status.DEPRECATED).build();
+        final Hints hints = hintsBuilder().withStatus(Status.DEPRECATED).build();
         // when
         final Map<String, ?> map = hintsToJsonHome(hints);
         // then
@@ -84,7 +84,7 @@ public class HintsConverterTest {
     @Test
     public void testStatusGone() throws Exception {
         // given
-        final Hints hints = hints().withStatus(Status.GONE).build();
+        final Hints hints = hintsBuilder().withStatus(Status.GONE).build();
         // when
         final Map<String, ?> map = hintsToJsonHome(hints);
         // then
@@ -94,7 +94,7 @@ public class HintsConverterTest {
     @Test
     public void testStatusOK() throws Exception {
         // given
-        final Hints hints = hints().withStatus(Status.OK).build();
+        final Hints hints = hintsBuilder().withStatus(Status.OK).build();
         // when
         final Map<String, ?> map = hintsToJsonHome(hints);
         // then

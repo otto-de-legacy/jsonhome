@@ -16,11 +16,9 @@
 package de.otto.jsonhome.model;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableMap;
 
 /**
@@ -41,6 +39,20 @@ public final class JsonHome {
     public static JsonHome emptyJsonHome() {
         return new JsonHome(Collections.<URI, ResourceLink>emptyMap());
 
+    }
+
+    /**
+     * Creates a JsonHome document from one or more ResourceLinks. The link-relation types of the resources
+     * must be unique, otherwise an IllegalArgumentException is thrown.
+     *
+     * @param resources collection of resource links.
+     * @return JsonHome
+     */
+    public static JsonHome jsonHome(final ResourceLink resourceLink, final ResourceLink... resources) {
+        final List<ResourceLink> resourceLinks = new ArrayList<ResourceLink>();
+        resourceLinks.add(resourceLink);
+        resourceLinks.addAll(asList(resources));
+        return jsonHome(resourceLinks);
     }
 
     /**

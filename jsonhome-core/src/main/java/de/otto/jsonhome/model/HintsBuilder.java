@@ -42,7 +42,7 @@ public class HintsBuilder {
     private HintsBuilder() {
     }
 
-    public static HintsBuilder hints() {
+    public static HintsBuilder hintsBuilder() {
         return new HintsBuilder();
     }
 
@@ -97,6 +97,11 @@ public class HintsBuilder {
 
     public HintsBuilder with(Docs docs) {
         this.docs = docs;
+        return this;
+    }
+
+    public HintsBuilder requiring(final Precondition... preconditions) {
+        this.preconditionReq.addAll(asList(preconditions));
         return this;
     }
 

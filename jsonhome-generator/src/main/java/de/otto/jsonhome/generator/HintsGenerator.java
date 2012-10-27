@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 import static de.otto.jsonhome.model.Allow.*;
-import static de.otto.jsonhome.model.HintsBuilder.hints;
+import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -56,7 +56,7 @@ public abstract class HintsGenerator {
 
     public final Hints hintsOf(final Method method) {
         final Set<Allow> allows = allowedHttpMethodsOf(method);
-        final HintsBuilder hintsBuilder = hints()
+        final HintsBuilder hintsBuilder = hintsBuilder()
                 .allowing(allows)
                 .with(docsGenerator.documentationFrom(method.getDeclaringClass(), method))
                 .requiring(preconditionsFrom(method))
