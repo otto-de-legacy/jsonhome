@@ -52,7 +52,7 @@ public class JacksonJsonHomeParserTest {
                 .fromStream(new ByteArrayInputStream(jsonHomeDocument.getBytes()))
                 .parse();
         // then
-        Assert.assertEquals(jsonHome, jsonHome(
+        assertEquals(jsonHome, jsonHome(
                 directLink(
                         URI.create("http://example.org/jsonhome-example/rel/storefront"),
                         URI.create("http://example.org/jsonhome-example/storefront"),
@@ -100,7 +100,7 @@ public class JacksonJsonHomeParserTest {
                 .fromStream(new ByteArrayInputStream(jsonHomeDocument.getBytes()))
                 .parse();
         // then
-        Assert.assertEquals(jsonHome, jsonHome(
+        assertEquals(jsonHome, jsonHome(
                 templatedLink(
                         URI.create("http://example.org/jsonhome-example/rel/product"),
                         "http://example.org/jsonhome-example/products/{productId}",

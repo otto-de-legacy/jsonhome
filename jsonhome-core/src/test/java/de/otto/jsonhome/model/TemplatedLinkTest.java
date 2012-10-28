@@ -17,6 +17,7 @@ package de.otto.jsonhome.model;
 
 import org.testng.annotations.Test;
 
+import java.net.URI;
 import java.util.Collections;
 
 import static de.otto.jsonhome.fixtures.LinkFixtures.*;
@@ -24,6 +25,7 @@ import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.Docs.emptyDocs;
 import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
+import static java.net.URI.create;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
 import static org.testng.Assert.assertEquals;
@@ -33,6 +35,9 @@ import static org.testng.Assert.assertEquals;
  * @since 16.09.12
  */
 public class TemplatedLinkTest {
+
+    public static final URI JSONHOME_URI = create("http://example.org/json-home");
+    public static final URI HREF = create("http://example.org/foo/bar/foobar");
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void mergeWithShouldFailWithExceptionIfOtherDoesNotHaveSameRelationType() {
@@ -240,5 +245,70 @@ public class TemplatedLinkTest {
         final ResourceLink mergedLink = aboutLink.mergeWith(aboutLink);
         // then
         assertEquals(aboutLink, mergedLink);
+    }
+
+    @Test
+    public void shouldExpandUriForExistingVarType() {
+        // given
+        final URI varType = create("http://example.org/vars/bar");
+        final TemplatedLink templatedLink = templatedLink(
+                create("http://example.org/rel/foo"),
+                "http://example.org/foo/{bar}",
+                asList(hrefVar("bar", varType)),
+                null
+        );
+        // when
+        final URI uri = templatedLink.expandToUri(varType, "42");
+        // then
+        assertEquals(uri, create("http://example.org/foo/42"));
+    }
+
+    @Test
+    public void shouldExpandUriWithRequestParams() {
+        // given
+        final URI fooVarType = create("http://example.org/vars/foo");
+        final URI barVarType = create("http://example.org/vars/bar");
+        final TemplatedLink templatedLink = templatedLink(
+                create("http://example.org/rel/foo"),
+                "http://example.org{?foo,bar}",
+                asList(hrefVar("foo", fooVarType), hrefVar("bar", barVarType)),
+                null
+        );
+        // when
+        final URI uri = templatedLink.expandToUri(fooVarType, "42", barVarType, 4711);
+        // then
+        assertEquals(uri, create("http://example.org?foo=42&bar=4711"));
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void expansionShouldFailWithIllegalArgumentExceptionForUnknownVarType() {
+        // given
+        final URI varType = create("http://example.org/vars/bar");
+        final TemplatedLink templatedLink = templatedLink(
+                create("http://example.org/rel/foo"),
+                "http://example.org/foo/{bar}",
+                asList(hrefVar("bar", varType)),
+                null
+        );
+        // when
+        templatedLink.expandToUri(create("http://example.org/vars/foo"), "42");
+        // then an exception is thrown.
+    }
+
+    @Test
+    public void expansionShouldTreatMissingVarTypeAsEmptyValue() {
+        // given
+        final URI fooVarType = create("http://example.org/vars/foo");
+        final URI barVarType = create("http://example.org/vars/bar");
+        final TemplatedLink templatedLink = templatedLink(
+                create("http://example.org/rel/foo"),
+                "http://example.org/{foo}/{bar}",
+                asList(hrefVar("foo", fooVarType), hrefVar("bar", barVarType)),
+                null
+        );
+        // when
+        final URI uri = templatedLink.expandToUri(create("http://example.org/vars/foo"), "42");
+        // then
+        assertEquals(uri, create("http://example.org/42/"));
     }
 }

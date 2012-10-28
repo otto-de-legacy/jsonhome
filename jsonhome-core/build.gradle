@@ -1,5 +1,6 @@
 
 dependencies {
+    compile 'com.damnhandy:handy-uri-templates:1.1.5'
     testCompile 'org.testng:testng:6.3.1'
 }
 
