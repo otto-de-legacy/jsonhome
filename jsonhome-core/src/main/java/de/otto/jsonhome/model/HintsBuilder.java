@@ -113,7 +113,7 @@ public class HintsBuilder {
     }
 
     public Hints build() {
-        return new Hints(
+        return Hints.hints(
                 allows,
                 new ArrayList<String>(representations),
                 new ArrayList<String>(acceptPut),

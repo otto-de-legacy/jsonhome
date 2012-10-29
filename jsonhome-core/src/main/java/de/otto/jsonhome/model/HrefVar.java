@@ -21,6 +21,8 @@ import static de.otto.jsonhome.model.Docs.emptyDocs;
 
 /**
  * A single href-var used to describe the href-vars of templated resource links.
+ * <p/>
+ * This implementation is immutable.
  *
  * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#section-4.1">http://tools.ietf.org/html/draft-nottingham-json-home-02#section-4.1</a>
  * @author Guido Steinacker

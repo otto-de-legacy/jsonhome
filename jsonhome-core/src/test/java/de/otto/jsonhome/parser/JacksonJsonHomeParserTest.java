@@ -49,8 +49,7 @@ public class JacksonJsonHomeParserTest {
                 "    }}}";
         // when
         final JsonHome jsonHome = new JacksonJsonHomeParser()
-                .fromStream(new ByteArrayInputStream(jsonHomeDocument.getBytes()))
-                .parse();
+                .parse(new ByteArrayInputStream(jsonHomeDocument.getBytes()));
         // then
         assertEquals(jsonHome, jsonHome(
                 directLink(
@@ -97,8 +96,7 @@ public class JacksonJsonHomeParserTest {
                 "    }}}";
         // when
         final JsonHome jsonHome = new JacksonJsonHomeParser()
-                .fromStream(new ByteArrayInputStream(jsonHomeDocument.getBytes()))
-                .parse();
+                .parse(new ByteArrayInputStream(jsonHomeDocument.getBytes()));
         // then
         assertEquals(jsonHome, jsonHome(
                 templatedLink(

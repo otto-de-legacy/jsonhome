@@ -15,10 +15,7 @@
  */
 package de.otto.jsonhome.fixtures;
 
-import de.otto.jsonhome.model.DirectLink;
-import de.otto.jsonhome.model.Hints;
-import de.otto.jsonhome.model.Precondition;
-import de.otto.jsonhome.model.TemplatedLink;
+import de.otto.jsonhome.model.*;
 
 import java.net.URI;
 import java.util.Collections;
@@ -48,23 +45,25 @@ public class LinkFixtures {
     public static final DirectLink STOREFRONT_LINK = directLink(
             RESOURCELINK_SHOP_STOREFRONT,
             ABS_STOREFRONT_HREF,
-            new Hints(of(GET),
+            Hints.hints(of(GET),
                     asList("text/html", "application/json"),
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<Precondition>emptyList(),
+                    Status.OK,
                     emptyDocs()
             ));
 
     public static final DirectLink SHOPPAGES_LINK = directLink(
             RESOURCELINK_SHOP_PAGES,
             ABS_SHOPPAGES_HREF,
-            new Hints(
+            Hints.hints(
                     of(GET),
                     asList("text/html", "application/json"),
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<Precondition>emptyList(),
+                    Status.OK,
                     emptyDocs()));
 
     public static final TemplatedLink ABOUTPAGE_LINK = TemplatedLink.templatedLink(

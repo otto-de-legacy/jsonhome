@@ -24,12 +24,26 @@ import static java.util.EnumSet.copyOf;
 import static java.util.EnumSet.noneOf;
 
 /**
+ * Hints are used to describe a resource: the allowed HTTP methods, the supported representations,
+ * required preconditions of an operation, the current status and possibly some documentation.
+ * <p/>
+ * All these information are optional. You should not completely rely on the information of the hints.
+ * For example, only because the hints do no contain a HTTP method, this must not necessarily mean that
+ * the method is not allowed for a resource.
+ * <p/>
+ * However, the JsonHomeGenerator will fortunately always find useful and correct hints...
+ * <p/>
+ * This implementation is immutable.
  *
  * @author Guido Steinacker
  * @since 30.09.12
  * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#section-5">http://tools.ietf.org/html/draft-nottingham-json-home-02#section-5</a>
  */
 public final class Hints {
+
+    public static final Hints EMPTY_HINTS = hints(
+            EnumSet.noneOf(Allow.class), Collections.<String>emptyList()
+    );
 
     private final Set<Allow> allows;
     private final List<String> representations;
@@ -39,31 +53,52 @@ public final class Hints {
     private final Status status;
     private final Docs docs;
 
-    public Hints(final Set<Allow> allows, final List<String> representations) {
-        this(allows,
+    /**
+     * Returns an empty Hints instance.
+     *
+     * @return EMPTY_HINTS
+     */
+    public static Hints emptyHints() {
+        return EMPTY_HINTS;
+    }
+
+    /**
+     * Creates hints with information about allowed HTTP methods and the supported representations of the resource.
+     * <p/>
+     * The status is set to Status.OK, all other fields will be empty (but not null).
+     *
+     * @param allows the allowed HTTP methods
+     * @param representations the representations of the resource
+     * @return Hints
+     */
+    public static Hints hints(final Set<Allow> allows,
+                              final List<String> representations) {
+        return hints(allows,
                 representations,
                 Collections.<String>emptyList(),
                 Collections.<String>emptyList(),
                 Collections.<Precondition>emptyList(),
+                Status.OK,
                 emptyDocs());
     }
 
-    public Hints(final Set<Allow> allows,
-                 final List<String> representations,
-                 final List<String> acceptPut,
-                 final List<String> acceptPost,
-                 final List<Precondition> preconditionReq,
-                 final Docs docs) {
-        this(allows, representations, acceptPut, acceptPost, preconditionReq, Status.OK, docs);
+    public static Hints hints(final Set<Allow> allows,
+                              final List<String> representations,
+                              final List<String> acceptPut,
+                              final List<String> acceptPost,
+                              final List<Precondition> preconditionReq,
+                              final Status status,
+                              final Docs docs) {
+        return new Hints(allows, representations, acceptPut, acceptPost, preconditionReq, status, docs);
     }
 
-    public Hints(final Set<Allow> allows,
-                 final List<String> representations,
-                 final List<String> acceptPut,
-                 final List<String> acceptPost,
-                 final List<Precondition> preconditionReq,
-                 final Status status,
-                 final Docs docs) {
+    private Hints(final Set<Allow> allows,
+                  final List<String> representations,
+                  final List<String> acceptPut,
+                  final List<String> acceptPost,
+                  final List<Precondition> preconditionReq,
+                  final Status status,
+                  final Docs docs) {
         if (!acceptPost.isEmpty() && !allows.contains(Allow.POST)) {
             throw new IllegalArgumentException("POST is not allowed but accept-post is provided.");
         }
@@ -75,8 +110,8 @@ public final class Hints {
         this.acceptPut = acceptPut;
         this.acceptPost = acceptPost;
         this.preconditionReq = unmodifiableList(new ArrayList<Precondition>(preconditionReq));
-        this.status = status;
-        this.docs = docs;
+        this.status = status != null ? status : Status.OK;
+        this.docs = docs != null ? docs : emptyDocs();
     }
 
     /**
@@ -96,23 +131,29 @@ public final class Hints {
     }
 
     /**
-     * @return the accept-put hint.
+     * @return the accept-put hint, declaring the accepted representations of a HTTP PUT request.
      */
     public List<String> getAcceptPut() {
         return acceptPut;
     }
 
     /**
-     * @return the accept-post hint.
+     * @return the accept-post hint, declaring the accepted representations of a HTTP POST request.
      */
     public List<String> getAcceptPost() {
         return acceptPost;
     }
 
+    /**
+     * @return the required preconditions.
+     */
     public List<Precondition> getPreconditionReq() {
         return preconditionReq;
     }
 
+    /**
+     * @return Status specifies whether the resource is OK, DEPRECATED or GONE.
+     */
     public Status getStatus() {
         return status;
     }
@@ -143,7 +184,7 @@ public final class Hints {
         acceptPost.addAll(other.getAcceptPost());
         final Set<Precondition> preconditionReq = new LinkedHashSet<Precondition>(this.preconditionReq);
         preconditionReq.addAll(other.getPreconditionReq());
-        return new Hints(
+        return hints(
                 allows,
                 new ArrayList<String>(representations),
                 new ArrayList<String>(acceptPut),

@@ -25,8 +25,32 @@ import static java.util.Collections.singletonMap;
 import static java.util.Collections.unmodifiableList;
 
 /**
- * A templated resource link.
+ * A templated resource link, referring to a REST resource using <a href="http://tools.ietf.org/html/rfc6570">RFC6570 URI Templates</a>
+ * <p/>
+ * The template processor supports <a href="http://tools.ietf.org/html/rfc6570#section-1.2">levels
+ * 1 through 4</a> as well as supports composite types. In addition to supporting {@link Map}
+ * and {@link List} values as composite types, the library also supports the use of Java objects
+ * as well.
+ * <p/>
+ * In order to access the resource, you can expand the URI template to an URI like this:
+ * <code><pre>
+ *     URI queryVarType = URI.create("http://example.org/vartypes/query");
+ *     // in the real world, you should get the TemplatedLink from a JsonHome instance:
+ *     TemplatedLink resourceLink = templatedLink(
+ *              URI.create("http://example.org/reltypes/my-resource-type"),
+ *              "http://example.org/search/{?query}",
+ *              asList(hrefVar("query", queryVarType)),
+ *              emptyHints()
+ *     );
+ *     URI resourceUri = resourceLink.expandToUri(queryVarType, "shirt");
+ *     // now you can GET the resource using your favorite REST client...
+ * </pre></code>
+ * Note that the variables of the template are not used by name, but by the var-type URI. This is similar
+ * to the usage of URIs to identify link-relation types instead of directly using the URI of the resource.
+ * <p/>
+ * This implementation is immutable.
  *
+ * @see <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#section-4.1">http://tools.ietf.org/html/draft-nottingham-json-home-02#section-4.1</a>
  * @author Guido Steinacker
  * @since 15.09.12

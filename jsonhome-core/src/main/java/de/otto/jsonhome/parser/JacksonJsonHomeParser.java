@@ -20,25 +20,17 @@ import static de.otto.jsonhome.model.JsonHomeBuilder.jsonHomeBuilder;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 
 /**
+ * A JsonHomeParser that is implemented using Jackson.
+ *
  * @author Guido Steinacker
  * @since 26.10.12
  */
 public class JacksonJsonHomeParser implements JsonHomeParser {
 
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private InputStream stream;
-
-    public JacksonJsonHomeParser() {
-    }
 
     @Override
-    public JsonHomeParser fromStream(final InputStream is) {
-        this.stream = is;
-        return this;
-    }
-
-    @Override
-    public JsonHome parse() {
+    public JsonHome parse(final InputStream stream) {
         try {
             final JsonNode jsonNode = OBJECT_MAPPER.readTree(stream);
             if (jsonNode != null && jsonNode.has("resources")) {
@@ -53,14 +45,12 @@ public class JacksonJsonHomeParser implements JsonHomeParser {
                 return builder.build();
             }
         } catch (JsonProcessingException e) {
-            // TODO: define more specific exceptions
             throw new IllegalArgumentException("Error parsing json-home document: " + e.getMessage(), e);
         } catch (IOException e) {
             // TODO: define more specific exceptions
             throw new IllegalStateException("Unable to get json-home document from stream: " + e.getMessage(), e);
         }
-        // TODO: define more specific exceptions
-        throw new IllegalStateException("Unable to parse json-home document: no resources defined.");
+        throw new IllegalArgumentException("Unable to parse json-home document: no resources defined.");
     }
 
     private ResourceLink resourceLinkFrom(final URI relationTypeUri, final JsonNode resourceLinkNode) {

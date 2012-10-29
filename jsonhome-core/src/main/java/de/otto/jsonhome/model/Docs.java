@@ -27,6 +27,8 @@ import static java.util.Collections.unmodifiableList;
 
 /**
  * Documentation of a ResourceLink or HrefVar.
+ * <p/>
+ * This implementation is immutable.
  *
  * @author Guido Steinacker
  * @since 10.10.12

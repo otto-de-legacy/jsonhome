@@ -238,8 +238,8 @@ public class SpringJsonHomeGeneratorTest {
         // then
         assertEquals(resourceLinks.size(), 2);
         assertTrue(resourceLinks.containsAll(asList(
-                directLink(create("http://example.org/rel/foo"), create("http://example.org/foo"), new Hints(of(GET), singletonList("text/html"))),
-                directLink(create("http://example.org/rel/bar"), create("http://example.org/foo"), new Hints(of(GET), singletonList("text/html")))
+                directLink(create("http://example.org/rel/foo"), create("http://example.org/foo"), Hints.hints(of(GET), singletonList("text/html"))),
+                directLink(create("http://example.org/rel/bar"), create("http://example.org/foo"), Hints.hints(of(GET), singletonList("text/html")))
         )));
     }
 

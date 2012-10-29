@@ -23,6 +23,8 @@ import static java.util.Collections.unmodifiableMap;
 
 /**
  * Immutable container of {@link ResourceLink resource links}, representing a json-home document.
+ * <p/>
+ * This implementation is immutable.
  *
  * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02">http://tools.ietf.org/html/draft-nottingham-json-home-02</a>
  * @author Guido Steinacker

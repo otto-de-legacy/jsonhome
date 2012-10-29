@@ -46,7 +46,7 @@ public class HttpJsonHomeClient implements JsonHomeClient {
                                 " (" + response.getStatusText() + ")");
             }
             stream = response.getResponseBodyAsStream();
-            return new JacksonJsonHomeParser().fromStream(stream).parse();
+            return new JacksonJsonHomeParser().parse(stream);
         } catch (IOException e) {
             throw new RuntimeException("Exception caught while getting json-home from " + uri, e);
         } catch (InterruptedException e) {
