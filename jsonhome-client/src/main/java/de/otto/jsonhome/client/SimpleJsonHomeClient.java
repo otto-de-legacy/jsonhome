@@ -33,7 +33,8 @@ public class SimpleJsonHomeClient implements JsonHomeClient {
     /**
      * {@inheritDoc}
      * <p/>
-     * This method has the same behaviour as {@link #get(java.net.URI)}
+     * This method has the same behaviour as {@link #get(java.net.URI)}. If you want to update an already
+     * registered resource, use {@link #register(java.net.URI, de.otto.jsonhome.model.JsonHome)}.
      */
     @Override
     public JsonHome updateAndGet(URI uri) {
