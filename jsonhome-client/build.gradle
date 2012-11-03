@@ -1,8 +1,8 @@
 
 dependencies {
     compile project(':jsonhome-core')
-    compile 'com.ning:async-http-client:1.7.5'
-    compile 'com.damnhandy:handy-uri-templates:1.1.5'
+    compile 'org.apache.httpcomponents:httpclient:4.2.2'
+    compile 'org.apache.httpcomponents:httpclient-cache:4.2.2'
     testCompile 'org.testng:testng:6.3.1'
 }
 

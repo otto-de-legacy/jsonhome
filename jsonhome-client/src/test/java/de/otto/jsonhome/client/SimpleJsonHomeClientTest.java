@@ -9,7 +9,8 @@ import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.JsonHome.jsonHome;
 import static java.net.URI.create;
 import static java.util.Arrays.asList;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Guido Steinacker
@@ -35,13 +36,12 @@ public class SimpleJsonHomeClientTest {
         assertTrue(jsonHome.hasResourceFor(RELATION_TYPE_URI));
     }
 
-    @Test
-    public void shouldReturnNullForRegisteredResource() {
+    @Test(expectedExceptions = NotFoundException.class)
+    public void shouldReturnNullForUnregisteredResource() {
         // given
         final SimpleJsonHomeClient simpleJsonHomeClient = new SimpleJsonHomeClient();
         // when
-        final JsonHome jsonHome = simpleJsonHomeClient.get(JSONHOME_URI);
-        // then
-        assertNull(jsonHome);
+        simpleJsonHomeClient.get(JSONHOME_URI);
+        // then an exception is thrown
     }
 }
