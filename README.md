@@ -133,14 +133,14 @@ The rel attribute of the @Doc is referring to the link-relation type. The value 
 will be rendered into the HTML documentation, rendered by the RelController using some Freemarker templates. Feel free
 to modify the templates to your needs.
 
-There are some more possibilities like overriding href or href-template (using @Href or @Href), specify required
-preconditions (aka precondition-req) or set the status (deprecated, gone) of a resource using @Hints.
+There are some more possibilities like overriding href or href-template (using @Href or @HrefTemplate), specify required
+preconditions (etag, last-modified) or set the status (deprecated, gone) of a resource using @Hints.
 
-Please Have a look at the example again, or download the sources and check the unit-tests for more examples.
+Please have a look at the example again, or download the sources and check the unit-tests for more examples.
 
 ### Consuming json-home documents
 
-There is also a small client-library and a json-home parser available. If you want to consume a json-home document
+There is also a very small client-library and a json-home parser available. If you want to consume a json-home document
 (access the linked resources without building "known" URIs using string-magic), you may try the following:
 ```
 final URI rel = URI.create("http://example.org/rel/foo");
@@ -173,7 +173,8 @@ if (jsonHome.hasResourceFor(rel)) {
 
 The HttpJsonHomeClient is supporting HTTP caching so the client is not hitting the server all the time. You only
 should reuse the client instance, otherwise the caching (at least in the default in-memory implementation) will
-not work.
+not work. You may want to force an update of a cached resource (for example, if a resource is not accessible 
+anymore): in this case you should call client.updateAndGet() instead of get().
 
 Internally, the client is based on Apache's CachingHttpClient. You may want to use the same client to access
 the resource itself - but this is up to you. Providing a full "REST client" is out of scope of this project. 
