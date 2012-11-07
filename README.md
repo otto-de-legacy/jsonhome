@@ -42,23 +42,115 @@ An example from the draft specification:
    }
 ```
 
+## Usage
+
+A simple Spring MVC controller is looking like this:
+```
+@Controller
+@RequestMapping(value = "/helloworld")
+public class HelloWorldController {
+
+    @RequestMapping(produces = "text/plain")
+    @ResponseBody
+    public String sayHello() {
+        return "Hello World!";
+    }
+    
+}
+```
+
+If you want to have a json-home document for the different entry-point resources of your application, you have to
+do the following:
+
+1. Add a dependency to jsonhome-spring to your application.
+
+2. Have a look to the example application and adopt the json-home related things to your application (configuration, 
+css, templates, properties). If you think that this is far too complicated - well, I think you are right. 
+I promise you to improve this in a few days.
+
+3. Identify the entry-point resources of your RESTful application. If your resources are using hypermedia intensively,
+these will be only a few. If not, you will end up with many entry-point resources (resources that are not
+reachable by following links contained in other resources). If you find lots of them, this is
+most likely a hint that your REST API is not at level 3 of Richardsons Maturity Model
+(see http://martinfowler.com/articles/richardsonMaturityModel.html).
+
+4. Add a @Rel annotation to all controller methods, dealing with your entry-point resources:
+```
+@Controller
+@RequestMapping(value = "/helloworld")
+public class HelloWorldController {
+
+    @Rel("/rel/hello-world")
+    @RequestMapping(produces = "text/plain")
+    @ResponseBody
+    public String sayHello() {
+        return "Hello World!";
+    } 
+}
+```
+
+That's basically all you have to do to get a json-home document like this:
+```
+{ "resources" :  
+   "http://localhost:8080/jsonhome-example/rel/hello-world" : {
+      "href" : "http://localhost:8080/jsonhome-example/helloworld",
+      "hints" : {
+        "allow" : [
+          "GET"
+        ],
+        "representations" : [
+          "text/plain"
+        ]
+      }
+   }
+}
+```
+The "http://localhost:8080" part of the URI is surely not a good idea in practice. In a real application, 
+you should use absolute URIs like "http://mycompany.com/rel/hello-world".
+
+The example application is using the RelController in order to resolve the link-relation URIs. Just open
+the resource from /jsonhome-example/json-home using your browser, and you will see the result.
+
+The RelController is able to serve a human-readable representation of the json-home document (as HTML). 
+This is especially important for developers using your REST resources, because it is easier to read than 
+JSON and - in contrast to hand-written documentation - never out-to-date.
+
+You may want to enrich this documentation by adding @Doc annotations to your controller (or href-variables):
+```
+@Controller
+@RequestMapping(value = "/helloworld")
+@Doc(value = {"A link to a hello-world resource", 
+              "Multiple lines of documentation are also supported"},
+     link = "http://example.org/some-external-documentation.html"
+     rel = "/rel/hello-world"
+)
+public class HelloWorldController {
+...
+```
+The rel attribute of the @Doc is referring to the link-relation type. The value and/or the link to the documentation
+will be rendered into the HTML documentation, rendered by the RelController using some Freemarker templates. Feel free
+to modify the templates to your needs.
+
 ## More Features
 
-The json-home format is nice for automatic discovery of RESTful services. Generating this format directly from source
-code is nice, because it will always be consistent with your application. Being consistent is also important for
-human-readable documentation - and the information needed to generate such kind of documentation is more or less
-available in your source code.
+A more complete support of the json-home spec is already planned, please have a look at the GitHub Issues. Release
+1.0 should support the full specification, as soon as the specification itself will be final. 
 
-A more complete support of the json-home spec is already planned, please have a look at the GitHub Issues. 
+For example, there will be a separate module used to serve json-home documents that are aggregated from different
+sources. This is intended for situations, where your API consists of resources handled by separate servers. For example:
+a web shop, having a product-system and a separate order-system. 
 
-In order to consume json-home documents, a client-side library is needed. This will be implemented in the future.
+Some things from the specification are still missing. Only "optional" information contained in the hints, but anyway.
+The missing parts will be added before release 1.0.
 
 ## Work in Progress!
 
 * The project is in an early state. Many details will change in the next weeks, possibly in an incompatible way.
-* The json-home specification is still a draft, it might change itself in the next months.
+* The json-home specification is still a draft, it might change (and will be extended) itself in the next months.
 * This library does not yet fully support the current draft specification.
 * But: it is already working. You can use it to easily generate json-home documents for your RESTful Spring application.
+JAX-RS support is already planned and will be added to version 0.2 in the next few weeks.
+
 The library is actively used (and developed) at otto (http://www.otto.de).
 
 ## Licensing
