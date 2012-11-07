@@ -18,7 +18,10 @@ package de.otto.jsonhome.annotation;
 import java.lang.annotation.*;
 
 /**
- * Refers to a link-relation type specified by a {@link RelDoc} annotation.
+ * Specifies the link-relation type of the resource offered by the annotated controller-class or method.
+ * <p/>
+ * All resources with a link-relation type will be part of the generated json-home document. Resources
+ * without a link-relation type will NOT be added to the json-home.
  *
  * @author Guido Steinacker
  * @since 15.09.12
