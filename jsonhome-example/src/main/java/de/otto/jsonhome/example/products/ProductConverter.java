@@ -22,8 +22,8 @@ import java.util.*;
 
 /**
  * Converter used to convert products to json and vice versa.
- *
- * We are not simply relying on Jackson here because we want to add some links to be more RESTful.
+ * <p/>
+ * TODO: Using the Jackson library would make this looking better...
  *
  * @author Guido Steinacker
  * @since 14.10.12

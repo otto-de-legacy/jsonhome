@@ -23,6 +23,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 /**
+ * Controller used to handle requests to the shopping basket of the example web-shop.
+ * <p/>
+ * TODO Currently not yet implemented.
+ *
  * @author Guido Steinacker
  * @since 15.09.12
  */

@@ -18,6 +18,8 @@ package de.otto.jsonhome.example.products;
 import java.util.UUID;
 
 /**
+ * A product, having only a few attributes.
+ *
  * @author Guido Steinacker
  * @since 29.09.12
  */

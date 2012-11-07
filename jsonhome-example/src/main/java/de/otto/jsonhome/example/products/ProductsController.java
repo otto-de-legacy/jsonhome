@@ -38,6 +38,7 @@ import static org.springframework.http.HttpStatus.PRECONDITION_FAILED;
 
 
 /**
+ * Controller used to handle the product-related resources of our example web-shop application.
  * @author Guido Steinacker
  * @since 15.09.12
  */

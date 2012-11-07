@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 /**
+ * Controller used to handle the /storefront resource of our example web-shop application.
+ *
  * @author Guido Steinacker
  * @since 15.09.12
  */

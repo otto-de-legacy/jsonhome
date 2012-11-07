@@ -25,6 +25,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
+ * A service used to access and modify the products offered by the example web-shop.
+ *
  * @author Guido Steinacker
  * @since 29.09.12
  */
