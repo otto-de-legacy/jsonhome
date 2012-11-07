@@ -44,6 +44,8 @@ An example from the draft specification:
 
 ## Usage
 
+### Serving json-home documents
+
 A simple Spring MVC controller is looking like this:
 ```
 @Controller
@@ -91,7 +93,7 @@ public class HelloWorldController {
 
 That's basically all you have to do to get a json-home document like this:
 ```
-{ "resources" :  
+{ "resources" : { 
    "http://localhost:8080/jsonhome-example/rel/hello-world" : {
       "href" : "http://localhost:8080/jsonhome-example/helloworld",
       "hints" : {
@@ -103,7 +105,7 @@ That's basically all you have to do to get a json-home document like this:
         ]
       }
    }
-}
+}}
 ```
 The "http://localhost:8080" part of the URI is surely not a good idea in practice. In a real application, 
 you should use absolute URIs like "http://mycompany.com/rel/hello-world".
@@ -130,6 +132,51 @@ public class HelloWorldController {
 The rel attribute of the @Doc is referring to the link-relation type. The value and/or the link to the documentation
 will be rendered into the HTML documentation, rendered by the RelController using some Freemarker templates. Feel free
 to modify the templates to your needs.
+
+There are some more possibilities like overriding href or href-template (using @Href or @Href), specify required
+preconditions (aka precondition-req) or set the status (deprecated, gone) of a resource using @Hints.
+
+Please Have a look at the example again, or download the sources and check the unit-tests for more examples.
+
+### Consuming json-home documents
+
+There is also a small client-library and a json-home parser available. If you want to consume a json-home document
+(access the linked resources without building "known" URIs using string-magic), you may try the following:
+```
+final URI rel = URI.create("http://example.org/rel/foo");
+
+final JsonHomeClient client = new HttpJsonHomeClient();
+final JsonHome jsonHome = client.get(URI.create("http://example.org/json-home");
+if (jsonHome.hasResourceFor(rel)) {
+   final DirektLink link = jsonHome.getResourceFor(rel).asDirectLink();
+   final URI uri = link.getHref();
+   // GET the uri using your favorite HTTP client...
+   ...
+}
+```
+
+Accessing a templated link like http://example.org/{foo} is nearly as easy. Remember that in json-home, the variable foo
+is not identified by name, but by an URI (=>URI varType).
+```
+final URI rel = URI.create("http://example.org/rel/foo");
+final URI varType = URI.create("http://example.org/var-type/foo");
+
+final JsonHomeClient client = new HttpJsonHomeClient();
+final JsonHome jsonHome = client.get(URI.create("http://example.org/json-home");
+if (jsonHome.hasResourceFor(rel)) {
+   final TemplatedLink templatedLink = jsonHome.getResourceFor(rel).asTemplatedLink();
+   final URI uri = templatedLink.expandToUri(varType, "42");
+   // GET the uri using your favorite HTTP client...
+   ...
+}
+```
+
+The HttpJsonHomeClient is supporting HTTP caching so the client is not hitting the server all the time. You only
+should reuse the client instance, otherwise the caching (at least in the default in-memory implementation) will
+not work.
+
+Internally, the client is based on Apache's CachingHttpClient. You may want to use the same client to access
+the resource itself - but this is up to you. Providing a full "REST client" is out of scope of this project. 
 
 ## More Features
 
