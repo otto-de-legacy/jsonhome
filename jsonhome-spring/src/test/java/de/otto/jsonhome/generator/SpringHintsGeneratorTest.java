@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.annotations.Test;
 
+import java.net.URI;
+
+import static java.net.URI.create;
 import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 
@@ -32,6 +35,8 @@ import static org.testng.Assert.assertEquals;
  * @since 20.10.12
  */
 public class SpringHintsGeneratorTest {
+
+    public static final URI RELATION_TYPE_BASE_URI = create("http://example.org");
 
     class ControllerWithDifferentProducesAndConsumes {
 
@@ -47,10 +52,12 @@ public class SpringHintsGeneratorTest {
     @Test
     public void testMethodWithTwoRepresentations() throws Exception {
         // given
-        final SpringHintsGenerator generator = new SpringHintsGenerator();
+        final SpringHintsGenerator generator = new SpringHintsGenerator(RELATION_TYPE_BASE_URI);
         final Class<?> controller = ControllerWithDifferentProducesAndConsumes.class;
         // when
-        final Hints hints = generator.hintsOf(controller.getMethod("postSomething", String.class));
+        final Hints hints = generator.hintsOf(
+                create("/rel/product/form"),
+                controller.getMethod("postSomething", String.class));
         // then
         assertEquals(hints.getRepresentations(), asList("text/html"));
         assertEquals(hints.getAcceptPost(), asList("application/x-www-form-urlencoded"));

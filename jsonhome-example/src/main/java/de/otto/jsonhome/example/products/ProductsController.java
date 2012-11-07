@@ -15,9 +15,7 @@
  */
 package de.otto.jsonhome.example.products;
 
-import de.otto.jsonhome.annotation.Doc;
-import de.otto.jsonhome.annotation.Hints;
-import de.otto.jsonhome.annotation.Rel;
+import de.otto.jsonhome.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -45,11 +43,16 @@ import static org.springframework.http.HttpStatus.PRECONDITION_FAILED;
  */
 @Controller
 @RequestMapping(value = "/products")
-@Doc(value = {
-        "A single product.",
-        "This is a second paragraph, describing the link-relation type."},
-     link = "http://de.wikipedia.org/wiki/Produkt_(Wirtschaft)"
-)
+@Docs({
+        @Doc(value = {"The collection of products.",
+                      "This is a second paragraph, describing the collection of products."},
+             rel = "/rel/products"),
+        @Doc(value = "A link to a single product.",
+             rel = "/rel/product",
+             link = "http://de.wikipedia.org/wiki/Produkt_(Wirtschaft)"),
+        @Doc(value = "Links to a resource used to create a product.",
+             rel = "/rel/product/form")
+})
 public class ProductsController {
 
     @Autowired
@@ -60,10 +63,6 @@ public class ProductsController {
             produces = "text/html"
     )
     @Rel("/rel/products")
-    @Doc(value = {
-            "The collection of products.",
-            "This is a second paragraph, describing the collection of products."
-    })
     public ModelAndView getProductsHtml(final @RequestParam(required = false, defaultValue = "*") String query) {
         final List<Product> products = productService.findProducts(query);
         return new ModelAndView("example/products", singletonMap("products", products));
@@ -75,10 +74,6 @@ public class ProductsController {
     )
     @ResponseBody
     @Rel("/rel/products")
-    @Doc(value = {
-            "The collection of products.",
-            "This is a second paragraph, describing the collection of products."
-    })
     public Map<String, ?> getProductsJson(final @RequestParam(required = false, defaultValue = "*") String query,
                                           final HttpServletRequest request) {
         final List<Product> products = productService.findProducts(query);
@@ -91,10 +86,6 @@ public class ProductsController {
             produces = "text/html"
     )
     @Rel("/rel/product/form")
-    @Doc(value = {
-            "Service to create a product.",
-            "This is a second paragraph, describing the link-relation type."
-    })
     public ModelAndView postProductUrlEncoded(final @RequestParam String title,
                                               final @RequestParam String price,
                                               final HttpServletRequest request,

@@ -22,7 +22,7 @@ import java.util.Collections;
 
 import static de.otto.jsonhome.model.Allow.GET;
 import static de.otto.jsonhome.model.DirectLink.directLink;
-import static de.otto.jsonhome.model.Docs.emptyDocs;
+import static de.otto.jsonhome.model.Documentation.emptyDocs;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
 import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static java.util.Arrays.asList;

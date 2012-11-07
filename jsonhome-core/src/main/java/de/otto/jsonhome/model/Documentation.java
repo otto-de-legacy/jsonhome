@@ -33,32 +33,32 @@ import static java.util.Collections.unmodifiableList;
  * @author Guido Steinacker
  * @since 10.10.12
  */
-public final class Docs {
+public final class Documentation {
 
     private final List<String> description;
     private final URI link;
 
-    private Docs(final List<String> description, final URI link) {
+    private Documentation(final List<String> description, final URI link) {
         this.description = description != null
                 ? unmodifiableList(new ArrayList<String>(description))
                 : Collections.<String>emptyList();
         this.link = link;
     }
 
-    public static Docs emptyDocs() {
-        return new Docs(Collections.<String>emptyList(), null);
+    public static Documentation emptyDocs() {
+        return new Documentation(Collections.<String>emptyList(), null);
     }
 
-    public static Docs documentation(final List<String> description) {
-        return new Docs(description, null);
+    public static Documentation documentation(final List<String> description) {
+        return new Documentation(description, null);
     }
 
-    public static Docs documentation(final List<String> description, final URI docUri) {
-        return new Docs(description, docUri);
+    public static Documentation documentation(final List<String> description, final URI docUri) {
+        return new Documentation(description, docUri);
     }
 
-    public static Docs docLink(final URI docUri) {
-        return new Docs(Collections.<String>emptyList(), docUri);
+    public static Documentation docLink(final URI docUri) {
+        return new Documentation(Collections.<String>emptyList(), docUri);
     }
 
     public List<String> getDescription() {
@@ -77,8 +77,8 @@ public final class Docs {
         return link != null && !link.toString().isEmpty();
     }
 
-    public Docs mergeWith(final Docs other) {
-        return new Docs(
+    public Documentation mergeWith(final Documentation other) {
+        return new Documentation(
                 description.isEmpty() ? other.description : description,
                 link == null ? other.getLink() : link
         );
@@ -89,7 +89,7 @@ public final class Docs {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Docs that = (Docs) o;
+        Documentation that = (Documentation) o;
 
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (link != null ? !link.equals(that.link) : that.link != null) return false;
@@ -106,7 +106,7 @@ public final class Docs {
 
     @Override
     public String toString() {
-        return "Docs{" +
+        return "Documentation{" +
                 "value=" + description +
                 ", link=" + link +
                 '}';

@@ -91,7 +91,6 @@ public final class DirectLink implements ResourceLink {
             throw new IllegalArgumentException("Merging DirectLink with TemplatedLink is not supported.");
         }
 
-
         if (!relationType.equals(other.getLinkRelationType())) {
             throw new IllegalArgumentException("Resource links with different relation types can not be merged. One resource must not have multiple relation types.");
         }

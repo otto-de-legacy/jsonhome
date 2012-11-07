@@ -17,7 +17,7 @@ package de.otto.jsonhome.model;
 
 import java.util.*;
 
-import static de.otto.jsonhome.model.Docs.emptyDocs;
+import static de.otto.jsonhome.model.Documentation.emptyDocs;
 import static java.util.Arrays.asList;
 
 /**
@@ -33,7 +33,7 @@ public class HintsBuilder {
     private final Set<String> acceptPost = new LinkedHashSet<String>();
     private final Set<String> acceptPut = new LinkedHashSet<String>();
     private final List<Precondition> preconditionReq = new ArrayList<Precondition>();
-    private Docs docs = emptyDocs();
+    private Documentation docs = emptyDocs();
     private Status status = Status.OK;
 
     private HintsBuilder() {
@@ -92,7 +92,7 @@ public class HintsBuilder {
         return this;
     }
 
-    public HintsBuilder with(Docs docs) {
+    public HintsBuilder with(Documentation docs) {
         this.docs = docs;
         return this;
     }

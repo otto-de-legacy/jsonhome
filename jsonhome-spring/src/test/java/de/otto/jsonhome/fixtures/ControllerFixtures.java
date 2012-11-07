@@ -15,9 +15,7 @@
  */
 package de.otto.jsonhome.fixtures;
 
-import de.otto.jsonhome.annotation.Doc;
-import de.otto.jsonhome.annotation.Hints;
-import de.otto.jsonhome.annotation.Rel;
+import de.otto.jsonhome.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -116,7 +114,10 @@ public class ControllerFixtures {
     }
 
     @Controller
-    @Doc(value = "controller value", link = "http://example.org/doc/foo")
+    @Docs({
+        @Doc(value = "controller value", link = "http://example.org/doc/foo", rel = "/rel/foo"),
+        @Doc(value = "a value", link = "http://example.org/doc/foo", rel = "/rel/bar")
+    })
     public static class ControllerWithDocumentation {
         public
         @Rel("/rel/foo")
@@ -126,7 +127,6 @@ public class ControllerFixtures {
 
         public
         @Rel("/rel/bar")
-        @Doc("a value")
         @RequestMapping(value = "/{bar}")
         void bar(@PathVariable @Doc("var value 1") String bar,
                  @RequestParam @Doc("var value 2") String requestParam) {}

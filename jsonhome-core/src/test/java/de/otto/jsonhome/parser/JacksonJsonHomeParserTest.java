@@ -11,7 +11,7 @@ import java.util.EnumSet;
 
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.DirectLink.directLink;
-import static de.otto.jsonhome.model.Docs.docLink;
+import static de.otto.jsonhome.model.Documentation.docLink;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
 import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static de.otto.jsonhome.model.JsonHome.jsonHome;

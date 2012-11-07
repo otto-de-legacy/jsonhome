@@ -19,6 +19,7 @@ import de.otto.jsonhome.model.Allow;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
@@ -29,6 +30,10 @@ import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
 
 public class SpringHintsGenerator extends HintsGenerator {
+
+    public SpringHintsGenerator(final URI relationTypeBaseUri) {
+        super(relationTypeBaseUri);
+    }
 
     /**
      * Analyses the method with a RequestMapping and returns a list of allowed http methods (GET, PUT, etc.).

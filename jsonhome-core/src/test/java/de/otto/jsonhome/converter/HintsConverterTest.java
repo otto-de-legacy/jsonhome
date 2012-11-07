@@ -29,7 +29,7 @@ import java.util.Set;
 
 import static de.otto.jsonhome.converter.HintsConverter.hintsToJsonHome;
 import static de.otto.jsonhome.model.Allow.*;
-import static de.otto.jsonhome.model.Docs.emptyDocs;
+import static de.otto.jsonhome.model.Documentation.emptyDocs;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
 import static de.otto.jsonhome.model.Precondition.ETAG;
 import static java.util.Arrays.asList;

@@ -22,7 +22,7 @@ import java.util.Collections;
 
 import static de.otto.jsonhome.fixtures.LinkFixtures.*;
 import static de.otto.jsonhome.model.Allow.*;
-import static de.otto.jsonhome.model.Docs.emptyDocs;
+import static de.otto.jsonhome.model.Documentation.emptyDocs;
 import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 import static java.net.URI.create;

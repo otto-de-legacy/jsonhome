@@ -17,7 +17,7 @@ package de.otto.jsonhome.model;
 
 import java.util.*;
 
-import static de.otto.jsonhome.model.Docs.emptyDocs;
+import static de.otto.jsonhome.model.Documentation.emptyDocs;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.EnumSet.copyOf;
@@ -51,7 +51,7 @@ public final class Hints {
     private final List<String> acceptPost;
     private final List<Precondition> preconditionReq;
     private final Status status;
-    private final Docs docs;
+    private final Documentation docs;
 
     /**
      * Returns an empty Hints instance.
@@ -88,7 +88,7 @@ public final class Hints {
                               final List<String> acceptPost,
                               final List<Precondition> preconditionReq,
                               final Status status,
-                              final Docs docs) {
+                              final Documentation docs) {
         return new Hints(allows, representations, acceptPut, acceptPost, preconditionReq, status, docs);
     }
 
@@ -98,7 +98,7 @@ public final class Hints {
                   final List<String> acceptPost,
                   final List<Precondition> preconditionReq,
                   final Status status,
-                  final Docs docs) {
+                  final Documentation docs) {
         if (!acceptPost.isEmpty() && !allows.contains(Allow.POST)) {
             throw new IllegalArgumentException("POST is not allowed but accept-post is provided.");
         }
@@ -161,9 +161,9 @@ public final class Hints {
     /**
      * Human-readable documentation of a ResourceLink.
      *
-     * @return Docs
+     * @return Documentation
      */
-    public Docs getDocs() {
+    public Documentation getDocs() {
         return docs;
     }
 

@@ -16,7 +16,7 @@
 package de.otto.jsonhome.generator;
 
 import de.otto.jsonhome.annotation.HrefTemplate;
-import de.otto.jsonhome.model.Docs;
+import de.otto.jsonhome.model.Documentation;
 import de.otto.jsonhome.model.HrefVar;
 
 import java.lang.reflect.Method;
@@ -26,12 +26,16 @@ import java.util.List;
 
 import static de.otto.jsonhome.generator.MethodHelper.getParameterInfos;
 import static de.otto.jsonhome.generator.UriTemplateHelper.variableNamesFrom;
-import static de.otto.jsonhome.model.Docs.emptyDocs;
+import static de.otto.jsonhome.model.Documentation.emptyDocs;
 import static de.otto.jsonhome.model.HrefVar.hrefVar;
 
 public abstract class HrefVarsGenerator {
 
-    private final DocsGenerator docsGenerator = new DocsGenerator();
+    private final DocsGenerator docsGenerator;
+
+    protected HrefVarsGenerator(final URI relationTypeBaseUri) {
+        docsGenerator = new DocsGenerator(relationTypeBaseUri);
+    }
 
     /**
      * Analyses the method and returns a list of HrefVar instances, describing the variables of a templated resource.
@@ -56,7 +60,7 @@ public abstract class HrefVarsGenerator {
             hrefVars = new ArrayList<HrefVar>();
             for (final ParameterInfo parameterInfo : getParameterInfos(method)) {
                 final URI relationType = relationTypeUri.resolve("#" + parameterInfo.getName());
-                final Docs docs = docsGenerator.documentationFor(parameterInfo);
+                final Documentation docs = docsGenerator.documentationFor(parameterInfo);
                 if (hasPathVariable(parameterInfo) || hasRequestParam(parameterInfo)) {
                     hrefVars.add(hrefVar(parameterInfo.getName(), relationType, docs));
                 }

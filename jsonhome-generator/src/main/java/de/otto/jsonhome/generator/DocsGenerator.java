@@ -19,36 +19,51 @@
 package de.otto.jsonhome.generator;
 
 import de.otto.jsonhome.annotation.Doc;
-import de.otto.jsonhome.model.Docs;
+import de.otto.jsonhome.annotation.Docs;
+import de.otto.jsonhome.model.Documentation;
 
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Collections;
 
-import static de.otto.jsonhome.model.Docs.documentation;
-import static de.otto.jsonhome.model.Docs.emptyDocs;
+import static de.otto.jsonhome.model.Documentation.documentation;
+import static de.otto.jsonhome.model.Documentation.emptyDocs;
+import static java.net.URI.create;
 import static java.util.Arrays.asList;
 
 /**
+ * A generator used to create {@link Documentation} for a link-relation type or href-var.
+ *
  * @author Guido Steinacker
  * @since 11.10.12
  */
 public class DocsGenerator {
 
-    public Docs documentationFrom(final Class<?> controller, final Method method) {
-        Doc doc = method.getAnnotation(Doc.class);
-        if (doc == null) {
-            doc = controller.getAnnotation(Doc.class);
-        }
+    private final URI relationTypeBaseUri;
 
-        if (doc != null) {
-            return documentationFrom(doc);
-        } else {
-            return emptyDocs();
-        }
+    public DocsGenerator(final URI relationTypeBaseUri) {
+        this.relationTypeBaseUri = relationTypeBaseUri;
     }
 
-    public Docs documentationFor(final ParameterInfo parameterInfo) {
+    public Documentation documentationFrom(final URI relationType, final Class<?> controller) {
+
+        // TODO: simplify!
+        Docs docs = controller.getAnnotation(Docs.class);
+        if (docs != null) {
+            for (final Doc relDoc : docs.value()) {
+                if (linkRelationTypeOf(relDoc.rel()).equals(relationType)) {
+                    return documentationFrom(relDoc);
+                }
+            }
+        } else {
+            Doc relDoc = controller.getAnnotation(Doc.class);
+            if (relDoc != null && linkRelationTypeOf(relDoc.rel()).equals(relationType)) {
+                return documentationFrom(relDoc);
+            }
+        }
+        return emptyDocs();
+    }
+
+    public Documentation documentationFor(final ParameterInfo parameterInfo) {
         if (parameterInfo.hasAnnotation(Doc.class)) {
             Doc doc = parameterInfo.getAnnotation(Doc.class);
             return documentationFrom(doc);
@@ -57,12 +72,18 @@ public class DocsGenerator {
         }
     }
 
-    private Docs documentationFrom(final Doc doc) {
+    private Documentation documentationFrom(final Doc doc) {
         final String link = doc.link();
         final String[] description = doc.value();
         return documentation(
                 description != null ? asList(description) : Collections.<String>emptyList(),
                 link != null && !link.isEmpty() ? URI.create(link) : null);
+    }
+
+    private URI linkRelationTypeOf(final String link) {
+        return create(link.startsWith("http://")
+                ? link
+                : relationTypeBaseUri + link);
     }
 
 }

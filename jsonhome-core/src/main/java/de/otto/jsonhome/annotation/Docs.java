@@ -18,22 +18,29 @@ package de.otto.jsonhome.annotation;
 import java.lang.annotation.*;
 
 /**
- * Refers to a link-relation type specified by a {@link RelDoc} annotation.
+ * A container annotation used to add documentation of multiple link-relation types to a single controller.
+ * <p/>
+ * Usage:
+ * <code><pre>
+ *      &#064;Documentation({
+ *          &#064;Doc(rel="/rel/foo-type", value="A reference to a foo"),
+ *          &#064;Doc(rel="/rel/bar-type", value="A reference to a bar")
+ *      })
+ * </pre></code>
  *
  * @author Guido Steinacker
  * @since 15.09.12
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Rel {
+public @interface Docs {
 
     /**
-     * The URI uniquely identifying the link relation type in a given context.
+     * One or more RelDoc annotations, describing link-relation types.
      *
-     *
-     * @return URI of the link relation type
+     * @return array of RelDoc annotations.
      */
-    String value();
+    Doc[] value();
 
 }

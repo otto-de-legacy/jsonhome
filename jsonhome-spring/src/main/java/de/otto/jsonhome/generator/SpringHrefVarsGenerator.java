@@ -20,7 +20,13 @@ package de.otto.jsonhome.generator;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.net.URI;
+
 public class SpringHrefVarsGenerator extends HrefVarsGenerator {
+
+    public SpringHrefVarsGenerator(final URI relationTypeBaseUri) {
+        super(relationTypeBaseUri);
+    }
 
     @Override
     protected boolean hasRequestParam(final ParameterInfo parameterInfo) {

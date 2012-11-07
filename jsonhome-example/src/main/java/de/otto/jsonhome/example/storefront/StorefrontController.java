@@ -28,7 +28,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping(value = "/storefront")
 @Rel("/rel/storefront")
-@Doc(link = "http://de.wikipedia.org/wiki/Homepage")
+@Doc(rel = "/rel/storefront",
+     link = "http://de.wikipedia.org/wiki/Homepage"
+)
 public class StorefrontController {
 
     @RequestMapping(produces = "text/html")

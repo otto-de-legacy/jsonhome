@@ -69,7 +69,7 @@ public abstract class ResourceLinkGenerator {
             for (final String resourcePath : resourcePaths) {
                 final URI relationType = relationTypeFrom(method);
                 if (relationType != null) {
-                    final Hints hints = hintsGenerator.hintsOf(method);
+                    final Hints hints = hintsGenerator.hintsOf(relationType, method);
                     if (resourcePath.matches(".*\\{.*\\}")) {
                         resourceLinks.add(templatedLink(
                                 relationType,

@@ -21,6 +21,7 @@ package de.otto.jsonhome.generator;
 import de.otto.jsonhome.model.*;
 
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -36,7 +37,11 @@ import static java.util.Collections.emptyList;
  */
 public abstract class HintsGenerator {
 
-    private final DocsGenerator docsGenerator = new DocsGenerator();
+    private final DocsGenerator docsGenerator;
+
+    protected HintsGenerator(final URI relationTypeBaseUri) {
+        this.docsGenerator = new DocsGenerator(relationTypeBaseUri);
+    }
 
     /**
      * Analyses the method with a RequestMapping and returns the corresponding Hints.
@@ -50,11 +55,11 @@ public abstract class HintsGenerator {
      * @throws NullPointerException if method is not annotated with @RequestMapping.
      */
 
-    public final Hints hintsOf(final Method method) {
+    public final Hints hintsOf(final URI relationType, final Method method) {
         final Set<Allow> allows = allowedHttpMethodsOf(method);
         final HintsBuilder hintsBuilder = hintsBuilder()
                 .allowing(allows)
-                .with(docsGenerator.documentationFrom(method.getDeclaringClass(), method))
+                .with(docsGenerator.documentationFrom(relationType, method.getDeclaringClass()))
                 .requiring(preconditionsFrom(method))
                 .withStatus(statusFrom(method));
 

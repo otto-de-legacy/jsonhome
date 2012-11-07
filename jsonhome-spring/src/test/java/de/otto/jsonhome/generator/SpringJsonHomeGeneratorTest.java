@@ -333,11 +333,11 @@ public class SpringJsonHomeGeneratorTest {
         // when
         final ResourceLink resourceLink = jsonHome.getResourceFor(relationTypeURI);
         // then
-        final Docs docs = resourceLink.getHints().getDocs();
+        final Documentation docs = resourceLink.getHints().getDocs();
         assertEquals(docs.getDescription().get(0), "a value");
-        final Docs var1Doc = resourceLink.asTemplatedLink().getHrefVars().get(0).getDocs();
+        final Documentation var1Doc = resourceLink.asTemplatedLink().getHrefVars().get(0).getDocs();
         assertEquals(var1Doc.getDescription().get(0), "var value 1");
-        final Docs var2Doc = resourceLink.asTemplatedLink().getHrefVars().get(1).getDocs();
+        final Documentation var2Doc = resourceLink.asTemplatedLink().getHrefVars().get(1).getDocs();
         assertEquals(var2Doc.getDescription().get(0), "var value 2");
     }
 
@@ -349,11 +349,11 @@ public class SpringJsonHomeGeneratorTest {
         // when
         final ResourceLink resourceLink = jsonHome.getResourceFor(relationTypeURI);
         // then
-        final Docs docs = resourceLink.getHints().getDocs();
+        final Documentation docs = resourceLink.getHints().getDocs();
         assertEquals(docs.getDescription().get(0), "controller value");
-        final Docs var1Doc = resourceLink.asTemplatedLink().getHrefVars().get(0).getDocs();
+        final Documentation var1Doc = resourceLink.asTemplatedLink().getHrefVars().get(0).getDocs();
         assertEquals(var1Doc.getDescription().get(0), "var value 1");
-        final Docs var2Doc = resourceLink.asTemplatedLink().getHrefVars().get(1).getDocs();
+        final Documentation var2Doc = resourceLink.asTemplatedLink().getHrefVars().get(1).getDocs();
         assertEquals(var2Doc.getDescription().get(0), "var value 2");
     }
 

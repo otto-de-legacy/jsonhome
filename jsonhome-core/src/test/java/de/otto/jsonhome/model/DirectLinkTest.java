@@ -24,7 +24,7 @@ import static de.otto.jsonhome.fixtures.LinkFixtures.*;
 import static de.otto.jsonhome.model.Allow.GET;
 import static de.otto.jsonhome.model.Allow.PUT;
 import static de.otto.jsonhome.model.DirectLink.directLink;
-import static de.otto.jsonhome.model.Docs.emptyDocs;
+import static de.otto.jsonhome.model.Documentation.emptyDocs;
 import static de.otto.jsonhome.model.Precondition.ETAG;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;

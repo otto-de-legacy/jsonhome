@@ -17,7 +17,7 @@ package de.otto.jsonhome.model;
 
 import java.net.URI;
 
-import static de.otto.jsonhome.model.Docs.emptyDocs;
+import static de.otto.jsonhome.model.Documentation.emptyDocs;
 
 /**
  * A single href-var used to describe the href-vars of templated resource links.
@@ -32,10 +32,10 @@ public final class HrefVar {
 
     private final String var;
     private final URI varType;
-    private final Docs docs;
+    private final Documentation docs;
 
 
-    private HrefVar(final String var, final URI varType, final Docs docs) {
+    private HrefVar(final String var, final URI varType, final Documentation docs) {
         this.var = var;
         this.varType = varType;
         this.docs = docs;
@@ -45,7 +45,7 @@ public final class HrefVar {
         return new HrefVar(var, varType, emptyDocs());
     }
 
-    public static HrefVar hrefVar(final String var, final URI varType, final Docs docs) {
+    public static HrefVar hrefVar(final String var, final URI varType, final Documentation docs) {
         return new HrefVar(var, varType, docs);
     }
 
@@ -72,7 +72,7 @@ public final class HrefVar {
      *
      * @return documenation
      */
-    public Docs getDocs() {
+    public Documentation getDocs() {
         return docs;
     }
 
