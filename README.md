@@ -2,7 +2,7 @@
 
 Libraries to publish and use json-home documents.
 
-## Json-Home?
+## 1. Json-Home?
 
 Think of an machine-readable alternative to an index.html in json format, describing the REST resources of an
 application. If the caller knows the format, no URIs must be constructed using string-magic. The resources
@@ -42,9 +42,9 @@ An example from the draft specification:
    }
 ```
 
-## Usage
+## 2. Usage
 
-### Serving json-home documents
+### 2.1 Serving json-home documents
 
 A simple Spring MVC controller is looking like this:
 ```
@@ -138,7 +138,7 @@ preconditions (etag, last-modified) or set the status (deprecated, gone) of a re
 
 Please have a look at the example again, or download the sources and check the unit-tests for more examples.
 
-### Consuming json-home documents
+### 2.2 Consuming json-home documents
 
 There is also a very small client-library and a json-home parser available. If you want to consume a json-home document
 (access the linked resources without building "known" URIs using string-magic), you may try the following:
@@ -179,7 +179,7 @@ anymore): in this case you should call client.updateAndGet() instead of get().
 Internally, the client is based on Apache's CachingHttpClient. You may want to use the same client to access
 the resource itself - but this is up to you. Providing a full "REST client" is out of scope of this project. 
 
-## More Features
+## 3. More Features
 
 A more complete support of the json-home spec is already planned, please have a look at the GitHub Issues. Release
 1.0 should support the full specification, as soon as the specification itself will be final. 
@@ -191,7 +191,7 @@ a web shop, having a product-system and a separate order-system.
 Some things from the specification are still missing. Only "optional" information contained in the hints, but anyway.
 The missing parts will be added before release 1.0.
 
-## Work in Progress!
+## 4. Work in Progress!
 
 * The project is in an early state. Many details will change in the next weeks, possibly in an incompatible way.
 * The json-home specification is still a draft, it might change (and will be extended) itself in the next months.
@@ -201,11 +201,11 @@ JAX-RS support is already planned and will be added to version 0.2 in the next f
 
 The library is actively used (and developed) at otto (http://www.otto.de).
 
-## Licensing
+## 5. Licensing
 
 The project is released under version 2.0 of the Apache License. See LICENSE.txt for details.
 
-## Maven, Gradle
+## 6. Maven, Gradle
 
 You can find all releases in Maven Central and in the public Sonatype repository:
 
@@ -229,13 +229,13 @@ The current snapshot-release is 0.2.0-SNAPSHOT:
 
 There is no de.otto:jsonhome-example:* because this is only an example, you should not depend on it.
 
-## Feedback + Help Wanted
+## 7. Feedback + Help Wanted
 
 Every kind of feedback - also negative - is appreciated. Even more appreciated are contributions to the code base.
 
 To contact us, please send an email to guido.steinacker@gmail.com
 
-## Links and Documentation
+## 8. Links and Documentation
 
 Have a look at the wiki pages.
 
