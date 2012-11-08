@@ -20,7 +20,7 @@ import java.net.URI;
 /**
  * A JsonHomeClient used to get json-home documents from an URI via HTTP.
  * <p/>
- * This implementation is relying on sonatype async-http-client.
+ * This implementation is relying on Apache's CachingHttpClient.
  *
  * @author Guido Steinacker
  * @since 26.10.12
