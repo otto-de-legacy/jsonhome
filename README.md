@@ -217,6 +217,9 @@ The current release is 0.1.0:
 * de.otto:jsonhome-generator:0.1.0
 * de.otto:jsonhome-spring:0.1.0
 
+Because the development is still involving incompatible changes, you may want to use the current 0.2 SNAPSHOT instead
+of using the 0.1 release.
+
 Snapshot releases will be published here:
 
 https://oss.sonatype.org/content/repositories/snapshots
@@ -229,11 +232,18 @@ The current snapshot-release is 0.2.0-SNAPSHOT:
 
 There is no de.otto:jsonhome-example:* because this is only an example, you should not depend on it.
 
-## 7. Feedback + Help Wanted
+## 7. Contributing
 
 Every kind of feedback - also negative - is appreciated. Even more appreciated are contributions to the code base.
 
 To contact us, please send an email to guido.steinacker@gmail.com
+
+In order to contribute source code:
+* Fork it
+* Create your feature branch (git checkout -b my-new-feature)
+* Commit your changes (git commit -am 'Added some feature')
+* Push to the branch (git push origin my-new-feature)
+* Create new Pull Request
 
 ## 8. Links and Documentation
 
