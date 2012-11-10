@@ -1,6 +1,6 @@
 # JSONHOME
 
-Libraries to publish and use json-home documents.
+Libraries to publish and use [json-home](http://tools.ietf.org/html/draft-nottingham-json-home-02) documents.
 
 ## 1. Json-Home?
 
@@ -43,6 +43,12 @@ An example from the draft specification:
 ```
 
 ## 2. Usage
+
+Module jsonhome-spring is used to serve json-home documents from your application. Section 2.1
+illustrates how to do this.
+
+There is also a module jsonhome-client, used to access remote or local json-home documents. You may
+find an example in Section 2.2.
 
 ### 2.1 Serving json-home documents
 
@@ -217,8 +223,8 @@ The current release is 0.1.0:
 * de.otto:jsonhome-generator:0.1.0
 * de.otto:jsonhome-spring:0.1.0
 
-Because the development is still involving incompatible changes, you may want to use the current 0.2 SNAPSHOT instead
-of using the 0.1 release.
+**Because the development is still involving incompatible changes, you may want to use the current 0.2 SNAPSHOT**
+instead of using the 0.1 release.
 
 Snapshot releases will be published here:
 
@@ -239,6 +245,7 @@ Every kind of feedback - also negative - is appreciated. Even more appreciated a
 To contact us, please send an email to guido.steinacker@gmail.com
 
 In order to contribute source code:
+
 * Fork it
 * Create your feature branch (git checkout -b my-new-feature)
 * Commit your changes (git commit -am 'Added some feature')
@@ -247,13 +254,13 @@ In order to contribute source code:
 
 ## 8. Links and Documentation
 
-Have a look at the wiki pages.
+* **Json-Home draft specification**:
+[http://tools.ietf.org/html/draft-nottingham-json-home-02](http://tools.ietf.org/html/draft-nottingham-json-home-02)
 
-You can find information about json-home in the draft specification:
-Json-Home: http://tools.ietf.org/html/draft-nottingham-json-home-02
+* **URI Templates**:
+[http://tools.ietf.org/html/rfc6570](http://tools.ietf.org/html/rfc6570)
 
-The concept of URI Templates is defined here:
-http://tools.ietf.org/html/rfc6570
+* **Link-Relation Types**:
+[http://tools.ietf.org/html/rfc5988](http://tools.ietf.org/html/rfc5988)
 
-For information about the concept of link-relation types:
-http://tools.ietf.org/html/rfc5988
+Please also have a look at the project's [wiki pages](https://github.com/otto-de/jsonhome/wiki).
