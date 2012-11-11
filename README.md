@@ -70,19 +70,31 @@ public class HelloWorldController {
 If you want to have a json-home document for the different entry-point resources of your application, you have to
 do the following:
 
-1. Add a dependency to jsonhome-spring to your application.
+### 2.1.1 Add a dependency to jsonhome-spring to your application.
 
-2. Have a look to the example application and adopt the json-home related things to your application (configuration, 
-css, templates, properties). If you think that this is far too complicated - well, I think you are right. 
-I promise you to improve this in a few days.
+### 2.1.2 Have a look at the hello-world example. You will have to:
 
-3. Identify the entry-point resources of your RESTful application. If your resources are using hypermedia intensively,
+  * Specify the properties used by jsonhome (helloworld.properties):
+
+  ```
+  jsonhome.applicationBaseUri = <base uri of the resources of your application>
+  jsonhome.relationTypeBaseUri = <base uri of the link-relation types of your application>
+  ```
+
+  * Import the jsonhome-beans and add a property-placeholder configurer in your Spring bean config:
+
+  ```
+  <import resource="classpath*:jsonhome/jsonhome-beans.xml" />
+  <context:property-placeholder location="/WEB-INF/properties/helloworld.properties" />
+  ```
+
+### 2.1.3 Identify the entry-point resources of your RESTful application. If your resources are using hypermedia intensively,
 these will be only a few. If not, you will end up with many entry-point resources (resources that are not
 reachable by following links contained in other resources). If you find lots of them, this is
 most likely a hint that your REST API is not at level 3 of Richardsons Maturity Model
 (see http://martinfowler.com/articles/richardsonMaturityModel.html).
 
-4. Add a @Rel annotation to all controller methods, dealing with your entry-point resources:
+### 2.1.4 Add a @Rel annotation to all controller methods, dealing with your entry-point resources:
 ```
 @Controller
 @RequestMapping(value = "/helloworld")
@@ -97,6 +109,7 @@ public class HelloWorldController {
 }
 ```
 
+### 2.1.5 Result
 That's basically all you have to do to get a json-home document like this:
 ```
 { "resources" : { 
