@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:p="http://www.springframework.org/schema/p"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
     <!--
-     The JsonHomeController is using the application/json-home namespace so we have to
+     Activates annotation-based configuration so we can rely on annotations in the JsonHomeController.
+     -->
+    <context:annotation-config />
+
+    <!--
+     The JsonHomeController is using the application/json-home representation so we have to
      add a message converter for this.
     -->
     <mvc:annotation-driven>
-        <mvc:message-converters register-defaults="false">
+        <mvc:message-converters register-defaults="true">
             <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
                 <property name="supportedMediaTypes">
                     <list>
@@ -27,13 +36,13 @@
     <mvc:resources mapping="/jsonhome/**" location="classpath:/jsonhome/" />
 
     <!--
-     The controller used to serve the json-home documents.
+     The controller used to serve the json-home documents. The dependencies are autowired.
     -->
     <bean class="de.otto.jsonhome.controller.JsonHomeController"
           p:maxAgeSeconds = "3600" />
 
     <!--
-     The controller used to serve the HTML representation of the json-home document.
+     The controller used to serve the HTML representation of the json-home document. The dependencies are autowired.
     -->
     <bean class="de.otto.jsonhome.controller.RelController" />
 

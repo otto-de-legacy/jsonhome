@@ -18,7 +18,7 @@
         * jsonhome.relationTypeBaseUri = <base uri of the link-relation types of your application>
     -->
     <context:property-placeholder
-            location="/WEB-INF/properties/jsonhome-example.properties"
+            location="/WEB-INF/properties/shop.properties"
             ignore-resource-not-found="false"/>
 
     <!--

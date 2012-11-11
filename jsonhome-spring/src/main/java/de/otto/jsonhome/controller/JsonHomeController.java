@@ -46,7 +46,7 @@ public class JsonHomeController extends JsonHomeControllerBase {
 
     @RequestMapping(produces = {"application/json-home", "application/json"})
     @ResponseBody
-    public Map<String, ?> getHomeDocument(final HttpServletResponse response) {
+    public Map<String, ?> getJsonHomeDocument(final HttpServletResponse response) {
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=" + maxAge);
         return toJsonHome(jsonHome());
@@ -54,8 +54,8 @@ public class JsonHomeController extends JsonHomeControllerBase {
 
     @RequestMapping(produces = "text/html")
     @ResponseBody
-    public ModelAndView getResourcesDoc(final HttpServletRequest request,
-                                        final HttpServletResponse response) {
+    public ModelAndView getHtmlHomeDocument(final HttpServletRequest request,
+                                            final HttpServletResponse response) {
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=" + maxAge);
         final Map<String,Object> resources = new HashMap<String, Object>();

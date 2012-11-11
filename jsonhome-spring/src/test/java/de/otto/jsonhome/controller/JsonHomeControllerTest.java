@@ -45,7 +45,7 @@ public class JsonHomeControllerTest {
                 null);
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        final Map<String, ?> resourcesMap = controller.getHomeDocument(response);
+        final Map<String, ?> resourcesMap = controller.getJsonHomeDocument(response);
         // then
         assertEquals(response.getHeader("Cache-Control"), "max-age=3600");
         assertEquals(resourcesMap.size(), 1);
@@ -69,7 +69,7 @@ public class JsonHomeControllerTest {
                 "http://otto.de");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        final Map<String, ?> resourcesMap = controller.getHomeDocument(response);
+        final Map<String, ?> resourcesMap = controller.getJsonHomeDocument(response);
         // then
         @SuppressWarnings("unchecked")
         final Map<String, Map<String, ?>> resources = (Map<String, Map<String, ?>>) resourcesMap.get("resources");
@@ -85,7 +85,7 @@ public class JsonHomeControllerTest {
                 "http://otto.de");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        final Map<String, ?> resourcesMap = controller.getHomeDocument(response);
+        final Map<String, ?> resourcesMap = controller.getJsonHomeDocument(response);
         // then
         @SuppressWarnings("unchecked")
         final Map<String, Map<String, ?>> resources = (Map<String, Map<String, ?>>) resourcesMap.get("resources");

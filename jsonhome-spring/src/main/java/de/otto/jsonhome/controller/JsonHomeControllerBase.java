@@ -17,16 +17,15 @@ package de.otto.jsonhome.controller;
 
 import de.otto.jsonhome.generator.JsonHomeGenerator;
 import de.otto.jsonhome.model.JsonHome;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.Resource;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Base class for controllers accessing JsonHome documents.
@@ -37,7 +36,7 @@ public class JsonHomeControllerBase {
 
     private JsonHomeGenerator jsonHomeGenerator;
     private volatile JsonHome jsonHome = null;
-    private Set<Class<?>> controllerTypes;
+    private Set<Class<?>> controllerTypes = Collections.emptySet();
     private URI applicationBaseUri;
 
     @Value("${jsonhome.applicationBaseUri}")
@@ -45,12 +44,12 @@ public class JsonHomeControllerBase {
         this.applicationBaseUri = URI.create(baseUri);
     }
 
-    @Resource
+    @Autowired
     public void setJsonHomeGenerator(final JsonHomeGenerator jsonHomeGenerator) {
         this.jsonHomeGenerator = jsonHomeGenerator;
     }
 
-    @Resource
+    @Autowired
     public void setApplicationContext(final ApplicationContext applicationContext) {
         final Map<String, Object> controllerBeans = applicationContext.getBeansWithAnnotation(Controller.class);
         controllerTypes = new HashSet<Class<?>>();
