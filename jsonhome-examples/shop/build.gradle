@@ -12,9 +12,6 @@ dependencies {
     compile 'org.freemarker:freemarker:2.3.19'
     compile project(':jsonhome-spring')
     providedCompile 'javax.servlet:servlet-api:2.5'
-    testCompile 'org.testng:testng:6.3.1'
 }
 
-test {
-    useTestNG()
-}
+jettyRun.contextPath = '/'
