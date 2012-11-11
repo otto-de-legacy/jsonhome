@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <!--
+     Import the controller beans, but not the freemarker beans, because we also want to use freemarker here:
+    -->
+    <import resource="classpath*:jsonhome/jsonhome-controller-beans.xml" />
+
+    <!--
+     Definition of the properties needed to configure the jsonhome controllers:
+        * jsonhome.applicationBaseUri = <base uri of the resources of your application>
+        * jsonhome.relationTypeBaseUri = <base uri of the link-relation types of your application>
+    -->
+    <context:property-placeholder
+            location="/WEB-INF/properties/jsonhome-example.properties"
+            ignore-resource-not-found="false"/>
+
+    <!--
+     The example's ProductController is using application-specific media types in json format.
+     We are using Jackson to do the transformation to application/example-*, so we have
+     to configure the message converter here.
+    -->
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="false">
+            <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>application/example-product</value>
+                            <value>application/example-products</value>
+                        </list>
+                    </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!--
+     Find all controllers and beans to do the autowiring of the example beans (not the jsonhome beans).
+    -->
+    <context:component-scan base-package="de.otto.jsonhome.example" />
+
+    <!--
+     The ContentNegotiatingViewResolver is used to do the content negotiating stuff. Needed in this example
+     because of the different representations of the product and products resources.
+    -->
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="order" value="1" />
+        <property name="mediaTypes">
+            <map>
+                <entry key="json" value="application/json" />
+            </map>
+        </property>
+
+        <property name="defaultViews">
+            <list>
+                <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
+            </list>
+        </property>
+    </bean>
+
+    <!--
+     if you are using freemarker and you want to use the HTML representation of json-home,
+     you must add the classpath:/jsonome/freemarker to the FreeMarkerConfigurer.
+     It is not possible (well at least I did not find out how) to use multiple FreeMarkerConfig
+     beans.
+    -->
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPaths">
+            <list>
+                <value>/WEB-INF/freemarker</value>
+                <value>classpath:/jsonhome/freemarker</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--
+     The viewResolver used to render views using Freemarker.
+    -->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="order" value="2"/>
+        <property name="cache" value="true"/>
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".ftl"/>
+    </bean>
+
+</beans>

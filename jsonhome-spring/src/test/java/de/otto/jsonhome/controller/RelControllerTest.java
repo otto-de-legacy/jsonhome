@@ -45,7 +45,7 @@ public class RelControllerTest {
         request.setRequestURI("/rel/foo");
         final ModelAndView resourcesMap = controller.getRelationshipType(request);
         // then
-        assertEquals(resourcesMap.getViewName(), "doc/directresource");
+        assertEquals(resourcesMap.getViewName(), "directresource");
         assertNotNull(resourcesMap.getModel().get("resource"));
         @SuppressWarnings("unchecked")
         final DirectLink model = (DirectLink) resourcesMap.getModel().get("resource");

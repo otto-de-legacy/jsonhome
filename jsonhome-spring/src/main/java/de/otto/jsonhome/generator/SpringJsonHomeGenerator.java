@@ -35,12 +35,12 @@ public final class SpringJsonHomeGenerator extends JsonHomeGenerator {
     private URI applicationBaseUri;
     private URI relationTypeBaseUri;
 
-    @Value("${applicationBaseUri}")
+    @Value("${jsonhome.applicationBaseUri}")
     public void setApplicationBaseUri(final String applicationBaseUri) {
         this.applicationBaseUri = URI.create(applicationBaseUri);
     }
 
-    @Value("${relationTypeBaseUri}")
+    @Value("${jsonhome.relationTypeBaseUri}")
     public void setRelationTypeBaseUri(final String relationTypeBaseUri) {
         this.relationTypeBaseUri = URI.create(relationTypeBaseUri);
     }

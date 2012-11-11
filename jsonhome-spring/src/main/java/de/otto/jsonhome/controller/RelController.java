@@ -58,9 +58,9 @@ public class RelController extends JsonHomeControllerBase {
             final ResourceLink resourceLink = jsonHome().getResourceFor(relationTypeURI);
             model.put("resource", resourceLink);
             if (resourceLink.isDirectLink()) {
-                return new ModelAndView("doc/directresource", model);
+                return new ModelAndView("directresource", model);
             } else {
-                return new ModelAndView("doc/templatedresource", model);
+                return new ModelAndView("templatedresource", model);
             }
         } else {
             throw new IllegalArgumentException("Unknown relation type " + relationType);

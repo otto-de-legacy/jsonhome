@@ -6,7 +6,7 @@
         <init-param>
             <param-name>contextConfigLocation</param-name>
             <param-value>
-                /WEB-INF/jsonhome-example-servlet.xml
+                /WEB-INF/spring/jsonhome-example-servlet.xml
             </param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
