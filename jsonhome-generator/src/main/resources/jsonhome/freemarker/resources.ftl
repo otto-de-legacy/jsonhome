@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Example Shop - REST API</title>
-    <link href="${contextpath}/resources/css/jsonhome.css" rel="stylesheet" type="text/css">
+    <link href="${contextpath}/jsonhome/css/jsonhome.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 

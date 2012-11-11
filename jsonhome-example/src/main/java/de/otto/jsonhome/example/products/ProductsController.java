@@ -15,7 +15,10 @@
  */
 package de.otto.jsonhome.example.products;
 
-import de.otto.jsonhome.annotation.*;
+import de.otto.jsonhome.annotation.Doc;
+import de.otto.jsonhome.annotation.Docs;
+import de.otto.jsonhome.annotation.Hints;
+import de.otto.jsonhome.annotation.Rel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -66,7 +69,7 @@ public class ProductsController {
     @Rel("/rel/products")
     public ModelAndView getProductsHtml(final @RequestParam(required = false, defaultValue = "*") String query) {
         final List<Product> products = productService.findProducts(query);
-        return new ModelAndView("example/products", singletonMap("products", products));
+        return new ModelAndView("products", singletonMap("products", products));
     }
 
     @RequestMapping(
@@ -97,7 +100,7 @@ public class ProductsController {
         // Return the URI of the created product in Location header:
         response.setHeader("Location", request.getContextPath() + "/products/" + id);
         response.setStatus(SC_CREATED);
-        return new ModelAndView("example/products", singletonMap("products", products));
+        return new ModelAndView("products", singletonMap("products", products));
     }
 
     @RequestMapping(
@@ -110,7 +113,7 @@ public class ProductsController {
                                                "A second line of valuable documentation."})
                                          @PathVariable final long productId) {
         final Product product = productService.findProduct(productId);
-        return new ModelAndView("example/product", singletonMap("product", product));
+        return new ModelAndView("product", singletonMap("product", product));
     }
 
     @RequestMapping(

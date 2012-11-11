@@ -40,7 +40,7 @@ public class JsonHomeControllerBase {
     private Set<Class<?>> controllerTypes;
     private URI applicationBaseUri;
 
-    @Value("${applicationBaseUri}")
+    @Value("${jsonhome.applicationBaseUri}")
     public void setApplicationBaseUri(final String baseUri) {
         this.applicationBaseUri = URI.create(baseUri);
     }

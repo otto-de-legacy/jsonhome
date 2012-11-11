@@ -37,7 +37,7 @@ public class StorefrontController {
 
     @RequestMapping(produces = "text/html")
     public String getStorefront() {
-        return "example/storefront";
+        return "storefront";
     }
 
 }

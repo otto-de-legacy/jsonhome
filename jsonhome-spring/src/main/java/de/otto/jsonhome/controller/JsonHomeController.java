@@ -38,11 +38,17 @@ import static de.otto.jsonhome.converter.JsonHomeConverter.toJsonHome;
 @RequestMapping(value = "/json-home")
 public class JsonHomeController extends JsonHomeControllerBase {
 
+    private int maxAge = 3600;
+
+    public void setMaxAgeSeconds(int maxAge) {
+        this.maxAge = maxAge;
+    }
+
     @RequestMapping(produces = {"application/json-home", "application/json"})
     @ResponseBody
     public Map<String, ?> getHomeDocument(final HttpServletResponse response) {
         // home document should be cached:
-        response.setHeader("Cache-Control", "max-age=3600");
+        response.setHeader("Cache-Control", "max-age=" + maxAge);
         return toJsonHome(jsonHome());
     }
 
@@ -51,11 +57,11 @@ public class JsonHomeController extends JsonHomeControllerBase {
     public ModelAndView getResourcesDoc(final HttpServletRequest request,
                                         final HttpServletResponse response) {
         // home document should be cached:
-        response.setHeader("Cache-Control", "max-age=3600");
+        response.setHeader("Cache-Control", "max-age=" + maxAge);
         final Map<String,Object> resources = new HashMap<String, Object>();
         resources.put("resources", jsonHome().getResources().values());
         resources.put("contextpath", request.getContextPath());
-        return new ModelAndView("doc/resources", resources);
+        return new ModelAndView("resources", resources);
     }
 
 
