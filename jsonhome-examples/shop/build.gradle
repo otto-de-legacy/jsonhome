@@ -14,4 +14,4 @@ dependencies {
     providedCompile 'javax.servlet:servlet-api:2.5'
 }
 
-jettyRun.contextPath = '/'
+jettyRun.contextPath = 'shop'
