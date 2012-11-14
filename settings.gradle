@@ -1,6 +1,7 @@
 include "jsonhome-core"
 include "jsonhome-generator"
 include "jsonhome-spring"
+include "jsonhome-registry"
 include "jsonhome-client"
 include "jsonhome-examples/shop"
 include "jsonhome-examples/helloworld"
