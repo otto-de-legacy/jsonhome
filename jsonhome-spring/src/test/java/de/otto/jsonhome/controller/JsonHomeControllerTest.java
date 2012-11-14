@@ -105,13 +105,13 @@ public class JsonHomeControllerTest {
         final JsonHomeController controller = new JsonHomeController();
         controller.setControllerTypes(controllerType);
         controller.setJsonHomeGenerator(
-                jsonHomeFor(applicationBaseUri, relationTypeBaseUri != null ? relationTypeBaseUri : applicationBaseUri)
+                jsonHomeGenerator(applicationBaseUri, relationTypeBaseUri != null ? relationTypeBaseUri : applicationBaseUri)
         );
         controller.setApplicationBaseUri(applicationBaseUri);
         return controller;
     }
 
-    private JsonHomeGenerator jsonHomeFor(final String baseUri, final String relationTypeBaseUri) {
+    private JsonHomeGenerator jsonHomeGenerator(final String baseUri, final String relationTypeBaseUri) {
         final SpringJsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
         jsonHomeGenerator.setApplicationBaseUri(baseUri);
         jsonHomeGenerator.setRelationTypeBaseUri(relationTypeBaseUri);
