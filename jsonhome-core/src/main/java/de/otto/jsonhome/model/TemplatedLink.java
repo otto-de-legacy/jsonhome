@@ -292,7 +292,7 @@ public final class TemplatedLink implements ResourceLink {
         if (other.isDirectLink()) {
             throw new IllegalArgumentException(format(
                     "Merging TemplatedLink with DirectLink is not supported. "
-                    + "\nTemplatedLink=%s, \nDirectLink=%s", this, other));
+                    + "\nTemplatedLink = %s \nDirectLink = %s", this, other));
         }
         if (!relationType.equals(other.getLinkRelationType())) {
             throw new IllegalArgumentException(format(

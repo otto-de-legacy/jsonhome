@@ -17,6 +17,8 @@ package de.otto.jsonhome.model;
 
 import java.net.URI;
 
+import static java.lang.String.format;
+
 /**
  * A resource link describing a resource that is directly accessible using an URI.
  * <p/>
@@ -88,7 +90,8 @@ public final class DirectLink implements ResourceLink {
     @Override
     public ResourceLink mergeWith(ResourceLink other) {
         if (!other.isDirectLink()) {
-            throw new IllegalArgumentException("Merging DirectLink with TemplatedLink is not supported.");
+            throw new IllegalArgumentException(format(
+                    "Merging DirectLink with TemplatedLink is not supported. \nDirectLink = %s \nTemplatedLink = %s", toString(), other));
         }
 
         if (!relationType.equals(other.getLinkRelationType())) {
