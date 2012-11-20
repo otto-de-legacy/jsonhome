@@ -102,6 +102,8 @@ public class HttpJsonHomeClient implements JsonHomeClient {
         } catch (final IOException e) {
             // in case of an IOException, the connection will be released automatically.
             throw new JsonHomeClientException("Exception caught while getting json-home from " + uri, e);
+        } finally {
+            httpget.reset();
         }
         final HttpEntity entity = response.getEntity();
         if (entity != null) {
