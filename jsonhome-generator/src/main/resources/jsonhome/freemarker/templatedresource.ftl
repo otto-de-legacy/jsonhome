@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Example Shop - REST API</title>
+    <title>json-home</title>
     <link href="${contextpath}/jsonhome//css/jsonhome.css" rel="stylesheet" type="text/css">
 </head>
 <body>
