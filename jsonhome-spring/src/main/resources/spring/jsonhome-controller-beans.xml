@@ -31,7 +31,7 @@
     </mvc:annotation-driven>
 
     <!--
-     Specify where to find the resources of the example application.
+     Specify where to find the resources.
     -->
     <mvc:resources mapping="/jsonhome/**" location="classpath:/jsonhome" />
 
