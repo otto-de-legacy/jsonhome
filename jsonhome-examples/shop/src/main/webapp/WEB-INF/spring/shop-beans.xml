@@ -10,7 +10,7 @@
     <!--
      Import the controller beans, but not the freemarker beans, because we also want to use freemarker here:
     -->
-    <import resource="classpath*:jsonhome/jsonhome-controller-beans.xml" />
+    <import resource="classpath*:spring/jsonhome-controller-beans.xml" />
 
     <!--
      Definition of the properties needed to configure the jsonhome controllers:

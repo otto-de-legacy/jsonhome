@@ -33,7 +33,7 @@
     <!--
      Specify where to find the resources of the example application.
     -->
-    <mvc:resources mapping="/jsonhome/**" location="classpath:/jsonhome/" />
+    <mvc:resources mapping="/jsonhome/**" location="classpath:/jsonhome" />
 
     <!--
      The controller used to serve the json-home documents. The dependencies are autowired.
