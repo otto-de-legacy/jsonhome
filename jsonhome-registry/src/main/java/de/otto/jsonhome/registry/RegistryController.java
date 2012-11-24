@@ -239,9 +239,11 @@ public class RegistryController {
             value = "/{id}",
             method = RequestMethod.DELETE)
     public void unregister(final @PathVariable @Doc("Identifier of the registry entry.") String id,
-                           final HttpServletRequest request) {
+                           final HttpServletRequest request,
+                           final HttpServletResponse response) {
         final URI location = locationUri(request, id);
         registry.remove(location);
+        response.setStatus(SC_NO_CONTENT);
     }
 
     private boolean isValid(Map<String, ?> entry) {

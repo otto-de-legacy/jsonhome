@@ -110,7 +110,8 @@ public class RegistryControllerTest {
         // when
         controller.unregister(
                 location.substring(location.lastIndexOf("/")+1),
-                new MockHttpServletRequest("DELETE", location));
+                new MockHttpServletRequest("DELETE", location),
+                new MockHttpServletResponse());
         // then
         final MockHttpServletResponse secondResponse = new MockHttpServletResponse();
         final Map<String, String> entry = controller.getEntry(
