@@ -110,7 +110,6 @@ public class JsonHomeControllerTest {
                                                   final String relationTypeBaseUri) {
         final JsonHomeController controller = new JsonHomeController();
         controller.setJsonHomeSource(getJsonHomeSource(controllerType, applicationBaseUri, relationTypeBaseUri));
-        controller.setApplicationBaseUri(applicationBaseUri);
         controller.setRelationTypeBaseUri(relationTypeBaseUri);
         return controller;
     }

@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.otto.jsonhome.converter.JsonHomeConverter.toJsonHome;
+import static java.net.URI.create;
 
 
 /**
@@ -43,7 +44,6 @@ import static de.otto.jsonhome.converter.JsonHomeConverter.toJsonHome;
 public class JsonHomeController {
 
     private JsonHomeSource jsonHomeSource;
-    private URI applicationBaseUri;
     private URI relationTypeBaseUri;
     private int maxAge = 3600;
 
@@ -52,18 +52,9 @@ public class JsonHomeController {
         this.jsonHomeSource = jsonHomeSource;
     }
 
-    @Value("${jsonhome.applicationBaseUri}")
-    public void setApplicationBaseUri(final String baseUri) {
-        this.applicationBaseUri = URI.create(baseUri);
-    }
-
     @Value("${jsonhome.relationTypeBaseUri}")
     public void setRelationTypeBaseUri(String relationTypeBaseUri) {
-        this.relationTypeBaseUri = URI.create(relationTypeBaseUri);
-    }
-
-    public URI baseUri() {
-        return applicationBaseUri;
+        this.relationTypeBaseUri = create(relationTypeBaseUri);
     }
 
     public URI relationTypeBaseUri() {

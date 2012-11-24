@@ -48,7 +48,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class RelController {
 
     private JsonHomeSource jsonHomeSource;
-    private URI applicationBaseUri;
     private URI relationTypeBaseUri;
 
     @Autowired
@@ -56,18 +55,9 @@ public class RelController {
         this.jsonHomeSource = jsonHomeSource;
     }
 
-    @Value("${jsonhome.applicationBaseUri}")
-    public void setApplicationBaseUri(final String baseUri) {
-        this.applicationBaseUri = URI.create(baseUri);
-    }
-
     @Value("${jsonhome.relationTypeBaseUri}")
     public void setRelationTypeBaseUri(String relationTypeBaseUri) {
         this.relationTypeBaseUri = URI.create(relationTypeBaseUri);
-    }
-
-    public URI baseUri() {
-        return applicationBaseUri;
     }
 
     public URI relationTypeBaseUri() {
