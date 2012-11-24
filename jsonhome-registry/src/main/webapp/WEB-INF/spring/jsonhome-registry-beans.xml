@@ -9,7 +9,7 @@
     <!--
      Import the jsonhome Spring configuration.
      -->
-    <import resource="classpath*:jsonhome/jsonhome-beans.xml" />
+    <import resource="classpath*:spring/jsonhome-beans.xml" />
 
     <!--
      Definition of the properties needed to configure the jsonhome controllers:
