@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
     <!--
-     Import the jsonhome Spring configuration.
+     Import the jsonhome Spring configuration for freemarker rendering.
      -->
-    <import resource="classpath*:spring/jsonhome-beans.xml" />
+    <import resource="classpath*:spring/jsonhome-freemarker-beans.xml" />
 
     <!--
      Definition of the properties needed to configure the jsonhome controllers:
@@ -19,10 +22,54 @@
     <context:property-placeholder location="/WEB-INF/properties/jsonhome-registry.properties" />
 
     <!--
-     Configure the JsonHomeRegistryController.
+    Activates annotation-based configuration so we can rely on annotations in the JsonHomeController.
+    -->
+    <context:annotation-config />
+
+    <!--
+     The JsonHomeController is using the application/json-home representation so we have to
+     add a message converter for this.
+    -->
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json-home</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!--
+     Specify where to find the resources of the example application.
+    -->
+    <mvc:resources mapping="/jsonhome/**" location="classpath:/jsonhome/**" />
+
+    <!--
+     Configure the RegistryController.
      -->
     <bean class="de.otto.jsonhome.registry.RegistryController" />
 
-    <bean class="de.otto.jsonhome.registry.FileSystemRegistry" />
+    <!--
+     The controller used to serve the json-home documents.
+     Resources delivered by this controller have a max-age of 3600 seconds.
+     -->
+    <bean class="de.otto.jsonhome.registry.RegistryJsonHomeController"
+          p:maxAgeSeconds = "3600"
+          p:source-ref="jsonHomeSource"/>
+
+    <!--
+     The JsonHomeSource used to get the JsonHome from all registered URIs.
+     -->
+    <bean id="jsonHomeSource"
+          class="de.otto.jsonhome.registry.RegistryBasedJsonHomeSource"
+          p:registry-ref="registry"/>
+
+    <!--
+     Registry data is stored in a file. Adjust this if you want to have a different persistence.
+     -->
+    <bean id="registry" class="de.otto.jsonhome.registry.FileSystemRegistry" />
 
 </beans>

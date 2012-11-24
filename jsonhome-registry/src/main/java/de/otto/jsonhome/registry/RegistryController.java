@@ -40,7 +40,7 @@ import static javax.servlet.http.HttpServletResponse.*;
  * @since 15.09.12
  */
 @Controller
-@RequestMapping("/")
+@RequestMapping("/registry")
 @Docs({
         @Doc(rel = "/rel/jsonhome/registry",
              value = "A registry of json-home documents"),
