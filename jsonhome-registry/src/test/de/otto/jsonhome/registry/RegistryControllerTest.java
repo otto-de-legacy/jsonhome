@@ -47,7 +47,6 @@ public class RegistryControllerTest {
         assertFalse(location.endsWith("/"));
         final Map<String, String> entry = controller.getEntry(
                 location.substring(location.lastIndexOf("/")+1),
-                new MockHttpServletRequest("GET", location),
                 new MockHttpServletResponse());
         assertEquals(entry.get("href"), "http://example.org/example/foo");
     }
@@ -64,7 +63,6 @@ public class RegistryControllerTest {
         assertEquals(response.getStatus(), SC_CONFLICT);
         final Map<String, String> entry = controller.getEntry(
                 location.substring(location.lastIndexOf("/")+1),
-                new MockHttpServletRequest("GET", location),
                 new MockHttpServletResponse());
         assertEquals(entry.get("href"), "http://example.org/example/foo");
     }
@@ -81,7 +79,6 @@ public class RegistryControllerTest {
         assertEquals(updateResponse.getStatus(), SC_NO_CONTENT);
         final Map<String, String> entry = controller.getEntry(
                 location.substring(location.lastIndexOf("/")+1),
-                new MockHttpServletRequest("GET", location),
                 new MockHttpServletResponse());
         assertEquals(entry.get("href"), "http://example.org/example/bar");
     }
@@ -96,7 +93,6 @@ public class RegistryControllerTest {
         assertEquals(response.getStatus(), SC_CREATED);
         final Map<String, String> entry = controller.getEntry(
                 "42",
-                new MockHttpServletRequest("GET", "http://example.org/registry/42"),
                 new MockHttpServletResponse());
         assertEquals(entry.get("href"), "http://example.org/example/bar");
     }
@@ -110,13 +106,11 @@ public class RegistryControllerTest {
         // when
         controller.unregister(
                 location.substring(location.lastIndexOf("/")+1),
-                new MockHttpServletRequest("DELETE", location),
                 new MockHttpServletResponse());
         // then
         final MockHttpServletResponse secondResponse = new MockHttpServletResponse();
         final Map<String, String> entry = controller.getEntry(
                 location.substring(location.lastIndexOf("/")+1),
-                new MockHttpServletRequest("GET", location),
                 secondResponse);
 
         assertNull(entry);
@@ -128,7 +122,7 @@ public class RegistryControllerTest {
         final MockHttpServletRequest request = new MockHttpServletRequest();
         request.setRequestURI("http://example.org/registry");
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        controller.create(buildEntry(href), request, response);
+        controller.create(buildEntry(href), response);
         return response;
     }
 
@@ -141,7 +135,6 @@ public class RegistryControllerTest {
         controller.createOrUpdate(
                 uri.substring(uri.lastIndexOf("/")+1),
                 buildEntry(href),
-                request,
                 response);
         return response;
     }

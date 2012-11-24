@@ -115,10 +115,9 @@ public class RegistryController {
             produces = "application/json")
     @ResponseBody
     public Map<String, String> getEntry(final @PathVariable @Doc("Identifier of the registry entry.") String id,
-                                        final HttpServletRequest request,
                                         final HttpServletResponse response) {
         response.setHeader("Cache-Control", "max-age=3600");
-        final RegistryEntry entry = registry.findBy(locationUri(request, id));
+        final RegistryEntry entry = registry.findBy(locationUri(id));
         if (entry == null) {
             response.setStatus(SC_NOT_FOUND);
             return null;
@@ -153,7 +152,6 @@ public class RegistryController {
      *     <li>409 conflict: The URI of the json-home document is already registered.</li>
      * </ul>
      * @param entry application/json document, like { href="http://example.org", title="Example" }
-     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @Rel("/rel/jsonhome/registry")
@@ -161,9 +159,8 @@ public class RegistryController {
             method = RequestMethod.POST,
             consumes = "application/json")
     public void create(final @RequestBody Map<String, String> entry,
-                       final HttpServletRequest request,
                        final HttpServletResponse response) throws IOException {
-        final URI location = locationUri(request, randomUUID().toString());
+        final URI location = locationUri(randomUUID().toString());
         entry.put("self", location.toString());
         if (isValid(entry)) {
             try {
@@ -204,7 +201,6 @@ public class RegistryController {
      *     <li>409 conflict: The URI of the json-home document is already registered.</li>
      * </ul>
      * @param entry application/json document, like { href="http://example.org", title="Example" }
-     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @Rel("/rel/jsonhome/registry-entry")
@@ -214,9 +210,8 @@ public class RegistryController {
             consumes = "application/json")
     public void createOrUpdate(final @PathVariable @Doc("Identifier of the registry entry.") String id,
                                final @RequestBody Map<String, String> entry,
-                               final HttpServletRequest request,
                                final HttpServletResponse response) throws IOException {
-        final URI location = locationUri(request, id);
+        final URI location = locationUri(id);
         entry.put("self", location.toString());
         if (isValid(entry)) {
             try {
@@ -239,10 +234,8 @@ public class RegistryController {
             value = "/{id}",
             method = RequestMethod.DELETE)
     public void unregister(final @PathVariable @Doc("Identifier of the registry entry.") String id,
-                           final HttpServletRequest request,
-                           final HttpServletResponse response) {
-        final URI location = locationUri(request, id);
-        registry.remove(location);
+                           final HttpServletResponse response) {;
+        registry.remove(locationUri(id));
         response.setStatus(SC_NO_CONTENT);
     }
 
@@ -259,8 +252,8 @@ public class RegistryController {
         }
     }
 
-    private URI locationUri(final HttpServletRequest request, final String id) {
-        return URI.create(applicationBaseUri + "/" + id);
+    private URI locationUri(final String id) {
+        return URI.create(applicationBaseUri + "/registry/" + id);
     }
 
 }

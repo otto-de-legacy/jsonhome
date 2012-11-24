@@ -53,17 +53,22 @@
     <bean class="de.otto.jsonhome.registry.RegistryController" />
 
     <!--
-     The controller used to serve the json-home documents.
-     Resources delivered by this controller have a max-age of 3600 seconds.
-     -->
-    <bean class="de.otto.jsonhome.registry.RegistryJsonHomeController"
+     The controller used to serve the json-home documents. The dependencies are autowired.
+    -->
+    <bean class="de.otto.jsonhome.controller.JsonHomeController"
           p:maxAgeSeconds = "3600"
-          p:source-ref="jsonHomeSource"/>
+          p:jsonHomeSource-ref="registryJsonHomeSource" />
+
+    <!--
+     The controller used to serve the HTML representation of the json-home document. The dependencies are autowired.
+    -->
+    <bean class="de.otto.jsonhome.controller.RelController"
+          p:jsonHomeSource-ref="registryJsonHomeSource" />
 
     <!--
      The JsonHomeSource used to get the JsonHome from all registered URIs.
      -->
-    <bean id="jsonHomeSource"
+    <bean id="registryJsonHomeSource"
           class="de.otto.jsonhome.registry.RegistryBasedJsonHomeSource"
           p:registry-ref="registry"/>
 

@@ -15,6 +15,9 @@
  */
 package de.otto.jsonhome.controller;
 
+import de.otto.jsonhome.generator.JsonHomeSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,9 +40,35 @@ import static de.otto.jsonhome.converter.JsonHomeConverter.toJsonHome;
  */
 @Controller
 @RequestMapping(value = "/json-home")
-public class JsonHomeController extends JsonHomeControllerBase {
+public class JsonHomeController {
 
+    private JsonHomeSource jsonHomeSource;
+    private URI applicationBaseUri;
+    private URI relationTypeBaseUri;
     private int maxAge = 3600;
+
+    @Autowired
+    public void setJsonHomeSource(final JsonHomeSource jsonHomeSource) {
+        this.jsonHomeSource = jsonHomeSource;
+    }
+
+    @Value("${jsonhome.applicationBaseUri}")
+    public void setApplicationBaseUri(final String baseUri) {
+        this.applicationBaseUri = URI.create(baseUri);
+    }
+
+    @Value("${jsonhome.relationTypeBaseUri}")
+    public void setRelationTypeBaseUri(String relationTypeBaseUri) {
+        this.relationTypeBaseUri = URI.create(relationTypeBaseUri);
+    }
+
+    public URI baseUri() {
+        return applicationBaseUri;
+    }
+
+    public URI relationTypeBaseUri() {
+        return relationTypeBaseUri;
+    }
 
     public void setMaxAgeSeconds(int maxAge) {
         this.maxAge = maxAge;
@@ -49,7 +79,7 @@ public class JsonHomeController extends JsonHomeControllerBase {
     public Map<String, ?> getJsonHomeDocument(final HttpServletResponse response) {
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=" + maxAge);
-        return toJsonHome(jsonHome());
+        return toJsonHome(jsonHomeSource.getJsonHome());
     }
 
     @RequestMapping(produces = "text/html")
@@ -59,7 +89,7 @@ public class JsonHomeController extends JsonHomeControllerBase {
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=" + maxAge);
         final Map<String,Object> resources = new HashMap<String, Object>();
-        resources.put("resources", jsonHome().getResources().values());
+        resources.put("resources", jsonHomeSource.getJsonHome().getResources().values());
         resources.put("contextpath", request.getContextPath());
         return new ModelAndView("resources", resources);
     }

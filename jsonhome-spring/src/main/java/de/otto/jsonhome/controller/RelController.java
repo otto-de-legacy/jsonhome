@@ -15,7 +15,11 @@
  */
 package de.otto.jsonhome.controller;
 
+import de.otto.jsonhome.generator.JsonHomeSource;
+import de.otto.jsonhome.model.JsonHome;
 import de.otto.jsonhome.model.ResourceLink;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,7 +45,35 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
  */
 @Controller
 @RequestMapping(value = "/rel")
-public class RelController extends JsonHomeControllerBase {
+public class RelController {
+
+    private JsonHomeSource jsonHomeSource;
+    private URI applicationBaseUri;
+    private URI relationTypeBaseUri;
+
+    @Autowired
+    public void setJsonHomeSource(final JsonHomeSource jsonHomeSource) {
+        this.jsonHomeSource = jsonHomeSource;
+    }
+
+    @Value("${jsonhome.applicationBaseUri}")
+    public void setApplicationBaseUri(final String baseUri) {
+        this.applicationBaseUri = URI.create(baseUri);
+    }
+
+    @Value("${jsonhome.relationTypeBaseUri}")
+    public void setRelationTypeBaseUri(String relationTypeBaseUri) {
+        this.relationTypeBaseUri = URI.create(relationTypeBaseUri);
+    }
+
+    public URI baseUri() {
+        return applicationBaseUri;
+    }
+
+    public URI relationTypeBaseUri() {
+        return relationTypeBaseUri;
+    }
+
 
     @RequestMapping(
             value = "/**",
@@ -49,12 +81,15 @@ public class RelController extends JsonHomeControllerBase {
             produces = "text/html"
     )
     public ModelAndView getRelationshipType(final HttpServletRequest request) {
-        final String relationType = request.getServletPath();
-        final URI relationTypeURI = URI.create(relationTypeBaseUri().toString() + relationType);
+
+        final URI relationTypeURI = URI.create(request.getRequestURL().toString());
+
+
         final Map<String,Object> model = new HashMap<String, Object>();
         model.put("contextpath", request.getContextPath());
-        if (jsonHome().hasResourceFor(relationTypeURI)) {
-            final ResourceLink resourceLink = jsonHome().getResourceFor(relationTypeURI);
+        final JsonHome jsonHome = jsonHomeSource.getJsonHome();
+        if (jsonHome.hasResourceFor(relationTypeURI)) {
+            final ResourceLink resourceLink = jsonHome.getResourceFor(relationTypeURI);
             model.put("resource", resourceLink);
             if (resourceLink.isDirectLink()) {
                 return new ModelAndView("directresource", model);
@@ -62,7 +97,7 @@ public class RelController extends JsonHomeControllerBase {
                 return new ModelAndView("templatedresource", model);
             }
         } else {
-            throw new IllegalArgumentException("Unknown relation type " + relationType);
+            throw new IllegalArgumentException("Unknown relation type " + relationTypeURI);
         }
     }
 

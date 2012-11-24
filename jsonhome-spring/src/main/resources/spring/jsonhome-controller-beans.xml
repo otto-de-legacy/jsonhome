@@ -52,4 +52,9 @@
     -->
     <bean class="de.otto.jsonhome.generator.SpringJsonHomeGenerator" />
 
+    <!--
+     The JsonHomeSource used by the controllers to discover JsonHome objects.
+     -->
+    <bean class="de.otto.jsonhome.controller.GeneratorBasedJsonHomeSource" />
+
 </beans>

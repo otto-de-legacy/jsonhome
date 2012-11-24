@@ -18,6 +18,7 @@
 package de.otto.jsonhome.controller;
 
 import de.otto.jsonhome.generator.JsonHomeGenerator;
+import de.otto.jsonhome.generator.JsonHomeSource;
 import de.otto.jsonhome.generator.SpringJsonHomeGenerator;
 import de.otto.jsonhome.model.DirectLink;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -41,9 +42,9 @@ public class RelControllerTest {
         // given
         final RelController controller = relController(ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class);
         // when
-        final MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setServletPath("/rel/foo");
-        request.setRequestURI("/rel/foo");
+        final MockHttpServletRequest request = new MockHttpServletRequest("GET", "/rel/foo");
+        request.setServerName("rel.example.org");
+        request.setScheme("http");
         final ModelAndView resourcesMap = controller.getRelationshipType(request);
         // then
         assertEquals(resourcesMap.getViewName(), "directresource");
@@ -55,17 +56,23 @@ public class RelControllerTest {
 
     private RelController relController(final Class<?> controllerType) {
         final RelController controller = new RelController();
-        controller.setControllerTypes(controllerType);
+        controller.setJsonHomeSource(getJsonHomeSource(controllerType));
         controller.setApplicationBaseUri("http://app.example.org");
         controller.setRelationTypeBaseUri("http://rel.example.org");
-        controller.setJsonHomeGenerator(getJsonHomeGenerator());
         return controller;
     }
 
-    private JsonHomeGenerator getJsonHomeGenerator() {
+    private JsonHomeSource getJsonHomeSource(final Class<?> controllerType) {
+        final GeneratorBasedJsonHomeSource source = new GeneratorBasedJsonHomeSource();
+        source.setControllerTypes(controllerType);
+        source.setJsonHomeGenerator(jsonHomeGenerator());
+        return source;
+    }
+
+    private JsonHomeGenerator jsonHomeGenerator() {
         final SpringJsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
         jsonHomeGenerator.setApplicationBaseUri("http://app.example.org");
-        jsonHomeGenerator.setRelationTypeBaseUri("http://rel.example.org");
+        jsonHomeGenerator.setRelationTypeBaseUri("http://rel.example.org:80");
         jsonHomeGenerator.postConstruct();
         return jsonHomeGenerator;
     }

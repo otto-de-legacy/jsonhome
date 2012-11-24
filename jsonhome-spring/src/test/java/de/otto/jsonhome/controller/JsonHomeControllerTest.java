@@ -15,7 +15,9 @@
  */
 package de.otto.jsonhome.controller;
 
+import de.otto.jsonhome.fixtures.ControllerFixtures;
 import de.otto.jsonhome.generator.JsonHomeGenerator;
+import de.otto.jsonhome.generator.JsonHomeSource;
 import de.otto.jsonhome.generator.SpringJsonHomeGenerator;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.testng.annotations.Test;
@@ -41,8 +43,7 @@ public class JsonHomeControllerTest {
         // given
         final JsonHomeController controller = jsonHomeController(
                 ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class,
-                "http://example.org",
-                null);
+                "http://example.org");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String, ?> resourcesMap = controller.getJsonHomeDocument(response);
@@ -100,25 +101,35 @@ public class JsonHomeControllerTest {
     }
 
     private JsonHomeController jsonHomeController(final Class<?> controllerType,
+                                                  final String applicationBaseUri) {
+        return jsonHomeController(controllerType, applicationBaseUri, applicationBaseUri);
+    }
+
+    private JsonHomeController jsonHomeController(final Class<?> controllerType,
                                                   final String applicationBaseUri,
                                                   final String relationTypeBaseUri) {
         final JsonHomeController controller = new JsonHomeController();
-        controller.setControllerTypes(controllerType);
-        controller.setJsonHomeGenerator(
-                jsonHomeGenerator(applicationBaseUri, relationTypeBaseUri != null ? relationTypeBaseUri : applicationBaseUri)
-        );
+        controller.setJsonHomeSource(getJsonHomeSource(controllerType, applicationBaseUri, relationTypeBaseUri));
         controller.setApplicationBaseUri(applicationBaseUri);
+        controller.setRelationTypeBaseUri(relationTypeBaseUri);
         return controller;
+    }
+
+    private JsonHomeSource getJsonHomeSource(final Class<?> controllerType,
+                                             final String baseUri,
+                                             final String relationTypeBaseUri) {
+        final GeneratorBasedJsonHomeSource source = new GeneratorBasedJsonHomeSource();
+        source.setControllerTypes(controllerType);
+        source.setJsonHomeGenerator(jsonHomeGenerator(baseUri, relationTypeBaseUri));
+        return source;
     }
 
     private JsonHomeGenerator jsonHomeGenerator(final String baseUri, final String relationTypeBaseUri) {
         final SpringJsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
         jsonHomeGenerator.setApplicationBaseUri(baseUri);
-        jsonHomeGenerator.setRelationTypeBaseUri(relationTypeBaseUri);
+        jsonHomeGenerator.setRelationTypeBaseUri(relationTypeBaseUri != null ? relationTypeBaseUri : baseUri);
         jsonHomeGenerator.postConstruct();
         return jsonHomeGenerator;
     }
-
-
 
 }

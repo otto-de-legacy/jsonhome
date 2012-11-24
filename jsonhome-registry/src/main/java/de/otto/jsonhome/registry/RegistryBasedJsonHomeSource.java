@@ -2,6 +2,7 @@ package de.otto.jsonhome.registry;
 
 import de.otto.jsonhome.client.HttpJsonHomeClient;
 import de.otto.jsonhome.client.JsonHomeClient;
+import de.otto.jsonhome.client.JsonHomeClientException;
 import de.otto.jsonhome.client.NotFoundException;
 import de.otto.jsonhome.generator.JsonHomeSource;
 import de.otto.jsonhome.model.JsonHome;
@@ -52,6 +53,9 @@ public class RegistryBasedJsonHomeSource implements JsonHomeSource {
                 // TODO: add some logging if there are collisions, i.e. link relations from different registry entries with same URI.
                 allResourceLinks.putAll(jsonHome.getResources());
             } catch (final NotFoundException e) {
+                // TODO: add some logging.
+                // TODO: handle not found. After some retries, the json-home MAY automatically be unregistered.
+            } catch (final JsonHomeClientException e) {
                 // TODO: add some logging.
                 // TODO: handle not found. After some retries, the json-home MAY automatically be unregistered.
             }

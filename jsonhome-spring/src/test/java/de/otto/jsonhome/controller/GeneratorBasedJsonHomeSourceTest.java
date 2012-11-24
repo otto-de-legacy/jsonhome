@@ -16,6 +16,7 @@
 package de.otto.jsonhome.controller;
 
 import de.otto.jsonhome.generator.JsonHomeGenerator;
+import de.otto.jsonhome.generator.JsonHomeSource;
 import de.otto.jsonhome.generator.SpringJsonHomeGenerator;
 import de.otto.jsonhome.model.JsonHome;
 import org.testng.annotations.Test;
@@ -27,31 +28,29 @@ import static org.testng.Assert.assertNotNull;
  * @author Guido Steinacker
  * @since 06.10.12
  */
-public class JsonHomeControllerBaseTest {
+public class GeneratorBasedJsonHomeSourceTest {
 
     @Test
     public void shouldReturnJsonHomeInstance() {
         // given
-        final JsonHomeControllerBase jsonHomeControllerBase = getJsonHomeControllerBase();
+        final JsonHomeSource jsonHomeControllerBase = getJsonHomeSource();
         // when
-        final JsonHome jsonHome = jsonHomeControllerBase.jsonHome();
+        final JsonHome jsonHome = jsonHomeControllerBase.getJsonHome();
         // then
         assertNotNull(jsonHome);
     }
 
-    private JsonHomeControllerBase getJsonHomeControllerBase() {
-        final JsonHomeControllerBase jsonHomeControllerBase = new JsonHomeControllerBase();
-        jsonHomeControllerBase.setControllerTypes(ControllerWithoutResource.class);
-        jsonHomeControllerBase.setApplicationBaseUri("http://example.org");
-        JsonHomeGenerator jsonHomeGenerator = getJsonHomeGenerator();
-        jsonHomeControllerBase.setJsonHomeGenerator(jsonHomeGenerator);
-        return jsonHomeControllerBase;
+    private JsonHomeSource getJsonHomeSource() {
+        final GeneratorBasedJsonHomeSource source = new GeneratorBasedJsonHomeSource();
+        source.setControllerTypes(ControllerWithoutResource.class);
+        source.setJsonHomeGenerator(getJsonHomeGenerator());
+        return source;
     }
 
     private JsonHomeGenerator getJsonHomeGenerator() {
         final SpringJsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
-        jsonHomeGenerator.setApplicationBaseUri("http://example.org");
-        jsonHomeGenerator.setRelationTypeBaseUri("http://example.org");
+        jsonHomeGenerator.setApplicationBaseUri("http://app.example.org");
+        jsonHomeGenerator.setRelationTypeBaseUri("http://rel.example.org");
         jsonHomeGenerator.postConstruct();
         return jsonHomeGenerator;
     }
