@@ -16,3 +16,4 @@ dependencies {
 }
 
 jettyRun.contextPath = '/registry'
+jettyRun.httpPort = 8082

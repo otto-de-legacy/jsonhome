@@ -49,9 +49,8 @@ public class RelController extends JsonHomeControllerBase {
             produces = "text/html"
     )
     public ModelAndView getRelationshipType(final HttpServletRequest request) {
-        final String requestURI = request.getRequestURI();
-        final String relationType = requestURI.substring(requestURI.indexOf("/rel/"));
-        final URI relationTypeURI = URI.create(baseUri().toString() + relationType);
+        final String relationType = request.getServletPath();
+        final URI relationTypeURI = URI.create(relationTypeBaseUri().toString() + relationType);
         final Map<String,Object> model = new HashMap<String, Object>();
         model.put("contextpath", request.getContextPath());
         if (jsonHome().hasResourceFor(relationTypeURI)) {

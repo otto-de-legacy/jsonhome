@@ -42,6 +42,7 @@ public class RelControllerTest {
         final RelController controller = relController(ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class);
         // when
         final MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setServletPath("/rel/foo");
         request.setRequestURI("/rel/foo");
         final ModelAndView resourcesMap = controller.getRelationshipType(request);
         // then
@@ -49,21 +50,22 @@ public class RelControllerTest {
         assertNotNull(resourcesMap.getModel().get("resource"));
         @SuppressWarnings("unchecked")
         final DirectLink model = (DirectLink) resourcesMap.getModel().get("resource");
-        assertEquals(model.getHref(), URI.create("http://example.org/bar"));
+        assertEquals(model.getHref(), URI.create("http://app.example.org/bar"));
     }
 
     private RelController relController(final Class<?> controllerType) {
         final RelController controller = new RelController();
         controller.setControllerTypes(controllerType);
-        controller.setApplicationBaseUri("http://example.org");
+        controller.setApplicationBaseUri("http://app.example.org");
+        controller.setRelationTypeBaseUri("http://rel.example.org");
         controller.setJsonHomeGenerator(getJsonHomeGenerator());
         return controller;
     }
 
     private JsonHomeGenerator getJsonHomeGenerator() {
         final SpringJsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
-        jsonHomeGenerator.setApplicationBaseUri("http://example.org");
-        jsonHomeGenerator.setRelationTypeBaseUri("http://example.org");
+        jsonHomeGenerator.setApplicationBaseUri("http://app.example.org");
+        jsonHomeGenerator.setRelationTypeBaseUri("http://rel.example.org");
         jsonHomeGenerator.postConstruct();
         return jsonHomeGenerator;
     }

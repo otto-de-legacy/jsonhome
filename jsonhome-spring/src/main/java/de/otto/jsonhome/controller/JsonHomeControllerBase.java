@@ -18,12 +18,10 @@ package de.otto.jsonhome.controller;
 import de.otto.jsonhome.generator.JsonHomeGenerator;
 import de.otto.jsonhome.model.JsonHome;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 
-import javax.annotation.Resource;
 import java.net.URI;
 import java.util.*;
 
@@ -38,10 +36,16 @@ public class JsonHomeControllerBase {
     private volatile JsonHome jsonHome = null;
     private Set<Class<?>> controllerTypes = Collections.emptySet();
     private URI applicationBaseUri;
+    private URI relationTypeBaseUri;
 
     @Value("${jsonhome.applicationBaseUri}")
     public void setApplicationBaseUri(final String baseUri) {
         this.applicationBaseUri = URI.create(baseUri);
+    }
+
+    @Value("${jsonhome.relationTypeBaseUri}")
+    public void setRelationTypeBaseUri(String relationTypeBaseUri) {
+        this.relationTypeBaseUri = URI.create(relationTypeBaseUri);
     }
 
     @Autowired
@@ -76,6 +80,10 @@ public class JsonHomeControllerBase {
         return applicationBaseUri;
     }
 
+    public URI relationTypeBaseUri() {
+        return relationTypeBaseUri;
+    }
+
     public final JsonHome jsonHome() {
         if (jsonHome == null) {
             generateJsonHome();
@@ -88,5 +96,4 @@ public class JsonHomeControllerBase {
             jsonHome = jsonHomeGenerator.with(controllerTypes).generate();
         }
     }
-
 }
