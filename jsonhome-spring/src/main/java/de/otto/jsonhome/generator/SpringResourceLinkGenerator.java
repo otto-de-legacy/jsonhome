@@ -73,7 +73,13 @@ public class SpringResourceLinkGenerator extends ResourceLinkGenerator {
                         : new String[] {""};
 
                 for (String resourcePathSuffix : resourcePathSuffixes) {
-                    resourcePaths.add(applicationBaseUri + resourcePathPrefix + resourcePathSuffix + queryTemplateFrom(method));
+                    final String resourcePath;
+                    if (resourcePathPrefix.endsWith("/") && resourcePathSuffix.startsWith("/")) {
+                        resourcePath = resourcePathPrefix + resourcePathSuffix.substring(1);
+                    } else {
+                        resourcePath = resourcePathPrefix + resourcePathSuffix;
+                    }
+                    resourcePaths.add(applicationBaseUri + resourcePath + queryTemplateFrom(method));
                 }
             }
         }
