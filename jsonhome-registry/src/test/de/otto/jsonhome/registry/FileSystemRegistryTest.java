@@ -18,14 +18,17 @@ package de.otto.jsonhome.registry;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static org.testng.Assert.*;
 
@@ -39,7 +42,9 @@ public class FileSystemRegistryTest {
 
     @BeforeMethod
     public void beforeMethod() throws IOException {
-        file = new File(System.getProperty("user.home") + "/jsonhome/jsonhome" + System.currentTimeMillis(), ".registry");
+        final File folder = new File(System.getProperty("user.home") + "/jsonhome-test/");
+        folder.deleteOnExit();
+        file = new File(folder, "jsonhome" + System.currentTimeMillis() + ".registry");
         file.deleteOnExit();
     }
 
@@ -60,10 +65,11 @@ public class FileSystemRegistryTest {
         // then
         final Map map = readRegistryAsMap();
         assertTrue(map.containsKey("registry"));
-        assertEquals(map.get("registry"), emptyMap());
+        assertEquals(map.get("registry"), emptyList());
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldRegisterNewRegistryEntry() throws IOException {
         // given
         final FileSystemRegistry registry = new FileSystemRegistry(file);
@@ -77,11 +83,11 @@ public class FileSystemRegistryTest {
         // then
         assertEquals(registry.findBy(entry.getSelf()), entry);
         final Map map = readRegistryAsMap();
-        final Map registryMap = (Map) map.get("registry");
-        final Map entryMap = (Map) registryMap.get("http://example.org/registry/42");
-        assertNotNull(registryMap);
+        final List<Map<String, ?>> registryEntries = (List<Map<String, ?>>) map.get("registry");
+        final Map entryMap = (Map) registryEntries.get(0);
         assertNotNull(entryMap);
-        assertEquals(entryMap.size(), 2);
+        assertEquals(entryMap.size(), 3);
+        assertEquals(entryMap.get("item"), entry.getSelf().toString());
         assertEquals(entryMap.get("title"), entry.getTitle());
         assertEquals(entryMap.get("href"), entry.getHref().toString());
     }

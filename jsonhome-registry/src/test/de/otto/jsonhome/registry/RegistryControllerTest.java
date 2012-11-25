@@ -17,6 +17,8 @@ package de.otto.jsonhome.registry;
 
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -33,6 +35,16 @@ import static org.testng.Assert.*;
  * @since 14.11.12
  */
 public class RegistryControllerTest {
+
+    private File file = null;
+
+    @BeforeMethod
+    public void beforeMethod() throws IOException {
+        final File folder = new File(System.getProperty("user.home") + "/jsonhome-test/");
+        folder.deleteOnExit();
+        file = new File(folder, "jsonhome" + System.currentTimeMillis() + ".registry");
+        file.deleteOnExit();
+    }
 
     @Test
     public void shouldRegisterNewEntry() throws Exception {
@@ -152,8 +164,6 @@ public class RegistryControllerTest {
      */
     private RegistryController registryController() {
         try {
-            File file = new File(System.getProperty("user.home") + "/jsonhome/jsonhome" + UUID.randomUUID() + ".registry");
-            file.deleteOnExit();
             final RegistryController controller = new RegistryController();
             controller.setApplicationBaseUri("http://example.org/registry");
             controller.setRegistry(new FileSystemRegistry(file));

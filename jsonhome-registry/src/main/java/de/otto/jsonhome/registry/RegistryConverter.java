@@ -16,9 +16,7 @@
 package de.otto.jsonhome.registry;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Collections.singletonMap;
 
@@ -39,14 +37,24 @@ public class RegistryConverter {
      * @return Map
      */
     public static Map<String, ?> registryEntriesToMap(final Collection<RegistryEntry> registry) {
-        final Map<String, Map<String, String>> entries = new HashMap<String, Map<String, String>>();
+        final List<Map<String, String>> entries = new ArrayList<Map<java.lang.String, java.lang.String>>();
         for (final RegistryEntry registryEntry : registry) {
             final Map<String, String> map = registryEntryToMap(registryEntry);
             map.put("item", registryEntry.getSelf().toString());
             map.remove("self");
-            entries.put(registryEntry.getHref().toString(), map);
+            entries.add(map);
         }
         return singletonMap("registry", entries);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<RegistryEntry> registryEntriesFromMap(final Map<String, ?> entries) {
+        final List<Map<String, String>> entryList = (List<Map<String, String>>) entries.get("registry");
+        final List<RegistryEntry> result = new ArrayList<RegistryEntry>();
+        for (Map<String, String> entryMap : entryList) {
+            result.add(registryEntryFromMap(entryMap));
+        }
+        return result;
     }
 
     /**

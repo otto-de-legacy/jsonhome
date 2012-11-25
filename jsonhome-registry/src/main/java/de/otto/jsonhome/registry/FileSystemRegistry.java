@@ -22,13 +22,17 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static de.otto.jsonhome.registry.RegistryConverter.registryEntriesFromMap;
+import static de.otto.jsonhome.registry.RegistryConverter.registryEntriesToMap;
 import static java.util.Collections.singletonMap;
 
 /**
@@ -124,23 +128,7 @@ public class FileSystemRegistry implements Registry {
                     throw new IllegalStateException("Can not create directory " + dir);
                 }
             }
-            // init registry file
-            final JsonFactory factory = new JsonFactory();
-            JsonGenerator generator = null;
-            try {
-                generator = factory.createJsonGenerator(registryFile, JsonEncoding.UTF8);
-                generator.writeStartObject(); // {
-
-                generator.writeObjectFieldStart("registry");
-
-                generator.writeEndObject();
-
-                generator.writeEndObject(); // }
-            } finally {
-                if (generator != null) {
-                    try { generator.close(); } catch (IOException e1) { /* ignore */}
-                }
-            }
+            writeRegistry();
         }
     }
 
@@ -149,21 +137,13 @@ public class FileSystemRegistry implements Registry {
      *
      * @throws IOException
      */
+    @SuppressWarnings("unchecked")
     private void readRegistry() throws IOException {
         final ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
-        final Map map = objectMapper.readValue(registryFile, Map.class);
-        final Map registryMap = (Map) map.get("registry");
-        for (Object o : registryMap.keySet()) {
-            final Map entryMap = (Map) registryMap.get(o);
-            final URI self = URI.create(o.toString());
-            registry.put(
-                    self,
-                    new RegistryEntry(
-                            self,
-                            entryMap.get("title").toString(),
-                            URI.create(entryMap.get("href").toString())
-                    )
-            );
+        final Map<String, ?> map = objectMapper.readValue(registryFile, Map.class);
+        final List<RegistryEntry> entries = registryEntriesFromMap(map);
+        for (final RegistryEntry entry : entries) {
+            registry.put(entry.getSelf(), entry);
         }
     }
 
@@ -173,15 +153,9 @@ public class FileSystemRegistry implements Registry {
      */
     private void writeRegistry() {
         final ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
-        final Map<String, Map> registryMap = new HashMap<String, Map>();
-        for (final RegistryEntry entry : registry.values()) {
-            final Map<String, String> entryMap = new HashMap<String, String>();
-            entryMap.put("href", entry.getHref().toString());
-            entryMap.put("title", entry.getTitle());
-            registryMap.put(entry.getSelf().toString(), entryMap);
-        }
+        final Map<String, ?> registryMap = registryEntriesToMap(registry.values());
         try {
-            objectMapper.writeValue(registryFile, singletonMap("registry", registryMap));
+            objectMapper.writeValue(registryFile, registryMap);
         } catch (final IOException e) {
             throw new IllegalArgumentException(e.getMessage(), e);
         }
