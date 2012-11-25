@@ -21,10 +21,7 @@ import de.otto.jsonhome.model.ResourceLink;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,11 +41,11 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
  * @since 15.09.12
  */
 @Controller
-@RequestMapping(value = "/rel")
-public class RelController {
+public class HtmlController {
 
     private JsonHomeSource jsonHomeSource;
     private URI relationTypeBaseUri;
+    private int maxAge = 3600;
 
     @Autowired
     public void setJsonHomeSource(final JsonHomeSource jsonHomeSource) {
@@ -60,13 +57,33 @@ public class RelController {
         this.relationTypeBaseUri = URI.create(relationTypeBaseUri);
     }
 
+    public void setMaxAgeSeconds(int maxAge) {
+        this.maxAge = maxAge;
+    }
+
     public URI relationTypeBaseUri() {
         return relationTypeBaseUri;
     }
 
 
     @RequestMapping(
-            value = "/**",
+            value = "/json-home",
+            method = RequestMethod.GET,
+            produces = "text/html")
+    @ResponseBody
+    public ModelAndView getHtmlHomeDocument(final HttpServletRequest request,
+                                            final HttpServletResponse response) {
+        // home document should be cached:
+        response.setHeader("Cache-Control", "max-age=" + maxAge);
+        final Map<String,Object> resources = new HashMap<String, Object>();
+        resources.put("resources", jsonHomeSource.getJsonHome().getResources().values());
+        resources.put("contextpath", request.getContextPath());
+        return new ModelAndView("resources", resources);
+    }
+
+
+    @RequestMapping(
+            value = "/rel/**",
             method = RequestMethod.GET,
             produces = "text/html"
     )

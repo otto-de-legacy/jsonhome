@@ -35,12 +35,12 @@ import static org.testng.Assert.assertNotNull;
  * @author Guido Steinacker
  * @since 05.10.12
  */
-public class RelControllerTest {
+public class HtmlControllerTest {
 
     @Test
     public void testGetRel() throws Exception {
         // given
-        final RelController controller = relController(ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class);
+        final HtmlController controller = relController(ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class);
         // when
         final MockHttpServletRequest request = new MockHttpServletRequest("GET", "/rel/foo");
         request.setServerName("rel.example.org");
@@ -54,8 +54,8 @@ public class RelControllerTest {
         assertEquals(model.getHref(), URI.create("http://app.example.org/bar"));
     }
 
-    private RelController relController(final Class<?> controllerType) {
-        final RelController controller = new RelController();
+    private HtmlController relController(final Class<?> controllerType) {
+        final HtmlController controller = new HtmlController();
         controller.setJsonHomeSource(getJsonHomeSource(controllerType));
         controller.setRelationTypeBaseUri("http://rel.example.org");
         return controller;

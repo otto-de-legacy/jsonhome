@@ -62,7 +62,7 @@
     <!--
      The controller used to serve the HTML representation of the json-home document. The dependencies are autowired.
     -->
-    <bean class="de.otto.jsonhome.controller.RelController"
+    <bean class="de.otto.jsonhome.controller.HtmlController"
           p:jsonHomeSource-ref="registryJsonHomeSource" />
 
     <!--

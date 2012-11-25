@@ -44,7 +44,7 @@
     <!--
      The controller used to serve the HTML representation of the json-home document. The dependencies are autowired.
     -->
-    <bean class="de.otto.jsonhome.controller.RelController" />
+    <bean class="de.otto.jsonhome.controller.HtmlController" />
 
     <!--
      The JsonHomeGenerator to be used by the controllers. You may want to
