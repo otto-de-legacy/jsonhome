@@ -7,6 +7,8 @@ import de.otto.jsonhome.client.NotFoundException;
 import de.otto.jsonhome.generator.JsonHomeSource;
 import de.otto.jsonhome.model.JsonHome;
 import de.otto.jsonhome.model.ResourceLink;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,8 @@ import static de.otto.jsonhome.model.JsonHome.jsonHome;
 @Component
 public class RegistryBasedJsonHomeSource implements JsonHomeSource {
 
+    private static Logger LOG = LoggerFactory.getLogger(RegistryBasedJsonHomeSource.class);
+
     private final JsonHomeClient client;
     private Registry registry;
 
@@ -37,6 +41,7 @@ public class RegistryBasedJsonHomeSource implements JsonHomeSource {
 
     @PreDestroy
     public void shutdown() {
+        LOG.info("Shutting down JsonHomeClient");
         client.shutdown();
     }
 
@@ -50,16 +55,24 @@ public class RegistryBasedJsonHomeSource implements JsonHomeSource {
         for (final RegistryEntry registryEntry : registry.getAll()) {
             try {
                 final JsonHome jsonHome = client.get(registryEntry.getHref());
-                // TODO: add some logging if there are collisions, i.e. link relations from different registry entries with same URI.
-                allResourceLinks.putAll(jsonHome.getResources());
+                final Map<URI, ResourceLink> resources = jsonHome.getResources();
+                for (final URI uri : resources.keySet()) {
+                    if (allResourceLinks.containsKey(uri)) {
+                        LOG.warn("Duplicate entries found for resource {}: entry '{}', is overridden by '{}'", uri, allResourceLinks.get(uri), resources.get(uri));
+                    }
+                    allResourceLinks.put(uri, resources.get(uri));
+                }
+                allResourceLinks.putAll(resources);
             } catch (final NotFoundException e) {
-                // TODO: add some logging.
-                // TODO: handle not found. After some retries, the json-home MAY automatically be unregistered.
+                LOG.warn("Unable to get json-home document {}: {}", registryEntry.getHref(), e.getMessage());
+                // After some retries, the json-home MAY automatically be unregistered here.
             } catch (final JsonHomeClientException e) {
-                // TODO: add some logging.
-                // TODO: handle not found. After some retries, the json-home MAY automatically be unregistered.
+                LOG.warn("Unable to get json-home document {}: {}", registryEntry.getHref(), e.getMessage());
+                // After some retries, the json-home MAY automatically be unregistered here.
             }
         }
+        LOG.debug("Returning json-home instance containing {} relation types: {}",
+                allResourceLinks.size(), allResourceLinks.keySet());
         return jsonHome(allResourceLinks.values());
     }
 }

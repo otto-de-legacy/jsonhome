@@ -12,6 +12,8 @@ import org.apache.http.impl.client.cache.BasicHttpCacheStorage;
 import org.apache.http.impl.client.cache.CacheConfig;
 import org.apache.http.impl.client.cache.CachingHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +28,8 @@ import java.net.URI;
  * @since 26.10.12
  */
 public class HttpJsonHomeClient implements JsonHomeClient {
+
+    private static Logger LOG = LoggerFactory.getLogger(HttpJsonHomeClient.class);
 
     private final HttpClient httpClient;
     private final HttpCacheStorage cacheStorage;
@@ -74,6 +78,7 @@ public class HttpJsonHomeClient implements JsonHomeClient {
     @Override
     public JsonHome updateAndGet(final URI uri) {
         try {
+            LOG.info("Expiring cached json-home document {}", uri);
             cacheStorage.removeEntry(uri.toString());
         } catch (IOException e) {
             throw new JsonHomeClientException("IOException caught while removing cache-entry: " + e.getMessage(), e);
@@ -91,18 +96,23 @@ public class HttpJsonHomeClient implements JsonHomeClient {
         final BasicHttpContext context = new BasicHttpContext();
         final HttpResponse response;
         try {
+            LOG.info("Getting json-home document {}", uri);
             response = httpClient.execute(httpget, context);
             final int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode == 404) {
+                LOG.warn("Json-home document {} not found. HTTP status is 404", uri);
                 throw new NotFoundException("Resource " + uri + " not found");
             } else if (statusCode >= 400) {
+                final String status = response.getStatusLine().toString();
+                LOG.warn("Json-home document {} not found: {}", uri, status);
                 throw new HttpStatusException(statusCode,
                         "Failed to load json-home from " + uri +
-                                ": Received HTTP status code " + response.getStatusLine().toString());
+                                ": Received HTTP status code " + status);
             }
         } catch (final IOException e) {
+            LOG.warn("Error getting json-home document {}: {}", uri, e.getMessage());
             // in case of an IOException, the connection will be released automatically.
-            throw new JsonHomeClientException("Exception caught while getting json-home from " + uri, e);
+            throw new JsonHomeClientException("Error getting json-home document " + uri, e);
         } finally {
             httpget.reset();
         }

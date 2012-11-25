@@ -16,6 +16,8 @@
 package de.otto.jsonhome.controller;
 
 import de.otto.jsonhome.generator.JsonHomeSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -42,6 +44,8 @@ import static java.net.URI.create;
 @RequestMapping(value = "/json-home")
 public class JsonHomeController {
 
+    private static Logger LOG = LoggerFactory.getLogger(JsonHomeController.class);
+
     private JsonHomeSource jsonHomeSource;
     private URI relationTypeBaseUri;
     private int maxAge = 3600;
@@ -54,6 +58,7 @@ public class JsonHomeController {
     @Value("${jsonhome.relationTypeBaseUri}")
     public void setRelationTypeBaseUri(String relationTypeBaseUri) {
         this.relationTypeBaseUri = create(relationTypeBaseUri);
+        LOG.info("RelationTypeBaseUri is {}", relationTypeBaseUri);
     }
 
     public URI relationTypeBaseUri() {
@@ -62,11 +67,13 @@ public class JsonHomeController {
 
     public void setMaxAgeSeconds(int maxAge) {
         this.maxAge = maxAge;
+        LOG.info("MaxAge is {}", maxAge);
     }
 
     @RequestMapping(produces = {"application/json-home"})
     @ResponseBody
     public Map<String, ?> getAsApplicationJsonHome(final HttpServletResponse response) {
+        LOG.info("Returning json-home in application/json-home format.");
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=" + maxAge);
         return toRepresentation(jsonHomeSource.getJsonHome(), APPLICATION_JSONHOME);
@@ -75,6 +82,7 @@ public class JsonHomeController {
     @RequestMapping(produces = {"application/json"})
     @ResponseBody
     public Map<String, ?> getAsApplicationJson(final HttpServletResponse response) {
+        LOG.info("Returning json-home in application/json format.");
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=" + maxAge);
         return toRepresentation(jsonHomeSource.getJsonHome(), APPLICATION_JSON);

@@ -18,6 +18,8 @@ package de.otto.jsonhome.controller;
 import de.otto.jsonhome.generator.JsonHomeSource;
 import de.otto.jsonhome.model.JsonHome;
 import de.otto.jsonhome.model.ResourceLink;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -43,6 +45,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Controller
 public class HtmlController {
 
+    private static Logger LOG = LoggerFactory.getLogger(HtmlController.class);
+
     private JsonHomeSource jsonHomeSource;
     private URI relationTypeBaseUri;
     private int maxAge = 3600;
@@ -55,10 +59,12 @@ public class HtmlController {
     @Value("${jsonhome.relationTypeBaseUri}")
     public void setRelationTypeBaseUri(String relationTypeBaseUri) {
         this.relationTypeBaseUri = URI.create(relationTypeBaseUri);
+        LOG.info("RelationTypeBaseUri is {}", relationTypeBaseUri);
     }
 
     public void setMaxAgeSeconds(int maxAge) {
         this.maxAge = maxAge;
+        LOG.info("MaxAge is {}", maxAge);
     }
 
     public URI relationTypeBaseUri() {

@@ -18,6 +18,8 @@ package de.otto.jsonhome.registry;
 import de.otto.jsonhome.annotation.Doc;
 import de.otto.jsonhome.annotation.Docs;
 import de.otto.jsonhome.annotation.Rel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -49,12 +51,15 @@ import static javax.servlet.http.HttpServletResponse.*;
 })
 public class RegistryController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(RegistryController.class);
+
     private Registry registry;
     private URI applicationBaseUri;
 
     @Value("${jsonhome.applicationBaseUri}")
     public void setApplicationBaseUri(final String baseUri) {
         this.applicationBaseUri = URI.create(baseUri);
+        LOG.info("ApplicationbaseUri is {}", applicationBaseUri.toString());
     }
 
     /**
@@ -92,8 +97,8 @@ public class RegistryController {
             produces = "application/json")
     @ResponseBody
     public Map<String, ?> getRegistry(final HttpServletResponse response) {
+        LOG.info("Returning registry containing {} entries.", registry.getAll().size());
         response.setHeader("Cache-Control", "max-age=3600");
-
         return registryEntriesToMap(registry.getAll());
     }
 
@@ -117,11 +122,14 @@ public class RegistryController {
     public Map<String, String> getEntry(final @PathVariable @Doc("Identifier of the registry entry.") String id,
                                         final HttpServletResponse response) {
         response.setHeader("Cache-Control", "max-age=3600");
-        final RegistryEntry entry = registry.findBy(locationUri(id));
+        final URI uri = locationUri(id);
+        final RegistryEntry entry = registry.findBy(uri);
         if (entry == null) {
+            LOG.info("Entry {} not found in registry.", uri);
             response.setStatus(SC_NOT_FOUND);
             return null;
         } else {
+            LOG.info("Returning entry {}", uri);
             final Map<String, String> map = registryEntryToMap(entry);
             map.put("collection", applicationBaseUri.toString());
             return map;
@@ -164,14 +172,17 @@ public class RegistryController {
         entry.put("self", location.toString());
         if (isValid(entry)) {
             try {
+                LOG.info("Registering new registry-entry {}", location);
                 registry.put(registryEntryFromMap(entry));
                 response.setHeader("Location", location.toString());
                 response.setStatus(SC_CREATED);
             } catch (final IllegalArgumentException e) {
+                LOG.info("Entry {} is already registered with a different id", location);
                 // href is already registered under different URI
                 response.sendError(SC_CONFLICT, "The referred json-home is already registered with a different id.");
             }
         } else {
+            LOG.info("Entry {} is not valid.", entry);
             response.sendError(SC_BAD_REQUEST, "The request does not contain a valid entry.");
         }
     }
@@ -234,7 +245,7 @@ public class RegistryController {
             value = "/{id}",
             method = RequestMethod.DELETE)
     public void unregister(final @PathVariable @Doc("Identifier of the registry entry.") String id,
-                           final HttpServletResponse response) {;
+                           final HttpServletResponse response) {
         registry.remove(locationUri(id));
         response.setStatus(SC_NO_CONTENT);
     }

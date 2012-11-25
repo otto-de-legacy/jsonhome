@@ -4,6 +4,8 @@ import de.otto.jsonhome.model.*;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +30,8 @@ import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
  */
 public class JacksonJsonHomeParser implements JsonHomeParser {
 
+    private static final Logger LOG = LoggerFactory.getLogger(JacksonJsonHomeParser.class);
+
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Override
@@ -45,9 +49,11 @@ public class JacksonJsonHomeParser implements JsonHomeParser {
                 }
                 return builder.build();
             }
-        } catch (JsonProcessingException e) {
+        } catch (final JsonProcessingException e) {
+            LOG.error("Unable to parse json-home document: {}", e.getMessage());
             throw new IllegalArgumentException("Error parsing json-home document: " + e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (final IOException e) {
+            LOG.error("Unable to get json-home from stream: {}", e.getMessage());
             // TODO: define more specific exceptions
             throw new IllegalStateException("Unable to get json-home document from stream: " + e.getMessage(), e);
         }
