@@ -29,7 +29,9 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.otto.jsonhome.converter.JsonHomeConverter.toJsonHome;
+import static de.otto.jsonhome.converter.JsonHomeConverter.toRepresentation;
+import static de.otto.jsonhome.converter.JsonHomeMediaType.APPLICATION_JSON;
+import static de.otto.jsonhome.converter.JsonHomeMediaType.APPLICATION_JSONHOME;
 import static java.net.URI.create;
 
 
@@ -65,12 +67,20 @@ public class JsonHomeController {
         this.maxAge = maxAge;
     }
 
-    @RequestMapping(produces = {"application/json-home", "application/json"})
+    @RequestMapping(produces = {"application/json-home"})
     @ResponseBody
-    public Map<String, ?> getJsonHomeDocument(final HttpServletResponse response) {
+    public Map<String, ?> getAsApplicationJsonHome(final HttpServletResponse response) {
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=" + maxAge);
-        return toJsonHome(jsonHomeSource.getJsonHome());
+        return toRepresentation(jsonHomeSource.getJsonHome(), APPLICATION_JSONHOME);
+    }
+
+    @RequestMapping(produces = {"application/json"})
+    @ResponseBody
+    public Map<String, ?> getAsApplicationJson(final HttpServletResponse response) {
+        // home document should be cached:
+        response.setHeader("Cache-Control", "max-age=" + maxAge);
+        return toRepresentation(jsonHomeSource.getJsonHome(), APPLICATION_JSON);
     }
 
     @RequestMapping(produces = "text/html")

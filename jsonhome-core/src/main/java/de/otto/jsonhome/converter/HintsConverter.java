@@ -24,6 +24,8 @@ import de.otto.jsonhome.model.Status;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static de.otto.jsonhome.converter.JsonHomeMediaType.APPLICATION_JSONHOME;
+
 /**
  * A converter used to convert Hints into other representations.
  *
@@ -35,9 +37,25 @@ public final class HintsConverter {
     private HintsConverter() {}
 
     /**
-     * @return a Java representation of the hints of a JSON document.
+     * Returns a json-home conforming representation of the hints as a map.
+     *
+     * @param hints the hints to represent as a map.
+     * @return map
      */
-    public static Map<String, ?> hintsToJsonHome(final Hints hints) {
+    public static Map<String, ?> toJsonHomeRepresentation(final Hints hints) {
+        return toRepresentation(hints, APPLICATION_JSONHOME);
+    }
+
+    /**
+     * Returns a representation of the hints as a map.
+     * <p/>
+     * Depending on the media type, different data is included in the map.
+     *
+     * @param hints the hints to represent as a map.
+     * @param mediaType the media type of the representation.
+     * @return map
+     */
+    public static Map<String, ?> toRepresentation(final Hints hints, final JsonHomeMediaType mediaType) {
         final Map<String, Object> jsonHints = new LinkedHashMap<String, Object>();
         jsonHints.put("allow", hints.getAllows());
         jsonHints.put("representations", hints.getRepresentations());
@@ -55,6 +73,9 @@ public final class HintsConverter {
         }
         if (hints.getDocs().hasLink()) {
             jsonHints.put("docs", hints.getDocs().getLink().toString());
+        }
+        if (mediaType.equals(JsonHomeMediaType.APPLICATION_JSON) && hints.getDocs().hasDescription()) {
+            jsonHints.put("description", hints.getDocs().getDescription());
         }
         return jsonHints;
     }

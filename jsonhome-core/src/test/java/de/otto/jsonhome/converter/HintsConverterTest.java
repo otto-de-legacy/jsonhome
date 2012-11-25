@@ -27,14 +27,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static de.otto.jsonhome.converter.HintsConverter.hintsToJsonHome;
+import static de.otto.jsonhome.converter.HintsConverter.toJsonHomeRepresentation;
+import static de.otto.jsonhome.converter.HintsConverter.toRepresentation;
+import static de.otto.jsonhome.converter.JsonHomeMediaType.APPLICATION_JSON;
+import static de.otto.jsonhome.converter.JsonHomeMediaType.APPLICATION_JSONHOME;
 import static de.otto.jsonhome.model.Allow.*;
+import static de.otto.jsonhome.model.Documentation.documentation;
 import static de.otto.jsonhome.model.Documentation.emptyDocs;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
 import static de.otto.jsonhome.model.Precondition.ETAG;
+import static java.net.URI.create;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 /**
  * @author Guido Steinacker
@@ -60,7 +66,7 @@ public class HintsConverterTest {
                 .withStatus(Status.DEPRECATED)
                 .build();
         // when
-        final Map<String, ?> map = hintsToJsonHome(hints);
+        final Map<String, ?> map = toJsonHomeRepresentation(hints);
         // then
         assertEquals(map.keySet().size(), 6);
         assertEquals(map.get("allow"), allows);
@@ -76,7 +82,7 @@ public class HintsConverterTest {
         // given
         final Hints hints = hintsBuilder().withStatus(Status.DEPRECATED).build();
         // when
-        final Map<String, ?> map = hintsToJsonHome(hints);
+        final Map<String, ?> map = toJsonHomeRepresentation(hints);
         // then
         assertEquals(map.get("status"), "deprecated");
     }
@@ -86,7 +92,7 @@ public class HintsConverterTest {
         // given
         final Hints hints = hintsBuilder().withStatus(Status.GONE).build();
         // when
-        final Map<String, ?> map = hintsToJsonHome(hints);
+        final Map<String, ?> map = toJsonHomeRepresentation(hints);
         // then
         assertEquals(map.get("status"), "gone");
     }
@@ -96,8 +102,24 @@ public class HintsConverterTest {
         // given
         final Hints hints = hintsBuilder().withStatus(Status.OK).build();
         // when
-        final Map<String, ?> map = hintsToJsonHome(hints);
+        final Map<String, ?> map = toJsonHomeRepresentation(hints);
         // then
         assertEquals(map.get("status"), null);
+    }
+
+    @Test
+    public void testAdditionalDescription() {
+        // given
+        final Hints hints = hintsBuilder()
+                .with(documentation(asList("foo", "bar"), create("http://example.org/docs")))
+                .build();
+        // when
+        final Map<String, ?> jsonMap = toRepresentation(hints, APPLICATION_JSON);
+        final Map<String, ?> jsonHomeMap = toRepresentation(hints, APPLICATION_JSONHOME);
+        // then
+        assertEquals(jsonMap.get("docs"), "http://example.org/docs");
+        assertEquals(jsonHomeMap.get("docs"), "http://example.org/docs");
+        assertEquals(jsonMap.get("description"), asList("foo", "bar"));
+        assertNull(jsonHomeMap.get("description"));
     }
 }

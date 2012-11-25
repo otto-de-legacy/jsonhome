@@ -24,10 +24,14 @@ import de.otto.jsonhome.model.ResourceLink;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.otto.jsonhome.converter.ResourceLinkConverter.resourceLinkToJsonHome;
+import static de.otto.jsonhome.converter.JsonHomeMediaType.APPLICATION_JSONHOME;
 import static java.util.Collections.singletonMap;
 
 /**
+ * Converter used to convert JsonHome instances into a map containing the information of a representation.
+ * <p/>
+ * The result may easily be converted into a format like JSON.
+ *
  * @author Guido Steinacker
  * @since 14.10.12
  */
@@ -35,15 +39,32 @@ public final class JsonHomeConverter {
 
     private JsonHomeConverter() {}
 
-    public static Map<String, Map<String,Object>> toJsonHome(final JsonHome jsonHome) {
+    /**
+     * Converts a JsonHome into json-home representation.
+     *
+     * @param jsonHome the JsonHome
+     * @return Map containing information and structure of a json-home document.
+     */
+    public static Map<String, Map<String,Object>> toJsonHomeRepresentation(final JsonHome jsonHome) {
+        return toRepresentation(jsonHome, APPLICATION_JSONHOME);
+    }
+
+    /**
+     * Converts a JsonHome into the specified representation.
+     *
+     * @param jsonHome the JsonHome
+     * @return Map containing information and structure specified by the media type.
+     */
+    public static Map<String, Map<String,Object>> toRepresentation(final JsonHome jsonHome,
+                                                                   final JsonHomeMediaType mediaType) {
         final Map<String, Object> jsonResources = new HashMap<String, Object>();
         for (final ResourceLink resource : jsonHome.getResources().values()) {
-            jsonResources.putAll(resourceLinkToJsonHome(resource));
+            jsonResources.putAll(ResourceLinkConverter.toRepresentation(resource, mediaType));
         }
         return singletonMap(
                 "resources",
                 jsonResources
         );
-
     }
+
 }

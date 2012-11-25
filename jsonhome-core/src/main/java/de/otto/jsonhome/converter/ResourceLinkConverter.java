@@ -27,8 +27,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static de.otto.jsonhome.converter.HintsConverter.hintsToJsonHome;
-
 /**
  * Converter used to convert a ResourceLink into a json-home resource.
  *
@@ -37,15 +35,17 @@ import static de.otto.jsonhome.converter.HintsConverter.hintsToJsonHome;
  */
 public final class ResourceLinkConverter {
 
-    public static Map<String, Map<String, Object>> resourceLinkToJsonHome(final ResourceLink resourceLink) {
+    public static Map<String, Map<String, Object>> toRepresentation(final ResourceLink resourceLink,
+                                                                    final JsonHomeMediaType mediaType) {
         if (resourceLink.isDirectLink()) {
-            return directLinkToJsonHome(resourceLink.asDirectLink());
+            return directLinkToJsonHome(resourceLink.asDirectLink(), mediaType);
         } else {
-            return templatedLinkToJsonHome(resourceLink.asTemplatedLink());
+            return templatedLinkToJsonHome(resourceLink.asTemplatedLink(), mediaType);
         }
     }
 
-    public static Map<String, Map<String, Object>> templatedLinkToJsonHome(final TemplatedLink resourceLink) {
+    public static Map<String, Map<String, Object>> templatedLinkToJsonHome(final TemplatedLink resourceLink,
+                                                                           final JsonHomeMediaType mediaType) {
         final Map<String,String> jsonHrefVars = new LinkedHashMap<String, String>();
         for (final HrefVar hrefVar : resourceLink.getHrefVars()) {
             jsonHrefVars.put(hrefVar.getVar(), hrefVar.getVarType().toString());
@@ -54,14 +54,15 @@ public final class ResourceLinkConverter {
         final Map<String, Object> map = new LinkedHashMap<String, Object>();
         map.put("href-template", resourceLink.getHrefTemplate());
         map.put("href-vars", jsonHrefVars);
-        map.put("hints", hintsToJsonHome(resourceLink.getHints()));
+        map.put("hints", HintsConverter.toRepresentation(resourceLink.getHints(), mediaType));
         return Collections.singletonMap(resourceLink.getLinkRelationType().toString(), map);
     }
 
-    public static Map<String, Map<String, Object>> directLinkToJsonHome(final DirectLink resourceLink) {
+    public static Map<String, Map<String, Object>> directLinkToJsonHome(final DirectLink resourceLink,
+                                                                        final JsonHomeMediaType mediaType) {
         final Map<String, Object> map = new LinkedHashMap<String, Object>();
         map.put("href", resourceLink.getHref().toString());
-        map.put("hints", hintsToJsonHome(resourceLink.getHints()));
+        map.put("hints", HintsConverter.toRepresentation(resourceLink.getHints(), mediaType));
         return Collections.singletonMap(resourceLink.getLinkRelationType().toString(), map);
     }
 

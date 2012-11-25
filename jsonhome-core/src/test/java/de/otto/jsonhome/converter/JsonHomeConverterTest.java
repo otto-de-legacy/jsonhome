@@ -25,8 +25,9 @@ import org.testng.annotations.Test;
 import java.util.List;
 import java.util.Map;
 
-import static de.otto.jsonhome.converter.JsonHomeConverter.toJsonHome;
-import static de.otto.jsonhome.converter.ResourceLinkConverter.resourceLinkToJsonHome;
+import static de.otto.jsonhome.converter.JsonHomeConverter.toJsonHomeRepresentation;
+import static de.otto.jsonhome.converter.JsonHomeMediaType.APPLICATION_JSONHOME;
+import static de.otto.jsonhome.converter.ResourceLinkConverter.toRepresentation;
 import static de.otto.jsonhome.fixtures.LinkFixtures.ABOUTPAGE_LINK;
 import static de.otto.jsonhome.fixtures.LinkFixtures.STOREFRONT_LINK;
 import static de.otto.jsonhome.model.JsonHome.jsonHome;
@@ -44,7 +45,7 @@ public class JsonHomeConverterTest {
         final List<ResourceLink> resourceLinks = asList(STOREFRONT_LINK, ABOUTPAGE_LINK);
         final JsonHome jsonHome = jsonHome(resourceLinks);
         // when
-        final Map<String,?> json = toJsonHome(jsonHome);
+        final Map<String,?> json = toJsonHomeRepresentation(jsonHome);
         // then
         assertNotNull(json);
     }
@@ -55,16 +56,16 @@ public class JsonHomeConverterTest {
         final List<ResourceLink> resourceLinks = asList(STOREFRONT_LINK, ABOUTPAGE_LINK);
         final JsonHome jsonHome = jsonHome(resourceLinks);
         // when
-        final Map<String,?> json = toJsonHome(jsonHome);
+        final Map<String,?> json = toJsonHomeRepresentation(jsonHome);
         // then
         assertTrue(json.containsKey("resources"));
         assertTrue(Map.class.isAssignableFrom(json.get("resources").getClass()));
         @SuppressWarnings("unchecked")
         final Map<String, ?> resources = (Map<String, ?>) json.get("resources");
         String relationType = STOREFRONT_LINK.getLinkRelationType().toString();
-        assertEquals(resources.get(relationType), resourceLinkToJsonHome(STOREFRONT_LINK).get(relationType));
+        assertEquals(resources.get(relationType), toRepresentation(STOREFRONT_LINK, APPLICATION_JSONHOME).get(relationType));
         relationType = ABOUTPAGE_LINK.getLinkRelationType().toString();
-        assertEquals(resources.get(relationType), resourceLinkToJsonHome(ABOUTPAGE_LINK).get(relationType));
+        assertEquals(resources.get(relationType), toRepresentation(ABOUTPAGE_LINK, APPLICATION_JSONHOME).get(relationType));
     }
 
 

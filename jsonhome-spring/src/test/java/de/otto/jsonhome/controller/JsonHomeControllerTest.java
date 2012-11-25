@@ -15,7 +15,6 @@
  */
 package de.otto.jsonhome.controller;
 
-import de.otto.jsonhome.fixtures.ControllerFixtures;
 import de.otto.jsonhome.generator.JsonHomeGenerator;
 import de.otto.jsonhome.generator.JsonHomeSource;
 import de.otto.jsonhome.generator.SpringJsonHomeGenerator;
@@ -46,7 +45,7 @@ public class JsonHomeControllerTest {
                 "http://example.org");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        final Map<String, ?> resourcesMap = controller.getJsonHomeDocument(response);
+        final Map<String, ?> resourcesMap = controller.getAsApplicationJsonHome(response);
         // then
         assertEquals(response.getHeader("Cache-Control"), "max-age=3600");
         assertEquals(resourcesMap.size(), 1);
@@ -59,6 +58,38 @@ public class JsonHomeControllerTest {
         final Object hints = resources.get("http://example.org/rel/foo").get("hints");
         assertEquals(hints, expected);
     }
+    @Test
+    public void applicationJsonHomeShouldNotContainAdditionalInformation() throws Exception {
+        // given
+        final JsonHomeController controller = jsonHomeController(
+                ControllerWithDocumentation.class,
+                "http://example.org");
+        // when
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        final Map<String, ?> resourcesMap = controller.getAsApplicationJsonHome(response);
+        // then
+        @SuppressWarnings("unchecked")
+        final Map<String, Map<String, ?>> resources = (Map<String, Map<String, ?>>) resourcesMap.get("resources");
+        final Map<String, ?> hints = asMap(resources.get("http://example.org/rel/foo").get("hints"));
+        assertNull(hints.get("description"));
+    }
+
+    @Test
+    public void applicationJsonShouldContainAdditionalInformation() throws Exception {
+        // given
+        final JsonHomeController controller = jsonHomeController(
+                ControllerWithDocumentation.class,
+                "http://example.org");
+        // when
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        final Map<String, ?> resourcesMap = controller.getAsApplicationJson(response);
+        // then
+        @SuppressWarnings("unchecked")
+        final Map<String, Map<String, ?>> resources = (Map<String, Map<String, ?>>) resourcesMap.get("resources");
+
+        final Map<String, ?> hints = asMap(resources.get("http://example.org/rel/foo").get("hints"));
+        assertEquals(hints.get("description"), asList("controller value"));
+    }
 
     @Test
     public void shouldUseRootLinkRelationTypeUri() throws Exception {
@@ -70,7 +101,7 @@ public class JsonHomeControllerTest {
                 "http://otto.de");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        final Map<String, ?> resourcesMap = controller.getJsonHomeDocument(response);
+        final Map<String, ?> resourcesMap = controller.getAsApplicationJsonHome(response);
         // then
         @SuppressWarnings("unchecked")
         final Map<String, Map<String, ?>> resources = (Map<String, Map<String, ?>>) resourcesMap.get("resources");
@@ -86,7 +117,7 @@ public class JsonHomeControllerTest {
                 "http://otto.de");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        final Map<String, ?> resourcesMap = controller.getJsonHomeDocument(response);
+        final Map<String, ?> resourcesMap = controller.getAsApplicationJsonHome(response);
         // then
         @SuppressWarnings("unchecked")
         final Map<String, Map<String, ?>> resources = (Map<String, Map<String, ?>>) resourcesMap.get("resources");

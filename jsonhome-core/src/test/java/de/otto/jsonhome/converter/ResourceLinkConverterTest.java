@@ -25,7 +25,8 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 import java.util.Map;
 
-import static de.otto.jsonhome.converter.ResourceLinkConverter.resourceLinkToJsonHome;
+import static de.otto.jsonhome.converter.JsonHomeMediaType.APPLICATION_JSONHOME;
+import static de.otto.jsonhome.converter.ResourceLinkConverter.toRepresentation;
 import static de.otto.jsonhome.fixtures.LinkFixtures.*;
 import static de.otto.jsonhome.model.Allow.GET;
 import static java.util.Collections.singletonMap;
@@ -43,7 +44,7 @@ public class ResourceLinkConverterTest {
         // given
         final DirectLink storefrontLink = STOREFRONT_LINK;
         // when
-        final Map<String,?> json = resourceLinkToJsonHome(storefrontLink);
+        final Map<String,?> json = toRepresentation(storefrontLink, APPLICATION_JSONHOME);
         // then
         assertNotNull(json);
         assertEquals(json.keySet().size(), 1);
@@ -62,7 +63,7 @@ public class ResourceLinkConverterTest {
         // given
         final TemplatedLink aboutPageLink = ABOUTPAGE_LINK;
         // when
-        Map<String, ?> json = resourceLinkToJsonHome(aboutPageLink);
+        Map<String, ?> json = toRepresentation(aboutPageLink, APPLICATION_JSONHOME);
         // then
         assertNotNull(json);
         assertEquals(json.keySet().size(), 1);
