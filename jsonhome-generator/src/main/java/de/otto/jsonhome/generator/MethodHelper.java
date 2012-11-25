@@ -57,6 +57,12 @@ public final class MethodHelper {
         return parameterInfos;
     }
 
+    /**
+     * Returns the names of the parameters of the specified method.
+     *
+     * @param method the Method
+     * @return List of Strings, in the order parameters in the method's signature.
+     */
     public static String[] parameterNamesOf(final Method method) {
         return PARANAMER.lookupParameterNames(method);
     }

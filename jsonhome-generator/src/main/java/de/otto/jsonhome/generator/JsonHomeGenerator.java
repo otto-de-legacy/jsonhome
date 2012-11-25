@@ -39,10 +39,23 @@ public abstract class JsonHomeGenerator {
     private final Collection<Class<?>> controllers = new ArrayList<Class<?>>();
     private ResourceLinkGenerator resourceLinkGenerator;
 
+    /**
+     * Injects the generator implementation used to generate ResourceLink instances.
+     *
+     * @param resourceLinkGenerator implementation of the ResourceLinkGenerator
+     */
     protected void setResourceLinkGenerator(final ResourceLinkGenerator resourceLinkGenerator) {
         this.resourceLinkGenerator = resourceLinkGenerator;
     }
 
+    /**
+     * Specifies a controller class, possibly providing one or more resource links.
+     * <p/>
+     * The injected generator is used to find the resource links supported by the controller.
+     *
+     * @param controller a class that is implementing a HTTP API.
+     * @return this
+     */
     public final JsonHomeGenerator with(final Class<?> controller) {
         if (isCandidateForAnalysis(controller)) {
             this.controllers.add(controller);
@@ -50,6 +63,14 @@ public abstract class JsonHomeGenerator {
         return this;
     }
 
+    /**
+     * Specifies a number of controller classes, possibly providing one or more resource links.
+     * <p/>
+     * The injected generator is used to find the resource links supported by the controllers.
+     *
+     * @param controllers classes implementing a HTTP API.
+     * @return this
+     */
     public final JsonHomeGenerator with(final Collection<Class<?>> controllers) {
         for (final Class<?> controller : controllers) {
             if (isCandidateForAnalysis(controller)) {
@@ -59,6 +80,10 @@ public abstract class JsonHomeGenerator {
         return this;
     }
 
+    /**
+     * Runs the generator and returns the JsonHome instance describing the HTTP API implemented by the controllers.
+     * @return JsonHome instance.
+     */
     public final JsonHome generate() {
         List<ResourceLink> resources = new ArrayList<ResourceLink>();
         for (final Class<?> controllerClass : controllers) {
@@ -67,6 +92,11 @@ public abstract class JsonHomeGenerator {
         return jsonHome(resources);
     }
 
+    /**
+     * Returns the ResourceLink instances of the controller.
+     * @param controller the controller
+     * @return list of ResourceLinks.
+     */
     protected final List<ResourceLink> resourceLinksFor(final Class<?> controller) {
         List<ResourceLink> resourceLinks = emptyList();
         for (final Method method : controller.getMethods()) {
@@ -77,6 +107,12 @@ public abstract class JsonHomeGenerator {
         return resourceLinks;
     }
 
+    /**
+     * Returns true if the controller is a candidate for further processing, false otherwise.
+     *
+     * @param controller the controller to check
+     * @return boolean
+     */
     protected abstract boolean isCandidateForAnalysis(final Class<?> controller);
 
 }

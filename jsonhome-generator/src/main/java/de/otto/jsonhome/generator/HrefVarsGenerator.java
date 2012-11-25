@@ -69,8 +69,18 @@ public abstract class HrefVarsGenerator {
         return hrefVars;
     }
 
+    /**
+     *
+     * @param parameterInfo information about a method parameter.
+     * @return true if the parameterInfo is describing a request parameter, false otherwise.
+     */
     protected abstract boolean hasRequestParam(final ParameterInfo parameterInfo);
 
+    /**
+     *
+     * @param parameterInfo information about a method parameter.
+     * @return true if the parameterInfo is describing a path variable, false otherwise.
+     */
     protected abstract boolean hasPathVariable(final ParameterInfo parameterInfo);
 
 }

@@ -36,6 +36,8 @@ import static java.net.URI.create;
 import static java.util.Arrays.asList;
 
 /**
+ * A generator used to generate the {@link ResourceLink resource links} of a method.
+ *
  * @author Guido Steinacker
  * @since 17.10.12
  */
@@ -57,7 +59,7 @@ public abstract class ResourceLinkGenerator {
     }
 
     /**
-     * Analyses the a method of a controller (having a RequestMapping) and returns the list of ResourceLinks of this method.
+     * Analyses the a method of a controller and returns the list of ResourceLinks of this method.
      *
      * @param method the method
      * @return list of resource links.
@@ -90,6 +92,12 @@ public abstract class ResourceLinkGenerator {
         return resourceLinks;
     }
 
+    /**
+     * Calculates the resource paths (direct links or templated links) of the method.
+     *
+     * @param method the Method
+     * @return List of resource paths, or empty list.
+     */
     protected List<String> overriddenOrCalculatedResourcePathsFor(final Method method) {
         final Href methodHrefAnnotation = method.getAnnotation(Href.class);
         if (methodHrefAnnotation != null) {
@@ -156,6 +164,12 @@ public abstract class ResourceLinkGenerator {
         }
     }
 
+    /**
+     * Returns true if the method is a candidate for further processing, false otherwise.
+     *
+     * @param method the method to check
+     * @return boolean
+     */
     protected abstract boolean isCandidateForAnalysis(final Method method);
 
     /**

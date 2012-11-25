@@ -29,24 +29,52 @@ public final class ParameterInfo {
     private final Class<?> type;
     private final List<Annotation> annotations;
 
-    public ParameterInfo(String name, Class<?> type, List<Annotation> annotations) {
+    /**
+     * Creates a ParameterInfo.
+     *
+     * @param name name of the parameter. Must neither be null nor empty.
+     * @param type type of the parameter. Must not be null.
+     * @param annotations annotations of the parameter. Must not be null.
+     */
+    public ParameterInfo(final String name, final Class<?> type, final List<Annotation> annotations) {
         this.name = name;
         this.type = type;
         this.annotations = annotations;
     }
 
+    /**
+     * Returns the name of the method parameter.
+     *
+     * @return neither null nor empty.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the type of the parameter.
+     *
+     * @return never null.
+     */
     public Class<?> getType() {
         return type;
     }
 
+    /**
+     * Returns the annotations of the parameter.
+     *
+     * @return list of annotations, never null.
+     */
     public List<Annotation> getAnnotations() {
         return annotations;
     }
 
+    /**
+     * Returns true if the parameter is annotated with the specified annotationType, false otherwise.
+     *
+     * @param annotationType the checked type of annotation.
+     * @return boolean
+     */
     public boolean hasAnnotation(final Class<? extends Annotation> annotationType) {
         for (final Annotation annotation : annotations) {
             if (annotationType.isAssignableFrom(annotation.annotationType())) {
@@ -56,6 +84,13 @@ public final class ParameterInfo {
         return false;
     }
 
+    /**
+     * Returns the specified annotation or null, if the parameter is not annotated with the annotationType.
+     *
+     * @param annotationType the type of the expected annotation.
+     * @param <T> the type of the expected annotation.
+     * @return Annotation or null.
+     */
     public <T extends Annotation> T getAnnotation(final Class<T> annotationType) {
         for (final Annotation annotation : annotations) {
             if (annotationType.isAssignableFrom(annotation.annotationType())) {

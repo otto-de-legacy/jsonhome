@@ -86,6 +86,15 @@ public abstract class HintsGenerator {
         return hintsBuilder.build();
     }
 
+    /**
+     * Analyses the method and returns the list of preconditions expected by the method.
+     * <p/>
+     * This implementation is using the {@link de.otto.jsonhome.annotation.Hints} annotation to determine the
+     * expected preconditions.
+     *
+     * @param method Method responsible for handling an HTTP request.
+     * @return List of Preconditions, or an empty list.
+     */
     protected List<Precondition> preconditionsFrom(final Method method) {
         final de.otto.jsonhome.annotation.Hints annotation = method.getAnnotation(de.otto.jsonhome.annotation.Hints.class);
         if (annotation != null && annotation.preconditionReq() != null) {
@@ -95,6 +104,12 @@ public abstract class HintsGenerator {
         }
     }
 
+    /**
+     * Analyses the method and returns the Status of the resource handled by the method.
+     *
+     * @param method Method responsible for handling an HTTP request.
+     * @return Status (ok, deprecated or gone)
+     */
     protected Status statusFrom(final Method method) {
         final de.otto.jsonhome.annotation.Hints annotation = method.getAnnotation(de.otto.jsonhome.annotation.Hints.class);
         if (annotation != null && annotation.status() != null) {

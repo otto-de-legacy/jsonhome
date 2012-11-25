@@ -40,13 +40,25 @@ public class DocsGenerator {
 
     private final URI relationTypeBaseUri;
 
+    /**
+     * Creates a DocsGenerator.
+     *
+     * @param relationTypeBaseUri base URI of all relation types.
+     */
     public DocsGenerator(final URI relationTypeBaseUri) {
         this.relationTypeBaseUri = relationTypeBaseUri;
     }
 
+    /**
+     * Returns the Documentation for a single link-relation type supported by the controller.
+     * <p/>
+     * This implementation is parsing the {@link Doc} and {@link Docs} annotations of the controller.
+     *
+     * @param relationType URI of the link-relation type.
+     * @param controller the controller, possibly annotated with Docs or Doc.
+     * @return Documentation, possibly empty but never null.
+     */
     public Documentation documentationFrom(final URI relationType, final Class<?> controller) {
-
-        // TODO: simplify!
         Docs docs = controller.getAnnotation(Docs.class);
         if (docs != null) {
             for (final Doc relDoc : docs.value()) {
@@ -63,6 +75,14 @@ public class DocsGenerator {
         return emptyDocs();
     }
 
+    /**
+     * Returns the documentation of a single href parameter.
+     * <p/>
+     * This implementation is using the optional {@link Doc} annotation of the parameter to get the documentation.
+     *
+     * @param parameterInfo information about the href-var parameter.
+     * @return Documentation, possibly empty but never null.
+     */
     public Documentation documentationFor(final ParameterInfo parameterInfo) {
         if (parameterInfo.hasAnnotation(Doc.class)) {
             Doc doc = parameterInfo.getAnnotation(Doc.class);
@@ -72,6 +92,11 @@ public class DocsGenerator {
         }
     }
 
+    /**
+     * Creates a Documentation instance from a Doc annotation.
+     * @param doc the annotation.
+     * @return Documentation, possibly empty but never null.
+     */
     private Documentation documentationFrom(final Doc doc) {
         final String link = doc.link();
         final String[] description = doc.value();
@@ -80,6 +105,14 @@ public class DocsGenerator {
                 link != null && !link.isEmpty() ? URI.create(link) : null);
     }
 
+    /**
+     * Constructs an absolute URI.
+     * <p/>
+     * If the link is already absolute, URI.create(link) is returned. Otherwise, the {@link #relationTypeBaseUri}
+     * is used to create the URI.
+     * @param link absolute or relative relation-type URI.
+     * @return absolute URI, uniquely identifying a link-relation type.
+     */
     private URI linkRelationTypeOf(final String link) {
         return create(link.startsWith("http://")
                 ? link
