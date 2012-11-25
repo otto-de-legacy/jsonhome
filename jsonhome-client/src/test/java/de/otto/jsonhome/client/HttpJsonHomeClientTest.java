@@ -54,4 +54,9 @@ public class HttpJsonHomeClientTest {
         // then
         assertNull(jsonHome);
     }
+
+    @Test(enabled = false)
+    public void shouldGetApplicationJsonFormatIncludingDescription() {
+        fail();
+    }
 }

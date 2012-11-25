@@ -87,6 +87,7 @@ public class HttpJsonHomeClient implements JsonHomeClient {
     @Override
     public JsonHome get(final URI uri) {
         final HttpGet httpget = new HttpGet(uri);
+        httpget.setHeader("Accept", "application/json");
         final BasicHttpContext context = new BasicHttpContext();
         final HttpResponse response;
         try {
@@ -109,26 +110,6 @@ public class HttpJsonHomeClient implements JsonHomeClient {
         if (entity != null) {
             InputStream stream = null;
             try {
-                /*
-                CacheResponseStatus responseStatus = (CacheResponseStatus) context.getAttribute(
-                        CachingHttpClient.CACHE_RESPONSE_STATUS);
-                switch (responseStatus) {
-                    case CACHE_HIT:
-                        System.out.println("A response was generated from the cache with no requests " +
-                                "sent upstream");
-                        break;
-                    case CACHE_MODULE_RESPONSE:
-                        System.out.println("The response was generated directly by the caching module");
-                        break;
-                    case CACHE_MISS:
-                        System.out.println("The response came from an upstream server");
-                        break;
-                    case VALIDATED:
-                        System.out.println("The response was generated from the cache after validating " +
-                                "the entry with the origin server");
-                        break;
-                }
-                */
                 stream = entity.getContent();
                 return new JacksonJsonHomeParser().parse(stream);
             } catch (final IOException e) {
