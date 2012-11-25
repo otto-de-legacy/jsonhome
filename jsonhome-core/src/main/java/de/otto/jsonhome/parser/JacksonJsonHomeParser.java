@@ -9,11 +9,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import static de.otto.jsonhome.model.DirectLink.directLink;
-import static de.otto.jsonhome.model.Documentation.docLink;
+import static de.otto.jsonhome.model.Documentation.documentation;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
 import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static de.otto.jsonhome.model.JsonHomeBuilder.jsonHomeBuilder;
@@ -100,8 +101,16 @@ public class JacksonJsonHomeParser implements JsonHomeParser {
                     builder.representedAs(iterator.next().getTextValue());
                 }
             }
-            if (hints.has("docs")) {
-                builder.with(docLink(URI.create(hints.get("docs").getTextValue())));
+            if (hints.has("docs") || hints.has("description")) {
+                final URI docUri = hints.has("docs") ? URI.create(hints.get("docs").getTextValue()) : null;
+                final List<String> description = new ArrayList<String>();
+                final Iterator<JsonNode> elements = hints.has("description")
+                        ? hints.get("description").getElements()
+                        : Collections.<JsonNode>emptyIterator();
+                while (elements.hasNext()) {
+                    description.add(elements.next().getTextValue());
+                }
+                builder.with(documentation(description, docUri));
             }
             if (hints.has("precondition-req")) {
                 final Iterator<JsonNode> iterator = hints.get("precondition-req").getElements();

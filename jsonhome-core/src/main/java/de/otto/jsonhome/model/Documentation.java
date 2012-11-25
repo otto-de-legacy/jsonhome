@@ -46,7 +46,7 @@ public final class Documentation {
     }
 
     public static Documentation emptyDocs() {
-        return new Documentation(Collections.<String>emptyList(), null);
+        return new Documentation(null, null);
     }
 
     public static Documentation documentation(final List<String> description) {
@@ -58,7 +58,7 @@ public final class Documentation {
     }
 
     public static Documentation docLink(final URI docUri) {
-        return new Documentation(Collections.<String>emptyList(), docUri);
+        return new Documentation(null, docUri);
     }
 
     public List<String> getDescription() {

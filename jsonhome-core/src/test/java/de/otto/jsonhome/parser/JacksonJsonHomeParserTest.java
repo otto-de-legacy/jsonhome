@@ -12,10 +12,12 @@ import java.util.EnumSet;
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.Documentation.docLink;
+import static de.otto.jsonhome.model.Documentation.documentation;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
 import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static de.otto.jsonhome.model.JsonHome.jsonHome;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
+import static java.net.URI.create;
 import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 
@@ -53,8 +55,8 @@ public class JacksonJsonHomeParserTest {
         // then
         assertEquals(jsonHome, jsonHome(
                 directLink(
-                        URI.create("http://example.org/jsonhome-example/rel/storefront"),
-                        URI.create("http://example.org/jsonhome-example/storefront"),
+                        create("http://example.org/jsonhome-example/rel/storefront"),
+                        create("http://example.org/jsonhome-example/storefront"),
                         hintsBuilder()
                                 .allowing(EnumSet.of(GET, HEAD))
                                 .representedAs(asList("text/html", "text/plain"))
@@ -100,9 +102,9 @@ public class JacksonJsonHomeParserTest {
         // then
         assertEquals(jsonHome, jsonHome(
                 templatedLink(
-                        URI.create("http://example.org/jsonhome-example/rel/product"),
+                        create("http://example.org/jsonhome-example/rel/product"),
                         "http://example.org/jsonhome-example/products/{productId}",
-                        asList(hrefVar("productId", URI.create("http://example.org/jsonhome-example/rel/product#productId"))),
+                        asList(hrefVar("productId", create("http://example.org/jsonhome-example/rel/product#productId"))),
                         hintsBuilder()
                                 .allowing(EnumSet.of(PUT, POST))
                                 .representedAs(asList("application/json"))
@@ -112,4 +114,32 @@ public class JacksonJsonHomeParserTest {
                 )
         ));
     }
+
+    @Test
+    public void shouldParseApplicationJsonWithDescription() throws Exception {
+        // given
+        final String jsonHomeDocument = "{\n" +
+                "  \"resources\" : {" +
+                "\"http://example.org/jsonhome-example/rel/storefront\" : {\n" +
+                "      \"href\" : \"http://example.org/jsonhome-example/storefront\",\n" +
+                "      \"hints\" : {\n" +
+                "        \"docs\" : \"http://de.wikipedia.org/wiki/Homepage\",\n" +
+                "        \"description\" : [\"a short description\"]\n" +
+                "      }\n" +
+                "    }}}";
+        // when
+        final JsonHome jsonHome = new JacksonJsonHomeParser()
+                .parse(new ByteArrayInputStream(jsonHomeDocument.getBytes()));
+        // then
+        assertEquals(jsonHome, jsonHome(
+                directLink(
+                        create("http://example.org/jsonhome-example/rel/storefront"),
+                        create("http://example.org/jsonhome-example/storefront"),
+                        hintsBuilder()
+                                .with(documentation(asList("a short description"), create("http://de.wikipedia.org/wiki/Homepage")))
+                                .build()
+                )
+        ));
+    }
+
 }
