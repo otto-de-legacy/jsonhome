@@ -8,7 +8,7 @@ dependencies {
     // logging:
     compile 'ch.qos.logback:logback-core:1.0.6'
     compile 'ch.qos.logback:logback-classic:1.0.6'
-    compile 'org.slf4j:slf4j-api:1.6.6'
+    compile 'org.slf4j:slf4j-api:1.7.2'
     // testng:
     testCompile 'org.testng:testng:6.3.1'
 }
