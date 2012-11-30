@@ -11,6 +11,9 @@ subprojects {
     group = 'de.otto'
     version = '0.2.0-SNAPSHOT'
 
+    ext.sonatypeUsername = "sonatypeUsername"
+    ext.sonatypePassword = "sonatypePassword"
+
     repositories {
         mavenCentral()
     }
