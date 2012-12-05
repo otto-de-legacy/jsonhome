@@ -19,7 +19,8 @@ An example from the draft specification:
    Content-Type: application/json-home
    Cache-Control: max-age=3600
    Connection: close
-
+```
+```json
    {
      "resources": {
        "http://example.org/rel/widgets": {
@@ -53,7 +54,7 @@ find an example in Section 2.2.
 ### 2.1 Serving json-home documents
 
 A simple Spring MVC controller is looking like this:
-```
+```java
 @Controller
 @RequestMapping(value = "/helloworld")
 public class HelloWorldController {
@@ -83,7 +84,7 @@ do the following:
 
   * Import the jsonhome-beans and add a property-placeholder configurer in your Spring bean config:
 
-  ```
+  ```xml
   <import resource="classpath*:jsonhome/jsonhome-beans.xml" />
   <context:property-placeholder location="/WEB-INF/properties/helloworld.properties" />
   ```
@@ -95,7 +96,7 @@ most likely a hint that your REST API is not at level 3 of Richardsons Maturity 
 (see http://martinfowler.com/articles/richardsonMaturityModel.html).
 
 ### 2.1.4 Add a @Rel annotation to all controller methods, dealing with your entry-point resources:
-```
+```java
 @Controller
 @RequestMapping(value = "/helloworld")
 public class HelloWorldController {
@@ -111,7 +112,7 @@ public class HelloWorldController {
 
 ### 2.1.5 Result
 That's basically all you have to do to get a json-home document like this:
-```
+```json
 { "resources" : { 
    "http://localhost:8080/jsonhome-example/rel/hello-world" : {
       "href" : "http://localhost:8080/jsonhome-example/helloworld",
@@ -137,7 +138,7 @@ This is especially important for developers using your REST resources, because i
 JSON and - in contrast to hand-written documentation - never out-to-date.
 
 You may want to enrich this documentation by adding @Doc annotations to your controller (or href-variables):
-```
+```java
 @Controller
 @RequestMapping(value = "/helloworld")
 @Doc(value = {"A link to a hello-world resource", 
@@ -161,7 +162,7 @@ Please have a look at the example again, or download the sources and check the u
 
 There is also a very small client-library and a json-home parser available. If you want to consume a json-home document
 (access the linked resources without building "known" URIs using string-magic), you may try the following:
-```
+```java
 final URI rel = URI.create("http://example.org/rel/foo");
 
 final JsonHomeClient client = new HttpJsonHomeClient();
@@ -176,7 +177,7 @@ if (jsonHome.hasResourceFor(rel)) {
 
 Accessing a templated link like http://example.org/{foo} is nearly as easy. Remember that in json-home, the variable foo
 is not identified by name, but by an URI (=>URI varType).
-```
+```java
 final URI rel = URI.create("http://example.org/rel/foo");
 final URI varType = URI.create("http://example.org/var-type/foo");
 
