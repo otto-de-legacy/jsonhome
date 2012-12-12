@@ -3,6 +3,8 @@ dependencies {
     compile project(':jsonhome-core')
     compile project(':jsonhome-generator')
     compile 'com.sun.jersey:jersey-core:1.14'
+    compile "com.sun.jersey:jersey-json:1.14"
+    compile 'org.reflections:reflections:0.9.8'
     testCompile 'org.testng:testng:6.3.1'
 }
 

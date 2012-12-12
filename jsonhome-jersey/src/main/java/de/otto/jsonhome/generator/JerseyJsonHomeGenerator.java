@@ -9,8 +9,13 @@ import java.net.URI;
  */
 public final class JerseyJsonHomeGenerator extends JsonHomeGenerator {
 
-    public JerseyJsonHomeGenerator(final URI applicationBaseUri, final URI relationTypeBaseUri) {
+    public JerseyJsonHomeGenerator(URI applicationBaseUri, URI relationTypeBaseUri) {
         setResourceLinkGenerator(new JerseyResourceLinkGenerator(applicationBaseUri, relationTypeBaseUri));
+    }
+
+    public JerseyJsonHomeGenerator(String applicationBaseUri, String relationTypeBaseUri) {
+        setResourceLinkGenerator(new JerseyResourceLinkGenerator(
+                URI.create(applicationBaseUri), URI.create(relationTypeBaseUri)));
     }
 
     /**
