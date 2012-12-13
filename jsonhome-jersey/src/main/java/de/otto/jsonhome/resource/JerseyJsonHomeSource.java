@@ -1,6 +1,6 @@
 package de.otto.jsonhome.resource;
 
-import de.otto.jsonhome.generator.JerseyJsonHomeGenerator;
+import de.otto.jsonhome.generator.JsonHomeGenerator;
 import de.otto.jsonhome.generator.JsonHomeSource;
 import de.otto.jsonhome.model.JsonHome;
 import org.reflections.Reflections;
@@ -9,7 +9,6 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import javax.ws.rs.Path;
-import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +21,7 @@ public class JerseyJsonHomeSource implements JsonHomeSource {
 
     private final JsonHome jsonHome;
 
-    public JerseyJsonHomeSource(URI applicationBaseUri, URI relationTypeBaseUri, List<String> packages) {
+    public JerseyJsonHomeSource(JsonHomeGenerator jsonHomeGenerator, List<String> packages) {
         final ConfigurationBuilder configBuilder = new ConfigurationBuilder().
                 addUrls(ClasspathHelper.forClass(Path.class)).
                 setScanners(new TypeAnnotationsScanner());
@@ -31,19 +30,11 @@ public class JerseyJsonHomeSource implements JsonHomeSource {
         }
         final Reflections reflections = new Reflections(configBuilder);
         final Set<Class<?>> classes = reflections.getTypesAnnotatedWith(Path.class);
-        jsonHome = new JerseyJsonHomeGenerator(applicationBaseUri, relationTypeBaseUri).with(classes).generate();
+        jsonHome = jsonHomeGenerator.with(classes).generate();
     }
 
-    public JerseyJsonHomeSource(String applicationBaseUri, String relationTypeBaseUri, List<String> packages) {
-        this(URI.create(applicationBaseUri), URI.create(relationTypeBaseUri), packages);
-    }
-
-    public JerseyJsonHomeSource(URI applicationBaseUri, URI relationTypeBaseUri, Collection<Class<?>> classes) {
-        jsonHome = new JerseyJsonHomeGenerator(applicationBaseUri, relationTypeBaseUri).with(classes).generate();
-    }
-
-    public JerseyJsonHomeSource(String applicationBaseUri, String relationTypeBaseUri, Collection<Class<?>> classes) {
-        jsonHome = new JerseyJsonHomeGenerator(applicationBaseUri, relationTypeBaseUri).with(classes).generate();
+    public JerseyJsonHomeSource(JsonHomeGenerator jsonHomeGenerator, Collection<Class<?>> classes) {
+        jsonHome = jsonHomeGenerator.with(classes).generate();
     }
 
     /**
