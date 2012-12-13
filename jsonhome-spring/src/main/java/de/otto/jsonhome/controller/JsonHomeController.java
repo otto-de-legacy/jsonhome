@@ -76,6 +76,7 @@ public class JsonHomeController {
         LOG.info("Returning json-home in application/json-home format.");
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=" + maxAge);
+        response.setHeader("Vary", "Accept");
         return toRepresentation(jsonHomeSource.getJsonHome(), APPLICATION_JSONHOME);
     }
 
@@ -85,6 +86,7 @@ public class JsonHomeController {
         LOG.info("Returning json-home in application/json format.");
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=" + maxAge);
+        response.setHeader("Vary", "Accept");
         return toRepresentation(jsonHomeSource.getJsonHome(), APPLICATION_JSON);
     }
 
