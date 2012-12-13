@@ -81,6 +81,7 @@ public class HtmlController {
                                             final HttpServletResponse response) {
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=" + maxAge);
+        response.setHeader("Vary", "Accept");
         final Map<String,Object> resources = new HashMap<String, Object>();
         resources.put("resources", jsonHomeSource.getJsonHome().getResources().values());
         resources.put("contextpath", request.getContextPath());
