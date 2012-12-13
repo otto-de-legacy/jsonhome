@@ -1,13 +1,16 @@
 package de.otto.jsonhome.resource;
 
+import de.otto.jsonhome.converter.JsonHomeMediaType;
 import de.otto.jsonhome.generator.JsonHomeSource;
 import de.otto.jsonhome.model.JsonHome;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 
 import static de.otto.jsonhome.converter.JsonHomeConverter.toRepresentation;
 import static de.otto.jsonhome.converter.JsonHomeMediaType.APPLICATION_JSON;
@@ -26,9 +29,11 @@ public final class JsonHomeResource {
     public JsonHomeResource(JsonHomeSource jsonHomeSource) {
         this.jsonHomeSource = jsonHomeSource;
     }
+
     /*
     public JsonHomeResource() {
-        this.jsonHomeSource = new JerseyJsonHomeSource("http://www.example.org", "http://rel.example.org", Arrays.asList("de.otto"));
+        JsonHomeGenerator generator = new JerseyJsonHomeGenerator("http://www.example.org", "http://rel.example.org");
+        this.jsonHomeSource = new JerseyJsonHomeSource(generator, Arrays.asList("de.otto"));
     }
     */
 
@@ -52,7 +57,11 @@ public final class JsonHomeResource {
     @Produces("application/json-home")
     public Response getAsApplicationJsonHome() {
         final JsonHome jsonHome = jsonHomeSource.getJsonHome();
-        return addHeaders(Response.ok(toRepresentation(jsonHome, APPLICATION_JSONHOME)));
+        try {
+            return addHeaders(Response.ok(toJsonString(jsonHome, APPLICATION_JSONHOME)));
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 
@@ -60,13 +69,22 @@ public final class JsonHomeResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAsApplicationJson() {
         final JsonHome jsonHome = jsonHomeSource.getJsonHome();
-        return addHeaders(Response.ok(toRepresentation(jsonHome, APPLICATION_JSON)));
+        try {
+            return addHeaders(Response.ok(toJsonString(jsonHome, APPLICATION_JSON)));
+        } catch (IOException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     private Response addHeaders(Response.ResponseBuilder builder) {
         return builder.
                 header("Vary", "Accept").
                 header("Cache-Control", "max-age=" + maxAge).build();
+    }
+
+    private String toJsonString(JsonHome jsonHome, JsonHomeMediaType mediaType) throws IOException {
+        final ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(toRepresentation(jsonHome, mediaType));
     }
 
 }
