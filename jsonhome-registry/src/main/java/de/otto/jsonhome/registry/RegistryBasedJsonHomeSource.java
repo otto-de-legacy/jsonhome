@@ -58,7 +58,8 @@ public class RegistryBasedJsonHomeSource implements JsonHomeSource {
                 final Map<URI, ResourceLink> resources = jsonHome.getResources();
                 for (final URI uri : resources.keySet()) {
                     if (allResourceLinks.containsKey(uri)) {
-                        LOG.warn("Duplicate entries found for resource {}: entry '{}', is overridden by '{}'", uri, allResourceLinks.get(uri), resources.get(uri));
+                        LOG.warn("Duplicate entries found for resource {}: entry '{}', is overridden by '{}'",
+                                new Object[] {uri, allResourceLinks.get(uri), resources.get(uri)});
                     }
                     allResourceLinks.put(uri, resources.get(uri));
                 }
