@@ -4,6 +4,7 @@ import de.otto.jsonhome.converter.JsonHomeMediaType;
 import de.otto.jsonhome.generator.JerseyJsonHomeGenerator;
 import de.otto.jsonhome.generator.JsonHomeSource;
 import de.otto.jsonhome.model.JsonHome;
+import de.otto.jsonhome.resource.scanner.AnnotationScanner;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.ws.rs.GET;
@@ -32,7 +33,7 @@ public final class JsonHomeResource {
     }
 
     public JsonHomeResource() {
-        this.jsonHomeSource = new JerseyJsonHomeSource(new JerseyJsonHomeGenerator());
+        this.jsonHomeSource = new JerseyJsonHomeSource(new JerseyJsonHomeGenerator(), new AnnotationScanner());
     }
 
     public void setMaxAge(int maxAge) {

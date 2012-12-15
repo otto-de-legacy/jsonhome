@@ -15,8 +15,8 @@ public final class JerseyJsonHomeSource implements JsonHomeSource {
 
     private final JsonHome jsonHome;
 
-    public JerseyJsonHomeSource(JsonHomeGenerator jsonHomeGenerator) {
-        jsonHome = jsonHomeGenerator.with(new AnnotationScanner().scanClasses()).generate();
+    public JerseyJsonHomeSource(JsonHomeGenerator jsonHomeGenerator, AnnotationScanner annotationScanner) {
+        jsonHome = jsonHomeGenerator.with(annotationScanner.scanClasses()).generate();
     }
 
     public JerseyJsonHomeSource(JsonHomeGenerator jsonHomeGenerator, Collection<Class<?>> classes) {
