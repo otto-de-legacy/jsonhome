@@ -1,6 +1,7 @@
 package de.otto.jsonhome.resource;
 
 import de.otto.jsonhome.converter.JsonHomeMediaType;
+import de.otto.jsonhome.generator.JerseyJsonHomeGenerator;
 import de.otto.jsonhome.generator.JsonHomeSource;
 import de.otto.jsonhome.model.JsonHome;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -24,34 +25,19 @@ import static de.otto.jsonhome.converter.JsonHomeMediaType.APPLICATION_JSONHOME;
 public final class JsonHomeResource {
 
     private final JsonHomeSource jsonHomeSource;
-    private int maxAge = 0;
+    private int maxAge = 3600;
 
     public JsonHomeResource(JsonHomeSource jsonHomeSource) {
         this.jsonHomeSource = jsonHomeSource;
     }
 
-    /*
     public JsonHomeResource() {
-        JsonHomeGenerator generator = new JerseyJsonHomeGenerator("http://www.example.org", "http://rel.example.org");
-        this.jsonHomeSource = new JerseyJsonHomeSource(generator, Arrays.asList("de.otto"));
+        this.jsonHomeSource = new JerseyJsonHomeSource(new JerseyJsonHomeGenerator());
     }
-    */
 
     public void setMaxAge(int maxAge) {
         this.maxAge = maxAge;
     }
-
-    /*
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    public Response getHtmlHomeDocument(@Context final UriInfo uriInfo) {
-        final JsonHome jsonHome = jsonHomeSource.getJsonHome();
-        final Map<String,Object> resources = new HashMap<String, Object>();
-        resources.put("resources", jsonHome.getResources().values());
-        resources.put("contextpath", uriInfo.getPath());
-        return addHeaders(Response.ok(resources));
-    }
-    */
 
     @GET
     @Produces("application/json-home")
@@ -59,11 +45,10 @@ public final class JsonHomeResource {
         final JsonHome jsonHome = jsonHomeSource.getJsonHome();
         try {
             return addHeaders(Response.ok(toJsonString(jsonHome, APPLICATION_JSONHOME)));
-        } catch (Exception e) {
+        } catch (IOException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
