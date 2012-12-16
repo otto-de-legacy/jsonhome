@@ -338,6 +338,14 @@ public class JerseyJsonHomeGeneratorTest {
         assertEquals(var2Doc.getDescription().get(0), "var value 2");
     }
 
+    @Test
+    public void testResourceWithAllSupportedHttpMethods() throws Exception {
+        // given
+        final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ResourceWithAllHttpMethods.class).generate();
+        //then
+        assertEquals(6, jsonHome.getResources().size());
+    }
+
     private JsonHomeGenerator jsonHomeFor(final URI applicationBaseUri) {
         return new JerseyJsonHomeGenerator(applicationBaseUri, applicationBaseUri);
     }

@@ -25,6 +25,15 @@ public class ResourceFixtures {
         public @GET @Path("/bar/") void bar() {}
     }
 
+    public static @Path("/foo") class ResourceWithAllHttpMethods {
+        public @GET @Path("/get") @Rel("http://example.org/rel/get") void get() {}
+        public @POST @Path("/post") @Rel("http://example.org/rel/post") void post() {}
+        public @PUT @Path("/put") @Rel("http://example.org/rel/put") void put() {}
+        public @DELETE @Path("/delete") @Rel("http://example.org/rel/delete") void delete() {}
+        public @HEAD @Path("/head") @Rel("http://example.org/rel/head") void head() {}
+        public @OPTIONS @Path("/options") @Rel("http://example.org/rel/options") void options() {}
+    }
+
     public static @Path("/foo") class ResourceWithDifferentUrisForSameRelationType {
         public @GET @Rel("http://example.org/rel/fooType") void foo() {}
         public @GET @Path("/bar") @Rel("http://example.org/rel/fooType") void bar() {}
