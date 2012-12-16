@@ -90,6 +90,7 @@ public class DirectLinkTest {
                         of(GET), singletonList("application/json"),
                         Collections.<String>emptyList(),
                         Collections.<String>emptyList(),
+                        Collections.<String>emptyList(),
                         asList(ETAG),
                         Status.OK,
                         emptyDocs()
@@ -120,6 +121,5 @@ public class DirectLinkTest {
         // then
         assertEquals(storeFrontLink, mergedLink);
     }
-
 
 }

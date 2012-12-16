@@ -32,6 +32,7 @@ public class HintsBuilder {
     private final Set<String> representations = new LinkedHashSet<String>();
     private final Set<String> acceptPost = new LinkedHashSet<String>();
     private final Set<String> acceptPut = new LinkedHashSet<String>();
+    private final Set<String> acceptPatch = new LinkedHashSet<String>();
     private final List<Precondition> preconditionReq = new ArrayList<Precondition>();
     private Documentation docs = emptyDocs();
     private Status status = Status.OK;
@@ -49,6 +50,7 @@ public class HintsBuilder {
                 .representedAs(hints.getRepresentations())
                 .acceptingForPut(hints.getAcceptPut())
                 .acceptingForPost(hints.getAcceptPost())
+                .acceptingForPatch(hints.getAcceptPatch())
                 .with(hints.getDocs());
     }
 
@@ -92,6 +94,16 @@ public class HintsBuilder {
         return this;
     }
 
+    public HintsBuilder acceptingForPatch(final String... representations) {
+        acceptPatch.addAll(asList(representations));
+        return this;
+    }
+
+    public HintsBuilder acceptingForPatch(final List<String> representations) {
+        acceptPatch.addAll(representations);
+        return this;
+    }
+
     public HintsBuilder with(Documentation docs) {
         this.docs = docs;
         return this;
@@ -118,6 +130,7 @@ public class HintsBuilder {
                 new ArrayList<String>(representations),
                 new ArrayList<String>(acceptPut),
                 new ArrayList<String>(acceptPost),
+                new ArrayList<String>(acceptPatch),
                 preconditionReq,
                 status,
                 docs

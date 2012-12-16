@@ -49,6 +49,7 @@ public final class Hints {
     private final List<String> representations;
     private final List<String> acceptPut;
     private final List<String> acceptPost;
+    private final List<String> acceptPatch;
     private final List<Precondition> preconditionReq;
     private final Status status;
     private final Documentation docs;
@@ -77,6 +78,7 @@ public final class Hints {
                 representations,
                 Collections.<String>emptyList(),
                 Collections.<String>emptyList(),
+                Collections.<String>emptyList(),
                 Collections.<Precondition>emptyList(),
                 Status.OK,
                 emptyDocs());
@@ -86,16 +88,18 @@ public final class Hints {
                               final List<String> representations,
                               final List<String> acceptPut,
                               final List<String> acceptPost,
+                              final List<String> acceptPatch,
                               final List<Precondition> preconditionReq,
                               final Status status,
                               final Documentation docs) {
-        return new Hints(allows, representations, acceptPut, acceptPost, preconditionReq, status, docs);
+        return new Hints(allows, representations, acceptPut, acceptPost, acceptPatch, preconditionReq, status, docs);
     }
 
     private Hints(final Set<Allow> allows,
                   final List<String> representations,
                   final List<String> acceptPut,
                   final List<String> acceptPost,
+                  final List<String> acceptPatch,
                   final List<Precondition> preconditionReq,
                   final Status status,
                   final Documentation docs) {
@@ -105,10 +109,14 @@ public final class Hints {
         if (!acceptPut.isEmpty() && !allows.contains(Allow.PUT)) {
             throw new IllegalArgumentException("PUT is not allowed but accept-put is provided.");
         }
+        if (!acceptPatch.isEmpty() && !allows.contains(Allow.PATCH)) {
+            throw new IllegalArgumentException("PATCH is not allowed but accept-patch is provided.");
+        }
         this.allows = unmodifiableSet(copyOf(allows));
         this.representations = unmodifiableList(new ArrayList<String>(representations));
         this.acceptPut = acceptPut;
         this.acceptPost = acceptPost;
+        this.acceptPatch = acceptPatch;
         this.preconditionReq = unmodifiableList(new ArrayList<Precondition>(preconditionReq));
         this.status = status != null ? status : Status.OK;
         this.docs = docs != null ? docs : emptyDocs();
@@ -142,6 +150,13 @@ public final class Hints {
      */
     public List<String> getAcceptPost() {
         return acceptPost;
+    }
+
+    /**
+     * @return the accept-patch hint, declaring the accepted representations of a HTTP PATCH request.
+     */
+    public List<String> getAcceptPatch() {
+        return acceptPatch;
     }
 
     /**
@@ -182,6 +197,8 @@ public final class Hints {
         acceptPut.addAll(other.getAcceptPut());
         final Set<String> acceptPost = new LinkedHashSet<String>(this.acceptPost);
         acceptPost.addAll(other.getAcceptPost());
+        final Set<String> acceptPatch = new LinkedHashSet<String>(this.acceptPatch);
+        acceptPatch.addAll(other.getAcceptPatch());
         final Set<Precondition> preconditionReq = new LinkedHashSet<Precondition>(this.preconditionReq);
         preconditionReq.addAll(other.getPreconditionReq());
         return hints(
@@ -189,6 +206,7 @@ public final class Hints {
                 new ArrayList<String>(representations),
                 new ArrayList<String>(acceptPut),
                 new ArrayList<String>(acceptPost),
+                new ArrayList<String>(acceptPatch),
                 new ArrayList<Precondition>(preconditionReq),
                 status.mergeWith(other.getStatus()),
                 docs.mergeWith(other.getDocs())
