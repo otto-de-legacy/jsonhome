@@ -1,0 +1,15 @@
+apply plugin: 'war'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':jsonhome-jersey')
+    compile 'com.sun.jersey:jersey-core:1.14'
+    compile "com.sun.jersey:jersey-json:1.14"
+    compile 'com.sun.jersey:jersey-server:1.14'
+    compile 'com.sun.jersey:jersey-servlet:1.14'
+    providedCompile 'javax.servlet:servlet-api:2.5'
+}

@@ -1,15 +1,11 @@
 
 dependencies {
-    // uri-template library:
-    compile 'com.damnhandy:handy-uri-templates:1.1.5'
-    // jackson json mapper:
-    compile 'org.codehaus.jackson:jackson-core-asl:1.9.2'
-    compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.2'
-    // logging:
-    compile 'ch.qos.logback:logback-core:1.0.6'
-    compile 'ch.qos.logback:logback-classic:1.0.6'
-    compile 'org.slf4j:slf4j-api:1.7.2'
-    // testng:
+    compile project(':jsonhome-core')
+    compile project(':jsonhome-generator')
+    compile 'com.sun.jersey:jersey-core:1.14'
+    compile 'com.sun.jersey:jersey-json:1.14'
+    compile 'com.sun.jersey:jersey-server:1.14'
+    compile 'org.reflections:reflections:0.9.8'
     testCompile 'org.testng:testng:6.3.1'
 }
 
@@ -36,9 +32,9 @@ uploadArchives {
             }
 
             pom.project {
-                name 'jsonhome-core'
+                name 'jsonhome-jersey'
                 packaging 'jar'
-                description 'Core library of the jsonhome project.'
+                description 'Jersey library of the jsonhome project.'
                 url 'http://github.com/otto-de/jsonhome'
 
                 scm {
@@ -59,6 +55,10 @@ uploadArchives {
                     developer {
                         id 'gsteinacker'
                         name 'Guido Steinacker'
+                    }
+                    developer {
+                        id 'SebastianSchroeder'
+                        name 'Sebastian Schroeder'
                     }
                 }
             }
