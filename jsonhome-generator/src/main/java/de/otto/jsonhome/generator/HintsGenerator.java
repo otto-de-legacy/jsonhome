@@ -68,6 +68,9 @@ public abstract class HintsGenerator {
         if (allows.contains(PUT)) {
             hintsBuilder.acceptingForPut(consumed);
             hintsBuilder.representedAs(produced);
+        } else if (allows.contains(PATCH)) {
+            hintsBuilder.acceptingForPatch(consumed);
+            hintsBuilder.representedAs(produced);
         } else if (allows.contains(POST)) {
             hintsBuilder.acceptingForPost(consumed.isEmpty()
                     ? asList("application/x-www-form-urlencoded")

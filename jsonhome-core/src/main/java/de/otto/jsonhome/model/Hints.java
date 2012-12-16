@@ -252,6 +252,7 @@ public final class Hints {
                 ", representations=" + representations +
                 ", acceptPut=" + acceptPut +
                 ", acceptPost=" + acceptPost +
+                ", acceptPatch=" + acceptPatch +
                 ", preconditionReq=" + preconditionReq +
                 ", status=" + status +
                 ", docs=" + docs +

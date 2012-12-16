@@ -3,6 +3,7 @@ package de.otto.jsonhome.generator;
 import de.otto.jsonhome.model.*;
 import org.testng.annotations.Test;
 
+import javax.ws.rs.core.MediaType;
 import java.net.URI;
 import java.util.*;
 
@@ -344,6 +345,20 @@ public class JerseyJsonHomeGeneratorTest {
         final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ResourceWithAllHttpMethods.class).generate();
         //then
         assertEquals(6, jsonHome.getResources().size());
+    }
+
+    @Test
+    public void testResourceWithPatchMethod() throws Exception {
+        // given
+        final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ResourceWithPatchMethod.class).generate();
+        //then
+        assertEquals(1, jsonHome.getResources().size());
+        Map.Entry<URI, ResourceLink> resource = jsonHome.getResources().entrySet().iterator().next();
+        ResourceLink link = resource.getValue();
+        Hints hints = link.getHints();
+        assertEquals(1, hints.getAcceptPatch().size());
+        assertEquals(MediaType.APPLICATION_JSON, hints.getAcceptPatch().get(0));
+        assertEquals(EnumSet.of(PATCH), hints.getAllows());
     }
 
     private JsonHomeGenerator jsonHomeFor(final URI applicationBaseUri) {
