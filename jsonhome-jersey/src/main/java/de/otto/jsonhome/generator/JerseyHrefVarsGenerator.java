@@ -10,7 +10,7 @@ import java.net.URI;
  */
 public final class JerseyHrefVarsGenerator extends HrefVarsGenerator {
 
-    protected JerseyHrefVarsGenerator(final URI relationTypeBaseUri) {
+    public JerseyHrefVarsGenerator(final URI relationTypeBaseUri) {
         super(relationTypeBaseUri);
     }
 

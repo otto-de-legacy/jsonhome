@@ -98,7 +98,7 @@ public class JsonHomeResourceTest {
         final Map<String, Map<String, ?>> resources = (Map<String, Map<String, ?>>) resourcesMap.get("resources");
 
         final Map<String, ?> hints = asMap(resources.get("http://rel.example.org/rel/foo").get("hints"));
-        assertEquals(hints.get("description"), asList("controller value"));
+        assertEquals(hints.get("description"), asList("resource value"));
     }
 
     @Test

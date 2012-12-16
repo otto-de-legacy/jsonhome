@@ -22,7 +22,7 @@ public class JerseyJsonHomeGeneratorTest {
     public static final URI ROOT_URI = create("http://example.org");
 
     @Test
-    public void controllerWithoutResourceMappingShouldNotHaveResourceLinks() throws Exception {
+    public void resourceWithoutResourceMappingShouldNotHaveResourceLinks() throws Exception {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ResourceWithoutResource.class).generate();
         // when
@@ -32,7 +32,7 @@ public class JerseyJsonHomeGeneratorTest {
     }
 
     @Test
-    public void controllerWithoutMethodsShouldNotHaveResourceLinks() throws Exception {
+    public void resourceWithoutMethodsShouldNotHaveResourceLinks() throws Exception {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org")).with(ResourceWithoutMethods.class).generate();
         // when
@@ -42,7 +42,7 @@ public class JerseyJsonHomeGeneratorTest {
     }
 
     @Test
-    public void controllerWithResourceWithoutLinkRelationTypeShouldNotHaveResourceLink() throws Exception {
+    public void resourceWithResourceWithoutLinkRelationTypeShouldNotHaveResourceLink() throws Exception {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org"))
                 .with(ResourceWithResourceWithoutLinkRelationType.class)
@@ -168,7 +168,7 @@ public class JerseyJsonHomeGeneratorTest {
     }
 
     @Test
-    public void controllerWithResourceAndDirectLinkRelationTypeShouldHaveDirectResourceLink() throws Exception {
+    public void resourceWithResourceAndDirectLinkRelationTypeShouldHaveDirectResourceLink() throws Exception {
         // given
         final JsonHome jsonHome = jsonHomeFor(create("http://example.org"))
                 .with(ResourceWithResourceAndLinkRelationType.class)
@@ -228,11 +228,11 @@ public class JerseyJsonHomeGeneratorTest {
     public void mustNotHaveMultipleResourceLinksIfResourceIsImplementedInDifferentResources() {
         // given
         @SuppressWarnings("unchecked")
-        final List<Class<?>> controller = Arrays.asList(
+        final List<Class<?>> resource = Arrays.asList(
                 ResourceWithRequestMappingAndLinkRelationTypeAtClassLevel.class,
                 AnotherResourceWithRequestMappingAndLinkRelationTypeAtClassLevel.class
         );
-        final JsonHome foo = jsonHomeFor(create("http://example.org")).with(controller).generate();
+        final JsonHome foo = jsonHomeFor(create("http://example.org")).with(resource).generate();
         // when
         final Collection<ResourceLink> resourceLinks = foo.getResources().values();
         // then
@@ -331,7 +331,7 @@ public class JerseyJsonHomeGeneratorTest {
         final ResourceLink resourceLink = jsonHome.getResourceFor(relationTypeURI);
         // then
         final Documentation docs = resourceLink.getHints().getDocs();
-        assertEquals(docs.getDescription().get(0), "controller value");
+        assertEquals(docs.getDescription().get(0), "resource value");
         final Documentation var1Doc = resourceLink.asTemplatedLink().getHrefVars().get(0).getDocs();
         assertEquals(var1Doc.getDescription().get(0), "var value 1");
         final Documentation var2Doc = resourceLink.asTemplatedLink().getHrefVars().get(1).getDocs();

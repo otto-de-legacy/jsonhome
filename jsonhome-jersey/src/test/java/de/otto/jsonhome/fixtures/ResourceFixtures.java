@@ -21,8 +21,8 @@ public class ResourceFixtures {
         public @GET @Path("/bar") void bar() {}
     }
 
-    public static @Path("/foo") @Rel("http://example.org/rel/fooBarType") class ResourceWithResourceAndLinkRelationType {
-        public @GET @Path("/bar") void bar() {}
+    public static @Path("/foo/") @Rel("http://example.org/rel/fooBarType") class ResourceWithResourceAndLinkRelationType {
+        public @GET @Path("/bar/") void bar() {}
     }
 
     public static @Path("/foo") class ResourceWithDifferentUrisForSameRelationType {
@@ -98,7 +98,7 @@ public class ResourceFixtures {
 
     @Path("")
     @Docs({
-            @Doc(value = "controller value", link = "http://example.org/doc/foo", rel = "/rel/foo"),
+            @Doc(value = "resource value", link = "http://example.org/doc/foo", rel = "/rel/foo"),
             @Doc(value = "a value", link = "http://example.org/doc/foo", rel = "/rel/bar")
     })
     public static class ResourceWithDocumentation {
