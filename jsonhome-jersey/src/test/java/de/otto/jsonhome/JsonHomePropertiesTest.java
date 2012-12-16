@@ -13,6 +13,5 @@ public class JsonHomePropertiesTest {
     public void testReadingProperties() throws Exception {
         Properties properties = JsonHomeProperties.getProperties();
         assertEquals(3, properties.size());
-        assertEquals("de.otto", properties.getProperty("resource.packages"));
     }
 }
