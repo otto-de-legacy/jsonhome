@@ -3,7 +3,7 @@ dependencies {
     compile project(':jsonhome-core')
     compile 'com.thoughtworks.paranamer:paranamer:2.5.1'
     // only used for ReflectionUtils
-    compile 'org.springframework:spring-core:3.2.0.RELEASE'
+    compile 'org.springframework:spring-core:3.1.3.RELEASE'
     testCompile 'org.testng:testng:6.3.1'
 }
 
