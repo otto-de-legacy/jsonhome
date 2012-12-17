@@ -19,11 +19,14 @@
 package de.otto.jsonhome.generator;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PostConstruct;
 import java.net.URI;
+
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
  * @author Guido Steinacker
@@ -52,7 +55,7 @@ public final class SpringJsonHomeGenerator extends JsonHomeGenerator {
 
     @Override
     protected boolean isCandidateForAnalysis(final Class<?> controller) {
-        return controller.getAnnotation(Controller.class) != null;
+        return findAnnotation(controller, Controller.class) != null;
     }
 
 }

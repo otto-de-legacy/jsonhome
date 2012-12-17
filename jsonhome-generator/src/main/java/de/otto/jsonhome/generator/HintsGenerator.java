@@ -30,6 +30,7 @@ import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
  * @author Guido Steinacker
@@ -96,7 +97,7 @@ public abstract class HintsGenerator {
      * @return List of Preconditions, or an empty list.
      */
     protected List<Precondition> preconditionsFrom(final Method method) {
-        final de.otto.jsonhome.annotation.Hints annotation = method.getAnnotation(de.otto.jsonhome.annotation.Hints.class);
+        final de.otto.jsonhome.annotation.Hints annotation = findAnnotation(method, de.otto.jsonhome.annotation.Hints.class);
         if (annotation != null && annotation.preconditionReq() != null) {
             return asList(annotation.preconditionReq());
         } else {
@@ -111,7 +112,7 @@ public abstract class HintsGenerator {
      * @return Status (ok, deprecated or gone)
      */
     protected Status statusFrom(final Method method) {
-        final de.otto.jsonhome.annotation.Hints annotation = method.getAnnotation(de.otto.jsonhome.annotation.Hints.class);
+        final de.otto.jsonhome.annotation.Hints annotation = findAnnotation(method, de.otto.jsonhome.annotation.Hints.class);
         if (annotation != null && annotation.status() != null) {
             return annotation.status();
         } else {

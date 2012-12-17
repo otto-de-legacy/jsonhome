@@ -21,6 +21,7 @@ package de.otto.jsonhome.generator;
 import de.otto.jsonhome.annotation.Doc;
 import de.otto.jsonhome.annotation.Docs;
 import de.otto.jsonhome.model.Documentation;
+import org.springframework.core.annotation.AnnotationUtils;
 
 import java.net.URI;
 import java.util.Collections;
@@ -29,6 +30,7 @@ import static de.otto.jsonhome.model.Documentation.documentation;
 import static de.otto.jsonhome.model.Documentation.emptyDocs;
 import static java.net.URI.create;
 import static java.util.Arrays.asList;
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
  * A generator used to create {@link Documentation} for a link-relation type or href-var.
@@ -59,7 +61,7 @@ public class DocsGenerator {
      * @return Documentation, possibly empty but never null.
      */
     public Documentation documentationFrom(final URI relationType, final Class<?> controller) {
-        Docs docs = controller.getAnnotation(Docs.class);
+        Docs docs = findAnnotation(controller, Docs.class);
         if (docs != null) {
             for (final Doc relDoc : docs.value()) {
                 if (linkRelationTypeOf(relDoc.rel()).equals(relationType)) {
@@ -67,7 +69,7 @@ public class DocsGenerator {
                 }
             }
         } else {
-            Doc relDoc = controller.getAnnotation(Doc.class);
+            Doc relDoc = findAnnotation(controller, Doc.class);
             if (relDoc != null && linkRelationTypeOf(relDoc.rel()).equals(relationType)) {
                 return documentationFrom(relDoc);
             }

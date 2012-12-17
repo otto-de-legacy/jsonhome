@@ -15,6 +15,7 @@
  */
 package de.otto.jsonhome.controller;
 
+import de.otto.jsonhome.fixtures.ControllerFixtures;
 import de.otto.jsonhome.generator.JsonHomeGenerator;
 import de.otto.jsonhome.generator.JsonHomeSource;
 import de.otto.jsonhome.generator.SpringJsonHomeGenerator;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.otto.jsonhome.fixtures.ControllerFixtures.ControllerWithDocumentation;
+import static de.otto.jsonhome.fixtures.ControllerFixtures.ControllerWithInheritance;
 import static de.otto.jsonhome.fixtures.ControllerFixtures.ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel;
 import static de.otto.jsonhome.model.Allow.GET;
 import static java.util.Arrays.asList;
@@ -58,6 +60,23 @@ public class JsonHomeControllerTest {
         final Object hints = resources.get("http://example.org/rel/foo").get("hints");
         assertEquals(hints, expected);
     }
+
+    @Test
+    public void shouldFindInheritedAnnotations() throws Exception {
+        // given
+        final JsonHomeController controller = jsonHomeController(
+                ControllerWithInheritance.class,
+                "http://example.org");
+        // when
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        final Map<String, ?> resourcesMap = controller.getAsApplicationJson(response);
+        // then
+        @SuppressWarnings("unchecked")
+        final Map<String, Map<String, ?>> resources = (Map<String, Map<String, ?>>) resourcesMap.get("resources");
+        final Map<String, ?> hints = asMap(resources.get("http://example.org/rel/foo").get("hints"));
+        assertEquals(hints.get("description"), asList("controller value"));
+    }
+
     @Test
     public void applicationJsonHomeShouldNotContainAdditionalInformation() throws Exception {
         // given

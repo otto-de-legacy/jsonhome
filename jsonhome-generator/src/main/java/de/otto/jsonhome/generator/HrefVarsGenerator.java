@@ -28,6 +28,7 @@ import static de.otto.jsonhome.generator.MethodHelper.getParameterInfos;
 import static de.otto.jsonhome.generator.UriTemplateHelper.variableNamesFrom;
 import static de.otto.jsonhome.model.Documentation.emptyDocs;
 import static de.otto.jsonhome.model.HrefVar.hrefVar;
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 public abstract class HrefVarsGenerator {
 
@@ -45,7 +46,7 @@ public abstract class HrefVarsGenerator {
      */
     public final List<HrefVar> hrefVarsFor(final URI relationTypeUri, final Method method) {
         final List<HrefVar> hrefVars;
-        final HrefTemplate hrefTemplateAnnotation = method.getAnnotation(HrefTemplate.class);
+        final HrefTemplate hrefTemplateAnnotation = findAnnotation(method, HrefTemplate.class);
         if (hrefTemplateAnnotation != null) {
             hrefVars = new ArrayList<HrefVar>();
             final String template = hrefTemplateAnnotation.value();

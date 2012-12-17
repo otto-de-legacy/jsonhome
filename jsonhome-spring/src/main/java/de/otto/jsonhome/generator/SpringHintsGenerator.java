@@ -28,6 +28,7 @@ import java.util.Set;
 import static de.otto.jsonhome.model.Allow.GET;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 public class SpringHintsGenerator extends HintsGenerator {
 
@@ -45,7 +46,7 @@ public class SpringHintsGenerator extends HintsGenerator {
      */
     @Override
     protected Set<Allow> allowedHttpMethodsOf(final Method method) {
-        final RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
+        final RequestMapping methodRequestMapping = findAnnotation(method, RequestMapping.class);
         final Set<Allow> allows = EnumSet.noneOf(Allow.class);
         for (Object o : methodRequestMapping.method()) {
             allows.add(Allow.valueOf(o.toString()));
@@ -59,7 +60,7 @@ public class SpringHintsGenerator extends HintsGenerator {
 
     @Override
     protected List<String> producedRepresentationsOf(final Method method) {
-        final RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
+        final RequestMapping methodRequestMapping = findAnnotation(method, RequestMapping.class);
         final String[] produces = methodRequestMapping.produces();
         return produces != null ? asList(produces) : Collections.<String>emptyList();
 
@@ -67,7 +68,7 @@ public class SpringHintsGenerator extends HintsGenerator {
 
     @Override
     protected List<String> consumedRepresentationsOf(final Method method) {
-        final RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
+        final RequestMapping methodRequestMapping = findAnnotation(method, RequestMapping.class);
         final String[] consumes = methodRequestMapping.consumes();
         return consumes != null ? asList(consumes) : Collections.<String>emptyList();
 

@@ -132,6 +132,14 @@ public class ControllerFixtures {
                  @RequestParam @Doc("var value 2") String requestParam) {}
     }
 
+    public static class ControllerWithInheritance extends ControllerWithDocumentation {
+        public
+        void foo(String foo, String requestParam) {}
+
+        public
+        void bar(String bar, String requestParam) {}
+    }
+
     @Controller
     @RequestMapping(value = "/foo")
     public static class ControllerWithDeprecatedResource {

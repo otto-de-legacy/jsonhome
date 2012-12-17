@@ -34,6 +34,7 @@ import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 import static java.net.URI.create;
 import static java.util.Arrays.asList;
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
  * A generator used to generate the {@link ResourceLink resource links} of a method.
@@ -99,11 +100,11 @@ public abstract class ResourceLinkGenerator {
      * @return List of resource paths, or empty list.
      */
     protected List<String> overriddenOrCalculatedResourcePathsFor(final Method method) {
-        final Href methodHrefAnnotation = method.getAnnotation(Href.class);
+        final Href methodHrefAnnotation = findAnnotation(method, Href.class);
         if (methodHrefAnnotation != null) {
             return asList(applicationBaseUri.resolve(methodHrefAnnotation.value()).toString());
         } else {
-            final HrefTemplate hrefTemplateAnnotation = method.getAnnotation(HrefTemplate.class);
+            final HrefTemplate hrefTemplateAnnotation = findAnnotation(method, HrefTemplate.class);
             if (hrefTemplateAnnotation != null) {
                 return asList(hrefTemplateAnnotation.value().startsWith("http://")
                         ? hrefTemplateAnnotation.value()
@@ -150,8 +151,8 @@ public abstract class ResourceLinkGenerator {
      * @return URI of the link-relation type, or null
      */
     protected URI relationTypeFrom(final Method method) {
-        final Rel controllerRel = method.getDeclaringClass().getAnnotation(Rel.class);
-        final Rel methodRel = method.getAnnotation(Rel.class);
+        final Rel controllerRel = findAnnotation(method.getDeclaringClass(), Rel.class);
+        final Rel methodRel = findAnnotation(method, Rel.class);
         if (controllerRel == null && methodRel == null) {
             return null;
         } else {

@@ -18,6 +18,8 @@
 
 package de.otto.jsonhome.generator;
 
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.lang.reflect.Method;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
  * A Spring-based ResourceLinkGenerator.
@@ -59,14 +62,14 @@ public class SpringResourceLinkGenerator extends ResourceLinkGenerator {
      */
     @Override
     public boolean isCandidateForAnalysis(final Method method) {
-        return method.getAnnotation(RequestMapping.class) != null;
+        return AnnotationUtils.findAnnotation(method, RequestMapping.class) != null;
     }
 
     @Override
     protected List<String> resourcePathsFor(final Method method) {
         final List<String> resourcePaths = new ArrayList<String>();
         if (isCandidateForAnalysis(method)) {
-            final RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
+            final RequestMapping methodRequestMapping = findAnnotation(method, RequestMapping.class);
             for (final String resourcePathPrefix : parentResourcePathsFrom(method.getDeclaringClass())) {
                 final String[] resourcePathSuffixes = methodRequestMapping.value().length > 0
                         ? methodRequestMapping.value()
@@ -93,7 +96,7 @@ public class SpringResourceLinkGenerator extends ResourceLinkGenerator {
      * @return list of resource paths.
      */
     protected List<String> parentResourcePathsFrom(final Class<?> controller) {
-        final RequestMapping controllerRequestMapping = controller.getAnnotation(RequestMapping.class);
+        final RequestMapping controllerRequestMapping = findAnnotation(controller, RequestMapping.class);
         final List<String> resourcePathPrefixes;
         if (controllerRequestMapping != null) {
             resourcePathPrefixes = asList(controllerRequestMapping.value());
