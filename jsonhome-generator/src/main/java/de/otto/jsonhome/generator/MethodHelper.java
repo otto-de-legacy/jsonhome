@@ -15,9 +15,8 @@
  */
 package de.otto.jsonhome.generator;
 
-import com.thoughtworks.paranamer.BytecodeReadingParanamer;
-import com.thoughtworks.paranamer.CachingParanamer;
-import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.core.ParameterNameDiscoverer;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -32,7 +31,7 @@ import static java.util.Arrays.asList;
  */
 public final class MethodHelper {
 
-    public static final CachingParanamer PARANAMER = new CachingParanamer(new BytecodeReadingParanamer());
+    private static final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
 
     /**
      * Discovers parameter infos of a Method.
@@ -65,7 +64,8 @@ public final class MethodHelper {
      * @return List of Strings, in the order parameters in the method's signature.
      */
     public static String[] parameterNamesOf(final Method method) {
-        return PARANAMER.lookupParameterNames(method);
+        final String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
+        return parameterNames != null ? parameterNames : new String[0];
     }
 
 }

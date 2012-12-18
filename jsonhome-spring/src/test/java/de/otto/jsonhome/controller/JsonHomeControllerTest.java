@@ -25,9 +25,7 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.otto.jsonhome.fixtures.ControllerFixtures.ControllerWithDocumentation;
-import static de.otto.jsonhome.fixtures.ControllerFixtures.ControllerWithInheritance;
-import static de.otto.jsonhome.fixtures.ControllerFixtures.ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel;
+import static de.otto.jsonhome.fixtures.ControllerFixtures.*;
 import static de.otto.jsonhome.model.Allow.GET;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
