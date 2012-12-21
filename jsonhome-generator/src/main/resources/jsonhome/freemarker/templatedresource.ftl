@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>json-home</title>
-    <link href="${contextpath}/jsonhome//css/jsonhome.css" rel="stylesheet" type="text/css">
+    <link href="${contextpath}/jsonhome/css/jsonhome.css" rel="stylesheet" type="text/css">
 </head>
 <body>
     <h1>${resource.linkRelationType}</h1>
