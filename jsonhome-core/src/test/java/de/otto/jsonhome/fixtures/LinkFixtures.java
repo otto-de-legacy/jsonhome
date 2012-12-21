@@ -49,6 +49,7 @@ public class LinkFixtures {
                     asList("text/html", "application/json"),
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
+                    Collections.<String>emptyList(),
                     Collections.<Precondition>emptyList(),
                     Status.OK,
                     emptyDocs()
@@ -60,6 +61,7 @@ public class LinkFixtures {
             Hints.hints(
                     of(GET),
                     asList("text/html", "application/json"),
+                    Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<Precondition>emptyList(),

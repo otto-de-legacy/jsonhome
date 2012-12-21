@@ -65,6 +65,9 @@ public final class HintsConverter {
         if (!hints.getAcceptPost().isEmpty()) {
             jsonHints.put("accept-post", hints.getAcceptPost());
         }
+        if (!hints.getAcceptPatch().isEmpty()) {
+            jsonHints.put("accept-patch", hints.getAcceptPatch());
+        }
         if (!hints.getPreconditionReq().isEmpty()) {
             jsonHints.put("precondition-req", hints.getPreconditionReq());
         }

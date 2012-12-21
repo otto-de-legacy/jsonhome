@@ -165,6 +165,7 @@ public class TemplatedLinkTest {
                         asList("application/foo"),
                         asList("application/json"),
                         Collections.<String>emptyList(),
+                        Collections.<String>emptyList(),
                         Collections.<Precondition>emptyList(),
                         Status.OK,
                         emptyDocs()
@@ -178,6 +179,7 @@ public class TemplatedLinkTest {
                         of(GET, PUT),
                         asList("application/foo"),
                         asList("application/foo"),
+                        Collections.<String>emptyList(),
                         Collections.<String>emptyList(),
                         Collections.<Precondition>emptyList(),
                         Status.OK,
@@ -203,6 +205,7 @@ public class TemplatedLinkTest {
                         of(GET, POST),
                         asList("application/foo"),
                         Collections.<String>emptyList(),
+                        Collections.<String>emptyList(),
                         asList("application/json"),
                         Collections.<Precondition>emptyList(),
                         Status.OK,
@@ -218,6 +221,7 @@ public class TemplatedLinkTest {
                         asList("application/foo"),
                         Collections.<String>emptyList(),
                         asList("application/foo"),
+                        Collections.<String>emptyList(),
                         Collections.<Precondition>emptyList(),
                         Status.OK,
                         emptyDocs()

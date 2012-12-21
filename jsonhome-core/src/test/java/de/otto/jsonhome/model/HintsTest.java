@@ -51,6 +51,16 @@ public class HintsTest {
         // then an exception is thrown
     }
 
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void creationShouldFailWithAcceptPatchIfPatchIsNotAllowed() {
+        // given
+        final Set<Allow> allows = of(GET, POST);
+        final String acceptPatch = "text/plain";
+        // when
+        hintsBuilder().allowing(allows).representedAs("text/html").acceptingForPatch(acceptPatch).build();
+        // then an exception is thrown
+    }
+
     @Test
     public void shouldMergeStatusWithHigherOrder() {
         // given
@@ -84,14 +94,14 @@ public class HintsTest {
                 .acceptingForPut("bar/foo")
                 .build();
         final Hints secondHints = hintsBuilder()
-                .allowing(of(GET, POST, DELETE))
+                .allowing(of(GET, POST, DELETE, PATCH))
                 .representedAs("text/html", "application/json")
                 .acceptingForPost("foo/bar")
                 .build();
         // when
         final Hints merged = firstHints.mergeWith(secondHints);
         // then
-        assertEquals(merged.getAllows(), of(GET, PUT, POST, DELETE));
+        assertEquals(merged.getAllows(), of(GET, PUT, POST, DELETE, PATCH));
         assertEquals(merged.getRepresentations(), asList("text/html", "text/plain", "application/json"));
         assertEquals(merged.getAcceptPut(), asList("bar/foo"));
         assertEquals(merged.getAcceptPost(), asList("foo/bar"));
