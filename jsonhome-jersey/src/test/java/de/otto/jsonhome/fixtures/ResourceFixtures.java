@@ -1,5 +1,6 @@
 package de.otto.jsonhome.fixtures;
 
+import de.otto.jsonhome.PATCH;
 import de.otto.jsonhome.annotation.Doc;
 import de.otto.jsonhome.annotation.Docs;
 import de.otto.jsonhome.annotation.Hints;
@@ -7,6 +8,7 @@ import de.otto.jsonhome.annotation.Rel;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 
 import static de.otto.jsonhome.model.Precondition.ETAG;
 import static de.otto.jsonhome.model.Status.DEPRECATED;
@@ -32,6 +34,10 @@ public class ResourceFixtures {
         public @DELETE @Path("/delete") @Rel("http://example.org/rel/delete") void delete() {}
         public @HEAD @Path("/head") @Rel("http://example.org/rel/head") void head() {}
         public @OPTIONS @Path("/options") @Rel("http://example.org/rel/options") void options() {}
+    }
+
+    public static @Path("/foo") class ResourceWithPatchMethod {
+        public @PATCH @Consumes(MediaType.APPLICATION_JSON) @Rel("http://example.org/rel/fooType") void foo() {}
     }
 
     public static @Path("/foo") class ResourceWithDifferentUrisForSameRelationType {
