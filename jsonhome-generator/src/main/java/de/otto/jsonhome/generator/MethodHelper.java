@@ -17,10 +17,12 @@ package de.otto.jsonhome.generator;
 
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
+import org.springframework.util.ClassUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -32,6 +34,10 @@ import static java.util.Arrays.asList;
 public final class MethodHelper {
 
     private static final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
+    public static final Annotation[][] EMPTY_ANNOTATIONS = new Annotation[1][];
+    static {
+        EMPTY_ANNOTATIONS[0] = new Annotation[0];
+    }
 
     /**
      * Discovers parameter infos of a Method.
@@ -44,15 +50,17 @@ public final class MethodHelper {
      */
     public static List<ParameterInfo> getParameterInfos(final Method method) {
         final Class<?>[] parameterTypes = method.getParameterTypes();
-        final Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+        final Annotation[][] parameterAnnotations = parameterAnnotationsOf(method);
         final String[] parameterNames = parameterNamesOf(method);
         final List<ParameterInfo> parameterInfos = new ArrayList<ParameterInfo>();
         for (int i=0,n=parameterNames.length; i<n; ++i) {
             parameterInfos.add(new ParameterInfo(
                     parameterNames[i],
                     parameterTypes[i],
-                    asList(parameterAnnotations[i])
-            ));
+                    parameterAnnotations.length > i
+                            ? asList(parameterAnnotations[i])
+                            : Collections.<Annotation>emptyList())
+            );
         }
         return parameterInfos;
     }
@@ -64,8 +72,44 @@ public final class MethodHelper {
      * @return List of Strings, in the order parameters in the method's signature.
      */
     public static String[] parameterNamesOf(final Method method) {
-        final String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
-        return parameterNames != null ? parameterNames : new String[0];
+        if (method != null) {
+            final String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
+            if (parameterNames == null) {
+                return parameterNamesOf(methodFromSuperclass(method));
+            } else {
+                return parameterNames;
+            }
+        }
+        return new String[0];
+    }
+
+    private static Annotation[][] parameterAnnotationsOf(final Method method) {
+        if (method != null) {
+            final Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+            if (isEmpty(parameterAnnotations)) {
+                return parameterAnnotationsOf(methodFromSuperclass(method));
+            } else {
+                return parameterAnnotations;
+            }
+        }
+        return EMPTY_ANNOTATIONS;
+    }
+
+    private static Method methodFromSuperclass(final Method method) {
+        final Class<?> superclass = method.getDeclaringClass().getSuperclass();
+        if (superclass != null) {
+            return ClassUtils.getMethodIfAvailable(superclass, method.getName(), method.getParameterTypes());
+        }
+        return null;
+    }
+
+    private static boolean isEmpty(Annotation[][] parameterAnnotations) {
+        for (Annotation[] parameterAnnotation : parameterAnnotations) {
+            if (parameterAnnotation.length != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

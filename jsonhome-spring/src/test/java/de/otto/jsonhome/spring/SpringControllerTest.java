@@ -10,10 +10,8 @@ import org.testng.annotations.Test;
 
 import java.util.Map;
 
-import static java.util.EnumSet.of;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
 /**
  * @author Guido Steinacker
@@ -33,16 +31,18 @@ public class SpringControllerTest extends AbstractTestNGSpringContextTests {
         assertEquals(controller.getAFoo("42"), "42");
     }
 
-    @Test(enabled = false)
+    @Test
     @SuppressWarnings("unchecked")
     public void shouldFindJsonHomeWithAspects() {
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String,?> json = jsonHomeController.getAsApplicationJson(response);
-        // then
         final Map<String, Map<String, ?>> resources = (Map<String, Map<String, ?>>) json.get("resources");
-        assertNotNull(resources.get("http://otto.de/rel/foo"));
-        final Map<String, String> hrefVars = (Map<String, String>) resources.get("http://otto.de/rel/foo").get("href-vars");
-        assertEquals(hrefVars.get("fooId"), "http://localhost/rel/foo#fooId");
+        assertNotNull(resources);
+        final Map<String, ?> fooResource = resources.get("http://specs.example.org/rel/foo");
+        assertNotNull(fooResource);
+        final Map<String, String> hrefVars = (Map<String, String>) fooResource.get("href-vars");
+        assertEquals(hrefVars.get("fooId"), "http://specs.example.org/rel/foo#fooId");
+        assertEquals(fooResource.get("href-template"), "http://www.example.org/{fooId}");
     }
 
 
