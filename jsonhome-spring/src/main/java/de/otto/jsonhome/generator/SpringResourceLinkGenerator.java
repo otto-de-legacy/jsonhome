@@ -90,7 +90,7 @@ public class SpringResourceLinkGenerator extends ResourceLinkGenerator {
     protected String parentResourcePathsFrom(final Class<?> controller) {
         final RequestMapping controllerRequestMapping = findAnnotation(controller, RequestMapping.class);
         final String firstResourcePathPrefix;
-        if (controllerRequestMapping != null) {
+        if (controllerRequestMapping != null && controllerRequestMapping.value().length > 0) {
             firstResourcePathPrefix = controllerRequestMapping.value()[0];
         } else {
             firstResourcePathPrefix = "";
