@@ -9,8 +9,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Sebastian Schroeder
@@ -21,7 +19,7 @@ public final class JerseyResourceLinkGenerator extends ResourceLinkGenerator {
     private final URI applicationBaseUri;
 
     public JerseyResourceLinkGenerator(final URI applicationBaseUri,
-                                          final URI relationTypeBaseUri) {
+                                       final URI relationTypeBaseUri) {
         super(applicationBaseUri,
                 relationTypeBaseUri,
                 new JerseyHintsGenerator(relationTypeBaseUri),
@@ -51,11 +49,10 @@ public final class JerseyResourceLinkGenerator extends ResourceLinkGenerator {
      * The resource paths are the paths of the URIs the given method is responsible for.
      *
      * @param method the method of the controller, possibly handling one or more REST resources.
-     * @return list of resource paths
+     * @return resource path
      */
     @Override
-    protected List<String> resourcePathsFor(final Method method) {
-        final List<String> resourcePaths = new ArrayList<String>();
+    protected String resourcePathFor(final Method method) {
         if (isCandidateForAnalysis(method)) {
             final UriBuilder uriBuilder = new UriBuilderImpl()
                     .uri(applicationBaseUri)
@@ -64,13 +61,12 @@ public final class JerseyResourceLinkGenerator extends ResourceLinkGenerator {
                 uriBuilder.path(method);
             }
             try {
-                resourcePaths.add(
-                        URLDecoder.decode(uriBuilder.build().toString(), "UTF-8") + queryTemplateFrom(method));
+                return URLDecoder.decode(uriBuilder.build().toString(), "UTF-8") + queryTemplateFrom(method);
             } catch (UnsupportedEncodingException e) {
                 //UTF-8 should be known
             }
         }
-        return resourcePaths;
+        return null;
     }
 
 }

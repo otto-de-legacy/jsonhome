@@ -102,7 +102,7 @@ public abstract class JsonHomeGenerator {
         for (final Method method : controller.getMethods()) {
             resourceLinks = mergeResources(
                     resourceLinks,
-                    resourceLinkGenerator.resourceLinksFor(method));
+                    resourceLinkGenerator.resourceLinkFor(method));
         }
         return resourceLinks;
     }

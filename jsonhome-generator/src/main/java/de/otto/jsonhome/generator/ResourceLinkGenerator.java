@@ -26,14 +26,12 @@ import de.otto.jsonhome.model.ResourceLink;
 
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 import static de.otto.jsonhome.generator.MethodHelper.getParameterInfos;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 import static java.net.URI.create;
-import static java.util.Arrays.asList;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
@@ -63,54 +61,52 @@ public abstract class ResourceLinkGenerator {
      * Analyses the a method of a controller and returns the list of ResourceLinks of this method.
      *
      * @param method the method
-     * @return list of resource links.
+     * @return resource link or null.
      */
-    public List<ResourceLink> resourceLinksFor(final Method method) {
-        final List<ResourceLink> resourceLinks = new ArrayList<ResourceLink>();
+    public ResourceLink resourceLinkFor(final Method method) {
+        ResourceLink resourceLink = null;
         if (isCandidateForAnalysis(method)) {
-            final List<String> resourcePaths = overriddenOrCalculatedResourcePathsFor(method);
-            for (final String resourcePath : resourcePaths) {
-                final URI relationType = relationTypeFrom(method);
-                if (relationType != null) {
-                    final Hints hints = hintsGenerator.hintsOf(relationType, method);
-                    if (resourcePath.matches(".*\\{.*\\}")) {
-                        resourceLinks.add(templatedLink(
-                                relationType,
-                                resourcePath,
-                                hrefVarsGenerator.hrefVarsFor(relationType, method),
-                                hints
-                        ));
-                    } else {
-                        resourceLinks.add(directLink(
-                                relationType,
-                                create(resourcePath),
-                                hints
-                        ));
-                    }
+            final String resourcePath = overriddenOrCalculatedResourcePathFor(method);
+            final URI relationType = relationTypeFrom(method);
+            if (relationType != null) {
+                final Hints hints = hintsGenerator.hintsOf(relationType, method);
+                if (resourcePath.matches(".*\\{.*\\}")) {
+                    resourceLink = templatedLink(
+                            relationType,
+                            resourcePath,
+                            hrefVarsGenerator.hrefVarsFor(relationType, method),
+                            hints
+                    );
+                } else {
+                    resourceLink = directLink(
+                            relationType,
+                            create(resourcePath),
+                            hints
+                    );
                 }
             }
         }
-        return resourceLinks;
+        return resourceLink;
     }
 
     /**
-     * Calculates the resource paths (direct links or templated links) of the method.
+     * Calculates the resource path (direct links or templated links) of the method.
      *
      * @param method the Method
-     * @return List of resource paths, or empty list.
+     * @return resource path or null.
      */
-    protected List<String> overriddenOrCalculatedResourcePathsFor(final Method method) {
+    protected String overriddenOrCalculatedResourcePathFor(final Method method) {
         final Href methodHrefAnnotation = findAnnotation(method, Href.class);
         if (methodHrefAnnotation != null) {
-            return asList(applicationBaseUri.resolve(methodHrefAnnotation.value()).toString());
+            return applicationBaseUri.resolve(methodHrefAnnotation.value()).toString();
         } else {
             final HrefTemplate hrefTemplateAnnotation = findAnnotation(method, HrefTemplate.class);
             if (hrefTemplateAnnotation != null) {
-                return asList(hrefTemplateAnnotation.value().startsWith("http://")
+                return hrefTemplateAnnotation.value().startsWith("http://")
                         ? hrefTemplateAnnotation.value()
-                        : applicationBaseUri.toString() + hrefTemplateAnnotation.value());
+                        : applicationBaseUri.toString() + hrefTemplateAnnotation.value();
             } else {
-                return resourcePathsFor(method);
+                return resourcePathFor(method);
             }
         }
     }
@@ -174,11 +170,13 @@ public abstract class ResourceLinkGenerator {
     protected abstract boolean isCandidateForAnalysis(final Method method);
 
     /**
-     * Returns the resource paths for the given method.
+     * Returns the resource path for the given method.
+     * <p/>
+     * If the method is able to handle multiple URIs, the implementation should select the first or
+     * best URI.
      *
-     * The resource paths are the paths of the URIs the given method is responsible for.
      * @param method the method of the controller, possibly handling one or more REST resources.
      * @return list of resource paths
      */
-    protected abstract List<String> resourcePathsFor(final Method method);
+    protected abstract String resourcePathFor(final Method method);
 }

@@ -29,6 +29,15 @@ public final class ResourceLinkHelper {
     private ResourceLinkHelper() {
     }
 
+    public static List<ResourceLink> mergeResources(final List<ResourceLink> resourceLinks,
+                                                    final List<ResourceLink> other) {
+        final List<ResourceLink> result = new ArrayList<ResourceLink>();
+        for (final ResourceLink resourceLink : other) {
+            result.addAll(mergeResources(resourceLinks, resourceLink));
+        }
+        return result;
+    }
+
     /**
      * Merges two lists of ResourceLinks into one list of {@link ResourceLink#mergeWith(de.otto.jsonhome.model.ResourceLink) merged} instances.
      *
@@ -37,10 +46,11 @@ public final class ResourceLinkHelper {
      * @return a list of merged resource links.
      */
     public static List<ResourceLink> mergeResources(final List<ResourceLink> resourceLinks,
-                                                    final List<ResourceLink> other) {
-        final List<ResourceLink> allCandidates = new ArrayList<ResourceLink>(resourceLinks.size() + other.size());
-        allCandidates.addAll(resourceLinks);
-        allCandidates.addAll(other);
+                                                    final ResourceLink other) {
+        final List<ResourceLink> allCandidates = new ArrayList<ResourceLink>(resourceLinks);
+        if (other != null) {
+            allCandidates.add(other);
+        }
         final Map<URI, ResourceLink> resourceLinkCandidates = new LinkedHashMap<URI, ResourceLink>();
         for (final ResourceLink candidate : allCandidates) {
             final URI linkRelationType = candidate.getLinkRelationType();

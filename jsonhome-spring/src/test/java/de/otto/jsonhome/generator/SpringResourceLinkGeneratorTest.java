@@ -11,14 +11,12 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.util.List;
 
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
 import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -57,16 +55,16 @@ public class SpringResourceLinkGeneratorTest {
         final Method method = ControllerWithDirectResourceLink.class.getMethod("getSomething");
         // when
         final boolean isCandidateForAnalysis = generator.isCandidateForAnalysis(method);
-        final List<ResourceLink> resourceLinks = generator.resourceLinksFor(method);
+        final ResourceLink resourceLink = generator.resourceLinkFor(method);
         // then
         assertTrue(isCandidateForAnalysis);
-        assertEquals(resourceLinks, singletonList(directLink(
+        assertEquals(resourceLink, directLink(
                 BASE_URI.resolve("/rel/bar"),
                 BASE_URI.resolve("/foo"),
                 hintsBuilder()
                         .representedAs("text/html")
                         .allowing(Allow.GET)
-                        .build()))
+                        .build())
         );
     }
 
@@ -77,16 +75,16 @@ public class SpringResourceLinkGeneratorTest {
         final Method method = ControllerWithOverriddenFullyQualifiedResourceLink.class.getMethod("getSomething");
         // when
         final boolean isCandidateForAnalysis = generator.isCandidateForAnalysis(method);
-        final List<ResourceLink> resourceLinks = generator.resourceLinksFor(method);
+        final ResourceLink resourceLink = generator.resourceLinkFor(method);
         // then
         assertTrue(isCandidateForAnalysis);
-        assertEquals(resourceLinks, singletonList(directLink(
+        assertEquals(resourceLink, directLink(
                 BASE_URI.resolve("/rel/bar"),
                 BASE_URI.resolve("/bar"),
                 hintsBuilder()
                         .representedAs("text/html")
                         .allowing(Allow.GET)
-                        .build()))
+                        .build())
         );
     }
 
@@ -97,16 +95,16 @@ public class SpringResourceLinkGeneratorTest {
         final Method method = ControllerWithOverriddenFullyQualifiedResourceLink.class.getMethod("getSomethingElse");
         // when
         final boolean isCandidateForAnalysis = generator.isCandidateForAnalysis(method);
-        final List<ResourceLink> resourceLinks = generator.resourceLinksFor(method);
+        final ResourceLink resourceLink = generator.resourceLinkFor(method);
         // then
         assertTrue(isCandidateForAnalysis);
-        assertEquals(resourceLinks, singletonList(directLink(
+        assertEquals(resourceLink, directLink(
                 BASE_URI.resolve("/rel/bar"),
                 BASE_URI.resolve("/bar"),
                 hintsBuilder()
                         .representedAs("text/html")
                         .allowing(Allow.GET)
-                        .build()))
+                        .build())
         );
     }
 
@@ -117,17 +115,17 @@ public class SpringResourceLinkGeneratorTest {
         final Method method = ControllerWithOverriddenRelativeTemplatedResourceLink.class.getMethod("getSomething");
         // when
         final boolean isCandidateForAnalysis = generator.isCandidateForAnalysis(method);
-        final List<ResourceLink> resourceLinks = generator.resourceLinksFor(method);
+        final ResourceLink resourceLink = generator.resourceLinkFor(method);
         // then
         assertTrue(isCandidateForAnalysis);
-        assertEquals(resourceLinks, singletonList(templatedLink(
+        assertEquals(resourceLink, templatedLink(
                 BASE_URI.resolve("/rel/bar"),
                 "http://example.org/bar{/var1*}",
                 asList(hrefVar("var1", BASE_URI.resolve("/rel/bar#var1"))),
                 hintsBuilder()
                         .representedAs("text/html")
                         .allowing(Allow.GET)
-                        .build()))
+                        .build())
         );
     }
 }

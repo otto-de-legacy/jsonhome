@@ -19,15 +19,11 @@
 package de.otto.jsonhome.generator;
 
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
@@ -66,27 +62,23 @@ public class SpringResourceLinkGenerator extends ResourceLinkGenerator {
     }
 
     @Override
-    protected List<String> resourcePathsFor(final Method method) {
-        final List<String> resourcePaths = new ArrayList<String>();
+    protected String resourcePathFor(final Method method) {
         if (isCandidateForAnalysis(method)) {
             final RequestMapping methodRequestMapping = findAnnotation(method, RequestMapping.class);
-            for (final String resourcePathPrefix : parentResourcePathsFrom(method.getDeclaringClass())) {
-                final String[] resourcePathSuffixes = methodRequestMapping.value().length > 0
-                        ? methodRequestMapping.value()
-                        : new String[] {""};
-
-                for (String resourcePathSuffix : resourcePathSuffixes) {
-                    final String resourcePath;
-                    if (resourcePathPrefix.endsWith("/") && resourcePathSuffix.startsWith("/")) {
-                        resourcePath = resourcePathPrefix + resourcePathSuffix.substring(1);
-                    } else {
-                        resourcePath = resourcePathPrefix + resourcePathSuffix;
-                    }
-                    resourcePaths.add(applicationBaseUri + resourcePath + queryTemplateFrom(method));
-                }
+            final String resourcePathPrefix = parentResourcePathsFrom(method.getDeclaringClass());
+            final String resourcePathSuffix = methodRequestMapping.value().length > 0
+                    ? methodRequestMapping.value()[0]
+                    : "";
+            final String resourcePath;
+            if (resourcePathPrefix.endsWith("/") && resourcePathSuffix.startsWith("/")) {
+                resourcePath = resourcePathPrefix + resourcePathSuffix.substring(1);
+            } else {
+                resourcePath = resourcePathPrefix + resourcePathSuffix;
             }
+            return applicationBaseUri + resourcePath + queryTemplateFrom(method);
+        } else {
+            return null;
         }
-        return resourcePaths;
     }
 
     /**
@@ -95,15 +87,15 @@ public class SpringResourceLinkGenerator extends ResourceLinkGenerator {
      * @param controller the controller.
      * @return list of resource paths.
      */
-    protected List<String> parentResourcePathsFrom(final Class<?> controller) {
+    protected String parentResourcePathsFrom(final Class<?> controller) {
         final RequestMapping controllerRequestMapping = findAnnotation(controller, RequestMapping.class);
-        final List<String> resourcePathPrefixes;
+        final String firstResourcePathPrefix;
         if (controllerRequestMapping != null) {
-            resourcePathPrefixes = asList(controllerRequestMapping.value());
+            firstResourcePathPrefix = controllerRequestMapping.value()[0];
         } else {
-            resourcePathPrefixes = asList("");
+            firstResourcePathPrefix = "";
         }
-        return resourcePathPrefixes;
+        return firstResourcePathPrefix;
     }
 
 }
