@@ -85,7 +85,7 @@ public abstract class JsonHomeGenerator {
      * @return JsonHome instance.
      */
     public final JsonHome generate() {
-        List<ResourceLink> resources = new ArrayList<ResourceLink>();
+        List<? extends ResourceLink> resources = new ArrayList<ResourceLink>();
         for (final Class<?> controllerClass : controllers) {
             resources = mergeResources(resources, resourceLinksFor(controllerClass));
         }
@@ -97,8 +97,8 @@ public abstract class JsonHomeGenerator {
      * @param controller the controller
      * @return list of ResourceLinks.
      */
-    protected final List<ResourceLink> resourceLinksFor(final Class<?> controller) {
-        List<ResourceLink> resourceLinks = emptyList();
+    protected final List<? extends ResourceLink> resourceLinksFor(final Class<?> controller) {
+        List<? extends ResourceLink> resourceLinks = emptyList();
         for (final Method method : controller.getMethods()) {
             resourceLinks = mergeResources(
                     resourceLinks,

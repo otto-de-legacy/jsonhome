@@ -28,6 +28,7 @@ public class JsonHomeResourceTest {
                 jsonHomeSource(ResourceFixtures.ResourceWithRequestMappingAndLinkRelationTypeAtClassLevel.class));
         // when
         final Response response = controller.getAsApplicationJsonHome();
+        @SuppressWarnings("unchecked")
         final Map<String, ?> resourcesMap = new ObjectMapper().readValue((String) response.getEntity(), Map.class);
         // then
         assertEquals(response.getMetadata().getFirst("Cache-Control"), "max-age=3600");
@@ -48,6 +49,7 @@ public class JsonHomeResourceTest {
         final JsonHomeResource controller = new JsonHomeResource();
         // when
         final Response response = controller.getAsApplicationJsonHome();
+        @SuppressWarnings("unchecked")
         final Map<String, ?> resourcesMap = new ObjectMapper().readValue((String) response.getEntity(), Map.class);
         // then
         assertEquals(response.getMetadata().getFirst("Cache-Control"), "max-age=3600");
@@ -77,6 +79,7 @@ public class JsonHomeResourceTest {
                 jsonHomeSource(ResourceFixtures.ResourceWithDocumentation.class));
         // when
         final Response response = controller.getAsApplicationJsonHome();
+        @SuppressWarnings("unchecked")
         final Map<String, ?> resourcesMap = new ObjectMapper().readValue((String) response.getEntity(), Map.class);
         // then
         @SuppressWarnings("unchecked")
@@ -92,6 +95,7 @@ public class JsonHomeResourceTest {
                 jsonHomeSource(ResourceFixtures.ResourceWithDocumentation.class));
         // when
         final Response response = controller.getAsApplicationJson();
+        @SuppressWarnings("unchecked")
         final Map<String, ?> resourcesMap = new ObjectMapper().readValue((String) response.getEntity(), Map.class);
         // then
         @SuppressWarnings("unchecked")
@@ -108,6 +112,7 @@ public class JsonHomeResourceTest {
                 jsonHomeSource(ResourceFixtures.ResourceWithRequestMappingAndLinkRelationTypeAtClassLevel.class));
         // when
         final Response response = controller.getAsApplicationJsonHome();
+        @SuppressWarnings("unchecked")
         final Map<String, ?> resourcesMap = new ObjectMapper().readValue((String) response.getEntity(), Map.class);
         // then
         @SuppressWarnings("unchecked")
@@ -122,6 +127,7 @@ public class JsonHomeResourceTest {
                 jsonHomeSource(ResourceFixtures.ResourceWithDocumentation.class));
         // when
         final Response response = controller.getAsApplicationJsonHome();
+        @SuppressWarnings("unchecked")
         final Map<String, ?> resourcesMap = new ObjectMapper().readValue((String) response.getEntity(), Map.class);
         // then
         @SuppressWarnings("unchecked")

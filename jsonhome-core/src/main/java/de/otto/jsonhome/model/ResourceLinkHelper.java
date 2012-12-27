@@ -29,13 +29,17 @@ public final class ResourceLinkHelper {
     private ResourceLinkHelper() {
     }
 
-    public static List<ResourceLink> mergeResources(final List<ResourceLink> resourceLinks,
-                                                    final List<ResourceLink> other) {
-        final List<ResourceLink> result = new ArrayList<ResourceLink>();
-        for (final ResourceLink resourceLink : other) {
-            result.addAll(mergeResources(resourceLinks, resourceLink));
+    public static List<? extends ResourceLink> mergeResources(final List<? extends ResourceLink> resourceLinks,
+                                                    final List<? extends ResourceLink> other) {
+        if (other.isEmpty()) {
+            return resourceLinks;
+        } else {
+            final List<ResourceLink> result = new ArrayList<ResourceLink>();
+            for (final ResourceLink resourceLink : other) {
+                result.addAll(mergeResources(resourceLinks, resourceLink));
+            }
+            return result;
         }
-        return result;
     }
 
     /**
@@ -45,7 +49,7 @@ public final class ResourceLinkHelper {
      * @param other the other list of resource links. This list will not be modified.
      * @return a list of merged resource links.
      */
-    public static List<ResourceLink> mergeResources(final List<ResourceLink> resourceLinks,
+    public static List<? extends ResourceLink> mergeResources(final List<? extends ResourceLink> resourceLinks,
                                                     final ResourceLink other) {
         final List<ResourceLink> allCandidates = new ArrayList<ResourceLink>(resourceLinks);
         if (other != null) {
