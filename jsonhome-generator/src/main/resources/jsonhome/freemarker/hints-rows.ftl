@@ -44,6 +44,17 @@
         <td>Available representations of the resource supported for POST.</td>
     </tr>
     <tr>
+        <th>Accept-Patch</th>
+        <td>
+            <ul>
+                <#list hints.acceptPatch as acceptPatch>
+                    <li>${acceptPatch}</li>
+                </#list>
+            </ul>
+        </td>
+        <td>Available representations of the resource supported for PATCH.</td>
+    </tr>
+    <tr>
         <th>Precondition-Req</th>
         <td>
             <ul>
