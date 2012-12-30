@@ -37,6 +37,7 @@ public class LinkFixtures {
     public static final URI RESOURCELINK_SHOP_STOREFRONT = URI.create("http://example.org/json-home/rel/shop/storefront");
     public static final URI RESOURCELINK_SHOP_PAGES = URI.create("http://example.org/json-home/rel/shop/pages");
     public static final URI RESOURCELINK_SHOP_PAGE = URI.create("http://example.org/json-home/rel/shop/page");
+    public static final URI RESOURCELINK_FOO = URI.create("http://example.org/json-home/rel/foo");
     public static final URI ABS_STOREFRONT_HREF = URI.create("http://example.org/storefront");
     public static final URI ABS_SHOPPAGES_HREF = URI.create("http://example.org/pages");
     public static final URI VAR_TYPE_PAGEID = URI.create("http://example.org/json-home/vartype/shop/page/pageId");
@@ -77,5 +78,18 @@ public class LinkFixtures {
                     .representedAs("text/html", "application/json")
                     .build()
     );
+
+    public static final DirectLink FOO_LINK = directLink(
+            RESOURCELINK_FOO,
+            ABS_SHOPPAGES_HREF,
+            Hints.hints(
+                    of(GET),
+                    asList("text/html"),
+                    Collections.<String>emptyList(),
+                    Collections.<String>emptyList(),
+                    Collections.<String>emptyList(),
+                    Collections.<Precondition>emptyList(),
+                    Status.OK,
+                    emptyDocs()));
 
 }
