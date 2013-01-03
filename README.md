@@ -231,24 +231,24 @@ You can find all releases in Maven Central and in the public Sonatype repository
 
 https://oss.sonatype.org/content/repositories/releases
 
-The current release is 0.1.0:
+The current release is 0.3.0:
 
-* de.otto:jsonhome-core:0.1.0
-* de.otto:jsonhome-generator:0.1.0
-* de.otto:jsonhome-spring:0.1.0
+* de.otto:jsonhome-core:0.3.0
+* de.otto:jsonhome-generator:0.3.0
+* de.otto:jsonhome-spring:0.3.0
 
-**Because the development is still involving incompatible changes, you may want to use the current 0.2 SNAPSHOT**
-instead of using the 0.1 release.
+**Because the development is still involving incompatible changes, you may want to use the current 0.3.1-SNAPSHOT**
+instead of using the 0.3 release.
 
 Snapshot releases will be published here:
 
 https://oss.sonatype.org/content/repositories/snapshots
 
-The current snapshot-release is 0.2.0-SNAPSHOT:
+The current snapshot-release is 0.3.1-SNAPSHOT:
 
-* de.otto:jsonhome-core:0.2.0-SNAPSHOT
-* de.otto:jsonhome-generator:0.2.0-SNAPSHOT
-* de.otto:jsonhome-spring:0.2.0-SNAPSHOT
+* de.otto:jsonhome-core:0.3.1-SNAPSHOT
+* de.otto:jsonhome-generator:0.3.1-SNAPSHOT
+* de.otto:jsonhome-spring:0.3.1-SNAPSHOT
 
 There is no de.otto:jsonhome-example:* because this is only an example, you should not depend on it.
 
