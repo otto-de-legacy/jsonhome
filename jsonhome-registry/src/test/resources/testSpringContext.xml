@@ -40,7 +40,4 @@
      -->
     <bean id="registry" class="de.otto.jsonhome.registry.store.InMemoryRegistry" />
 
-
-    <aop:aspectj-autoproxy />
-
 </beans>
