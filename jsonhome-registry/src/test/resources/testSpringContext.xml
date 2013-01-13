@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd"
+        >
+
+    <util:properties id="testProps">
+        <prop key="jsonhome.relationTypeBaseUri">http://specs.example.org</prop>
+        <prop key="jsonhome.applicationBaseUri">http://www.example.org</prop>
+    </util:properties>
+
+    <context:property-placeholder properties-ref="testProps" />
+
+    <!--
+     Configure the RegistryController.
+     -->
+    <bean class="de.otto.jsonhome.registry.controller.RegistryController" />
+
+    <!--
+     The controller used to serve the json-home documents. The dependencies are autowired.
+    -->
+    <bean class="de.otto.jsonhome.registry.controller.RegistryJsonHomeController"
+          p:maxAgeSeconds = "3600"
+          p:jsonHomeSource-ref="registryJsonHomeSource" />
+
+    <!--
+     The JsonHomeSource used to get the JsonHome from all registered URIs.
+     -->
+    <bean id="registryJsonHomeSource"
+          class="de.otto.jsonhome.registry.controller.RegistryBasedJsonHomeSource"
+          p:registry-ref="registry"/>
+
+    <!--
+     Registry data is stored in a file. Adjust this if you want to have a different persistence.
+     -->
+    <bean id="registry" class="de.otto.jsonhome.registry.store.InMemoryRegistry" />
+
+
+    <aop:aspectj-autoproxy />
+
+</beans>

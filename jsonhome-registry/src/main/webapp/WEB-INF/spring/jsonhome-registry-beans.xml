@@ -50,12 +50,12 @@
     <!--
      Configure the RegistryController.
      -->
-    <bean class="de.otto.jsonhome.registry.RegistryController" />
+    <bean class="de.otto.jsonhome.registry.controller.RegistryController" />
 
     <!--
      The controller used to serve the json-home documents. The dependencies are autowired.
     -->
-    <bean class="de.otto.jsonhome.controller.JsonHomeController"
+    <bean class="de.otto.jsonhome.registry.controller.RegistryJsonHomeController"
           p:maxAgeSeconds = "3600"
           p:jsonHomeSource-ref="registryJsonHomeSource" />
 
@@ -69,12 +69,12 @@
      The JsonHomeSource used to get the JsonHome from all registered URIs.
      -->
     <bean id="registryJsonHomeSource"
-          class="de.otto.jsonhome.registry.RegistryBasedJsonHomeSource"
+          class="de.otto.jsonhome.registry.controller.RegistryBasedJsonHomeSource"
           p:registry-ref="registry"/>
 
     <!--
      Registry data is stored in a file. Adjust this if you want to have a different persistence.
      -->
-    <bean id="registry" class="de.otto.jsonhome.registry.FileSystemRegistry" />
+    <bean id="registry" class="de.otto.jsonhome.registry.store.FileSystemRegistry" />
 
 </beans>

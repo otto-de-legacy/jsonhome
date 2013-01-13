@@ -13,7 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package de.otto.jsonhome.registry;
+package de.otto.jsonhome.registry.store;
 
 import java.net.URI;
 import java.util.Collection;
@@ -42,9 +42,12 @@ public interface Registry {
 
     /**
      * Returns a collection of all registered entries.
+     * @param environment the environment (like develop, live) of this entry. Different registered environments
+     *                    are used to access different versions of json-home documents during development.
+     *                    The default environment is ""; null is not accepted.
      * @return collection of entries.
      */
-    public Collection<RegistryEntry> getAll();
+    public Collection<RegistryEntry> getAllFrom(final String environment);
 
     /**
      * Returns the entry identified by the URI.
@@ -60,4 +63,8 @@ public interface Registry {
      */
     public RegistryEntry findByHref(final URI href);
 
+    /**
+     * Removes all entries from the registry.
+     */
+    void clear();
 }

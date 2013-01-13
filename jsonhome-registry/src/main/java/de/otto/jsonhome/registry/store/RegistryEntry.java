@@ -13,7 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package de.otto.jsonhome.registry;
+package de.otto.jsonhome.registry.store;
 
 import java.net.URI;
 
@@ -34,6 +34,7 @@ public final class RegistryEntry {
      *
      * @param self the URI identifying the registry entry.
      * @param title the title, describing the system offering the json-home document.
+     *                    It is expected to have different 'self' URIs for different environments.
      * @param href the URI of the linked json-home document.
      */
     public RegistryEntry(final URI self,
@@ -85,11 +86,11 @@ public final class RegistryEntry {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        RegistryEntry that = (RegistryEntry) o;
+        RegistryEntry entry = (RegistryEntry) o;
 
-        if (href != null ? !href.equals(that.href) : that.href != null) return false;
-        if (self != null ? !self.equals(that.self) : that.self != null) return false;
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        if (href != null ? !href.equals(entry.href) : entry.href != null) return false;
+        if (self != null ? !self.equals(entry.self) : entry.self != null) return false;
+        if (title != null ? !title.equals(entry.title) : entry.title != null) return false;
 
         return true;
     }

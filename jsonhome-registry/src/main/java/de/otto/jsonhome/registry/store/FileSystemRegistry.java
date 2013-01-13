@@ -13,27 +13,23 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package de.otto.jsonhome.registry;
+package de.otto.jsonhome.registry.store;
 
-import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static de.otto.jsonhome.registry.RegistryConverter.registryEntriesFromMap;
-import static de.otto.jsonhome.registry.RegistryConverter.registryEntriesToMap;
-import static java.util.Collections.singletonMap;
+import static de.otto.jsonhome.registry.controller.RegistryConverter.registryEntriesFromMap;
+import static de.otto.jsonhome.registry.controller.RegistryConverter.registryEntriesToMap;
 
 /**
  * File based implementation of the Registry interface.
@@ -87,15 +83,21 @@ public class FileSystemRegistry implements Registry {
 
     /** {@inheritDoc} */
     @Override
-    public void remove(final URI self) {
-        registry.remove(self);
+    public void remove(final URI entryUri) {
+        registry.remove(entryUri);
         writeRegistry();
     }
 
     /** {@inheritDoc} */
     @Override
-    public Collection<RegistryEntry> getAll() {
-        return registry.values();
+    public Collection<RegistryEntry> getAllFrom(final String environment) {
+        final Collection<RegistryEntry> filteredEntries = new ArrayList<RegistryEntry>();
+        for (final RegistryEntry entry : registry.values()) {
+            if (entry.getHref().getQuery().matches(".*environment\\w=\\w" + environment)) {
+                filteredEntries.add(entry);
+            }
+        }
+        return filteredEntries;
     }
 
     /** {@inheritDoc} */
@@ -113,6 +115,12 @@ public class FileSystemRegistry implements Registry {
             }
         }
         return null;
+    }
+
+    @Override
+    public void clear() {
+        registry.clear();
+        writeRegistry();
     }
 
     /**
