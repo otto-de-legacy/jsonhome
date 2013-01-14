@@ -51,9 +51,9 @@ public final class RelationResource {
             model.put("resource", resourceLink);
             final Viewable viewable;
             if (resourceLink.isDirectLink()) {
-                viewable = new Viewable("/directresource", model);
+                viewable = new Viewable("/jsonhome/directresource", model);
             } else {
-                viewable = new Viewable("/templatedresource", model);
+                viewable = new Viewable("/jsonhome/templatedresource", model);
             }
             return addCacheControlHeaders(Response.ok(viewable), maxAge);
         } else {

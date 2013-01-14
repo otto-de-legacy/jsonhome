@@ -49,8 +49,7 @@ public final class JsonHomeResource {
     public Response getAsTextHtmlHome() {
         final Map<String,Object> resources = new HashMap<String, Object>();
         resources.put("resources", jsonHomeSource.getJsonHome().getResources().values());
-
-        final Viewable viewable = new Viewable("/resources", resources);
+        final Viewable viewable = new Viewable("/jsonhome/resources", resources);
         return addCacheControlHeaders(Response.ok(viewable), maxAge);
     }
 

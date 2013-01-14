@@ -18,7 +18,7 @@
         </init-param>
         <init-param>
             <param-name>com.sun.jersey.freemarker.templateBasePath</param-name>
-            <param-value>jsonhome/freemarker</param-value>
+            <param-value>freemarker</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
