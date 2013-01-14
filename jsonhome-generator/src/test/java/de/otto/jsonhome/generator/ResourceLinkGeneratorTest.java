@@ -5,19 +5,18 @@ import de.otto.jsonhome.annotation.HrefTemplate;
 import de.otto.jsonhome.annotation.Rel;
 import de.otto.jsonhome.model.Allow;
 import de.otto.jsonhome.model.ResourceLink;
+import de.otto.jsonhome.model.TemplatedLink;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import static de.otto.jsonhome.model.Allow.GET;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * @author Guido Steinacker
@@ -115,7 +114,9 @@ public class ResourceLinkGeneratorTest {
         // when:
         final ResourceLink resourceLink = generator.resourceLinkFor(TestController.class.getMethod("templatedLink", String.class));
         // then:
-        assertEquals(resourceLink.asTemplatedLink().getHrefTemplate(), APPLICATION_BASE_URI + "/foo/{bar}");
+        final TemplatedLink templatedLink = resourceLink.asTemplatedLink();
+        assertEquals(templatedLink.getHrefTemplate(), APPLICATION_BASE_URI + "/foo/{bar}");
+        assertNotNull(templatedLink.getHrefVar(URI.create(RELATION_TYPE_BASE_URI + "/rel/test#bar")));
     }
 
     @Test
