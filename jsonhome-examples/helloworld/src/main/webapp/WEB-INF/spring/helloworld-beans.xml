@@ -15,6 +15,7 @@
      Definition of the properties needed to configure the jsonhome controllers:
         * jsonhome.applicationBaseUri = <base uri of the resources of your application>
         * jsonhome.relationTypeBaseUri = <base uri of the link-relation types of your application>
+        * jsonhome.varTypeBaseUri = <base uri of the variable types of your application>
      -->
     <context:property-placeholder location="/WEB-INF/properties/helloworld.properties" />
 

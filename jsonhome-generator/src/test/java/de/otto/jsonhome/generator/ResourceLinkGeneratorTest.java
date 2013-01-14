@@ -5,7 +5,6 @@ import de.otto.jsonhome.annotation.HrefTemplate;
 import de.otto.jsonhome.annotation.Rel;
 import de.otto.jsonhome.model.Allow;
 import de.otto.jsonhome.model.ResourceLink;
-import de.otto.jsonhome.model.TemplatedLink;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
@@ -26,12 +25,14 @@ public class ResourceLinkGeneratorTest {
 
     public static final URI APPLICATION_BASE_URI = URI.create("http://app.example.org");
     public static final URI RELATION_TYPE_BASE_URI = URI.create("http://spec.example.org");
+    public static final URI VAR_TYPE_BASE_URI = URI.create("http://spec.example.org/vartypes");
 
     static class TestResourceLinkGenerator extends ResourceLinkGenerator {
 
-        TestResourceLinkGenerator() {
+        TestResourceLinkGenerator(final URI baseVarTypeUri) {
             super(APPLICATION_BASE_URI,
                     RELATION_TYPE_BASE_URI,
+                    baseVarTypeUri,
                     new HintsGenerator(RELATION_TYPE_BASE_URI) {
                         @Override
                         protected Set<Allow> allowedHttpMethodsOf(final Method method) {
@@ -59,6 +60,10 @@ public class ResourceLinkGeneratorTest {
                             return true;
                         }
                     });
+        }
+
+        public TestResourceLinkGenerator() {
+            this(null);    //To change body of overridden methods use File | Settings | File Templates.
         }
 
         @Override
@@ -114,9 +119,30 @@ public class ResourceLinkGeneratorTest {
         // when:
         final ResourceLink resourceLink = generator.resourceLinkFor(TestController.class.getMethod("templatedLink", String.class));
         // then:
-        final TemplatedLink templatedLink = resourceLink.asTemplatedLink();
-        assertEquals(templatedLink.getHrefTemplate(), APPLICATION_BASE_URI + "/foo/{bar}");
-        assertNotNull(templatedLink.getHrefVar(URI.create(RELATION_TYPE_BASE_URI + "/rel/test#bar")));
+        final String expectedTemplate = APPLICATION_BASE_URI + "/foo/{bar}";
+        assertEquals(resourceLink.asTemplatedLink().getHrefTemplate(), expectedTemplate);
+    }
+
+    @Test
+    public void varTypeForTemplatedLinkWithDefaultVarTypeUri() throws Exception {
+        // given:
+        ResourceLinkGenerator generator = new TestResourceLinkGenerator();
+        // when:
+        final ResourceLink resourceLink = generator.resourceLinkFor(TestController.class.getMethod("templatedLink", String.class));
+        // then:
+        final URI expectedVarType = URI.create(RELATION_TYPE_BASE_URI + "/rel/test#bar");
+        assertNotNull(resourceLink.asTemplatedLink().getHrefVar(expectedVarType));
+    }
+
+    @Test
+    public void varTypeForTemplatedLinkWithBaseVarTypeUri() throws Exception {
+        // given:
+        ResourceLinkGenerator generator = new TestResourceLinkGenerator(VAR_TYPE_BASE_URI);
+        // when:
+        final ResourceLink resourceLink = generator.resourceLinkFor(TestController.class.getMethod("templatedLink", String.class));
+        // then:
+        final URI expectedVarType = URI.create(VAR_TYPE_BASE_URI.toString() + "/bar");
+        assertNotNull(resourceLink.asTemplatedLink().getHrefVar(expectedVarType));
     }
 
     @Test
@@ -126,7 +152,8 @@ public class ResourceLinkGeneratorTest {
         // when:
         final ResourceLink resourceLink = generator.resourceLinkFor(TestController.class.getMethod("templatedLinkWithHrefTemplate", String.class));
         // then:
-        assertEquals(resourceLink.asTemplatedLink().getHrefTemplate(), APPLICATION_BASE_URI + "/bar/{foo}");
+        final String expectedTemplate = APPLICATION_BASE_URI + "/bar/{foo}";
+        assertEquals(resourceLink.asTemplatedLink().getHrefTemplate(), expectedTemplate);
     }
 
     @Test

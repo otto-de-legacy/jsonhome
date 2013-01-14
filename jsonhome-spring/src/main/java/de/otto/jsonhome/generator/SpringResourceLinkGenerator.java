@@ -38,10 +38,13 @@ public class SpringResourceLinkGenerator extends ResourceLinkGenerator {
 
     private final URI applicationBaseUri;
 
-    public SpringResourceLinkGenerator(final URI applicationBaseUri, final URI relationTypeBaseUri) {
+    public SpringResourceLinkGenerator(final URI applicationBaseUri,
+                                       final URI relationTypeBaseUri,
+                                       final URI varTypeBaseUri) {
         super(
                 applicationBaseUri,
                 relationTypeBaseUri,
+                varTypeBaseUri,
                 new SpringHintsGenerator(relationTypeBaseUri),
                 new SpringHrefVarsGenerator(relationTypeBaseUri)
         );

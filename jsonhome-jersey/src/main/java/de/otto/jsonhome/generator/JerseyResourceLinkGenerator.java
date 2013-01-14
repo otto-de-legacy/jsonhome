@@ -22,6 +22,7 @@ public final class JerseyResourceLinkGenerator extends ResourceLinkGenerator {
                                        final URI relationTypeBaseUri) {
         super(applicationBaseUri,
                 relationTypeBaseUri,
+                null,
                 new JerseyHintsGenerator(relationTypeBaseUri),
                 new JerseyHrefVarsGenerator(relationTypeBaseUri));
         this.applicationBaseUri = applicationBaseUri;

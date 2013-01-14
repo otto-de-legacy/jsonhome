@@ -19,7 +19,6 @@
 package de.otto.jsonhome.generator;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
@@ -37,6 +36,7 @@ public final class SpringJsonHomeGenerator extends JsonHomeGenerator {
 
     private URI applicationBaseUri;
     private URI relationTypeBaseUri;
+    private URI varTypeBaseUri;
 
     @Value("${jsonhome.applicationBaseUri}")
     public void setApplicationBaseUri(final String applicationBaseUri) {
@@ -48,9 +48,16 @@ public final class SpringJsonHomeGenerator extends JsonHomeGenerator {
         this.relationTypeBaseUri = URI.create(relationTypeBaseUri);
     }
 
+    @Value("${jsonhome.varTypeBaseUri}")
+    public void setVarTypeBaseUri(final String varTypeBaseUri) {
+        if (varTypeBaseUri != null && !varTypeBaseUri.isEmpty()) {
+            this.varTypeBaseUri = URI.create(varTypeBaseUri);
+        }
+    }
+
     @PostConstruct
     public void postConstruct() {
-        setResourceLinkGenerator(new SpringResourceLinkGenerator(applicationBaseUri, relationTypeBaseUri));
+        setResourceLinkGenerator(new SpringResourceLinkGenerator(applicationBaseUri, relationTypeBaseUri, varTypeBaseUri));
     }
 
     @Override

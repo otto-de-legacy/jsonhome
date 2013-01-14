@@ -44,21 +44,33 @@ public abstract class ResourceLinkGenerator {
 
     private final URI applicationBaseUri;
     private final URI relationTypeBaseUri;
+    private final URI varTypeBaseUri;
     private final HintsGenerator hintsGenerator;
     private final HrefVarsGenerator hrefVarsGenerator;
 
+    /**
+     * Generator used to generate {@link ResourceLink} instances.
+     *
+     * @param applicationBaseUri base URI of the application. This is used to generate HREFs and HREF-TEMPLATES.
+     * @param relationTypeBaseUri base URI of all link-relation types.
+     * @param varTypeBaseUri base URI used to generate var-types, identifying the semantics of variables used in href-templates.
+     * @param hintsGenerator generator used to create {@link Hints}
+     * @param hrefVarsGenerator generator used to create {@link de.otto.jsonhome.model.HrefVar HrefVars}.
+     */
     protected ResourceLinkGenerator(final URI applicationBaseUri,
                                     final URI relationTypeBaseUri,
+                                    final URI varTypeBaseUri,
                                     final HintsGenerator hintsGenerator,
                                     final HrefVarsGenerator hrefVarsGenerator) {
         this.applicationBaseUri = applicationBaseUri;
         this.relationTypeBaseUri = relationTypeBaseUri;
+        this.varTypeBaseUri = varTypeBaseUri;
         this.hintsGenerator = hintsGenerator;
         this.hrefVarsGenerator = hrefVarsGenerator;
     }
 
     /**
-     * Analyses the a method of a controller and returns the list of ResourceLinks of this method.
+     * Analyzes a method of a controller and returns the list of ResourceLinks of this method.
      *
      * @param method the method
      * @return resource link or null.
@@ -68,13 +80,14 @@ public abstract class ResourceLinkGenerator {
         if (isCandidateForAnalysis(method)) {
             final String resourcePath = overriddenOrCalculatedResourcePathFor(method);
             final URI relationType = relationTypeFrom(method);
+            final URI varTypeBaseUri = this.varTypeBaseUri != null ? this.varTypeBaseUri : relationType;
             if (relationType != null) {
                 final Hints hints = hintsGenerator.hintsOf(relationType, method);
                 if (resourcePath.matches(".*\\{.*\\}")) {
                     resourceLink = templatedLink(
                             relationType,
                             resourcePath,
-                            hrefVarsGenerator.hrefVarsFor(relationType, method),
+                            hrefVarsGenerator.hrefVarsFor(varTypeBaseUri, this.varTypeBaseUri == null, method),
                             hints
                     );
                 } else {
