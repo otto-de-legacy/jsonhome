@@ -13,5 +13,10 @@ dependencies {
     compile "com.sun.jersey:jersey-json:1.14"
     compile 'com.sun.jersey:jersey-server:1.14'
     compile 'com.sun.jersey:jersey-servlet:1.14'
+    compile 'ch.qos.logback:logback-core:1.0.6'
+    compile 'ch.qos.logback:logback-classic:1.0.6'
     providedCompile 'javax.servlet:servlet-api:2.5'
+
+    jettyRun.contextPath = '/hellojersey'
+    jettyRun.httpPort = 8082
 }

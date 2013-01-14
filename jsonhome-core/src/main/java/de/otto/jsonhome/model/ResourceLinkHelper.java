@@ -34,9 +34,9 @@ public final class ResourceLinkHelper {
         if (other.isEmpty()) {
             return resourceLinks;
         } else {
-            final List<ResourceLink> result = new ArrayList<ResourceLink>();
+            List<? extends ResourceLink> result = resourceLinks;
             for (final ResourceLink resourceLink : other) {
-                result.addAll(mergeResources(resourceLinks, resourceLink));
+                result = mergeResources(result, resourceLink);
             }
             return result;
         }

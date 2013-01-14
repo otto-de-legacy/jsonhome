@@ -13,12 +13,11 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package de.otto.jsonhome.registry;
+package de.otto.jsonhome.registry.store;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -29,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
 import static org.testng.Assert.*;
 
 /**
@@ -106,7 +104,7 @@ public class FileSystemRegistryTest {
         registry.remove(entry.getSelf());
         // then
         assertNull(registry.findBy(entry.getSelf()));
-        assertTrue(registry.getAll().isEmpty());
+        assertTrue(registry.getAllFrom("").isEmpty());
     }
 
     private Map readRegistryAsMap() throws IOException {

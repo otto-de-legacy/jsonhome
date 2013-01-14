@@ -13,7 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package de.otto.jsonhome.registry;
+package de.otto.jsonhome.registry.store;
 
 import org.testng.annotations.Test;
 

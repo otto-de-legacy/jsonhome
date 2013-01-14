@@ -13,11 +13,13 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package de.otto.jsonhome.registry;
+package de.otto.jsonhome.registry.controller;
 
 import de.otto.jsonhome.annotation.Doc;
 import de.otto.jsonhome.annotation.Docs;
 import de.otto.jsonhome.annotation.Rel;
+import de.otto.jsonhome.registry.store.Registry;
+import de.otto.jsonhome.registry.store.RegistryEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +27,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
 
-import static de.otto.jsonhome.registry.RegistryConverter.*;
+import static de.otto.jsonhome.registry.controller.RegistryConverter.*;
 import static java.util.UUID.randomUUID;
 import static javax.servlet.http.HttpServletResponse.*;
 
@@ -96,10 +97,13 @@ public class RegistryController {
             method = RequestMethod.GET,
             produces = "application/json")
     @ResponseBody
-    public Map<String, ?> getRegistry(final HttpServletResponse response) {
-        LOG.info("Returning registry containing {} entries.", registry.getAll().size());
+    public Map<String, ?> getRegistry(@RequestParam(defaultValue = "")
+                                      @Doc("Optionally selects an environment.")
+                                      final String environment,
+                                      final HttpServletResponse response) {
+        LOG.info("Returning registry containing {} entries.", registry.getAllFrom(environment).size());
         response.setHeader("Cache-Control", "max-age=3600");
-        return registryEntriesToMap(registry.getAll());
+        return registryEntriesToMap(registry.getAllFrom(environment));
     }
 
     /**
@@ -119,10 +123,15 @@ public class RegistryController {
             method = RequestMethod.GET,
             produces = "application/json")
     @ResponseBody
-    public Map<String, String> getEntry(final @PathVariable @Doc("Identifier of the registry entry.") String id,
+    public Map<String, String> getEntry(@PathVariable
+                                        @Doc("Identifier of the registry entry.")
+                                        final String id,
+                                        @RequestParam(defaultValue = "")
+                                        @Doc("Optionally selects an environment.")
+                                        final String environment,
                                         final HttpServletResponse response) {
         response.setHeader("Cache-Control", "max-age=3600");
-        final URI uri = locationUri(id);
+        final URI uri = locationUri(id, environment);
         final RegistryEntry entry = registry.findBy(uri);
         if (entry == null) {
             LOG.info("Entry {} not found in registry.", uri);
@@ -166,11 +175,15 @@ public class RegistryController {
     @RequestMapping(
             method = RequestMethod.POST,
             consumes = "application/json")
-    public void create(final @RequestBody Map<String, String> entry,
-                       final HttpServletResponse response) throws IOException {
-        final URI location = locationUri(randomUUID().toString());
-        entry.put("self", location.toString());
+    public void register(@RequestParam(defaultValue = "")
+                         @Doc("Optionally selects an environment.")
+                         final String environment,
+                         @RequestBody
+                         final Map<String, String> entry,
+                         final HttpServletResponse response) throws IOException {
         if (isValid(entry)) {
+            final URI location = locationUri(randomUUID().toString(), environment);
+            entry.put("self", location.toString());
             try {
                 LOG.info("Registering new registry-entry {}", location);
                 registry.put(registryEntryFromMap(entry));
@@ -188,11 +201,12 @@ public class RegistryController {
     }
 
     /**
-     * Creates or updates a json-home document.
+     * Registers or updates a json-home document.
      * <p/>
-     * If the document is created, HTTP 201 created is returned, if updated HTTP 204 no content.
+     * If the home document is registered, <code>HTTP 201 created</code> is returned,
+     * if updated <code>HTTP 204 no content</code>.
      * <p/>
-     * If the URI of the json-home document is already registered, HTTP 409 conflict is returned.
+     * If the URI of the json-home document is already registered, <code>HTTP 409 conflict</code> is returned.
      * In this case the registry is not changed.
      * <p/>
      * The body of the request is expected to have the following attributes in json format:
@@ -219,12 +233,17 @@ public class RegistryController {
             value = "/{id}",
             method = RequestMethod.PUT,
             consumes = "application/json")
-    public void createOrUpdate(final @PathVariable @Doc("Identifier of the registry entry.") String id,
-                               final @RequestBody Map<String, String> entry,
-                               final HttpServletResponse response) throws IOException {
-        final URI location = locationUri(id);
-        entry.put("self", location.toString());
+    public void registerOrUpdate(@PathVariable @Doc("Identifier of the registry entry.")
+                                 final String id,
+                                 @RequestParam(defaultValue = "")
+                                 @Doc("Optionally selects an environment.")
+                                 final String environment,
+                                 @RequestBody
+                                 final Map<String, String> entry,
+                                 final HttpServletResponse response) throws IOException {
         if (isValid(entry)) {
+            final URI location = locationUri(id, environment);
+            entry.put("self", location.toString());
             try {
                 if (registry.put(registryEntryFromMap(entry))) {
                     response.setStatus(SC_CREATED);
@@ -244,9 +263,14 @@ public class RegistryController {
     @RequestMapping(
             value = "/{id}",
             method = RequestMethod.DELETE)
-    public void unregister(final @PathVariable @Doc("Identifier of the registry entry.") String id,
+    public void unregister(@PathVariable
+                           @Doc("Identifier of the registry entry.")
+                           final String id,
+                           @RequestParam(defaultValue = "")
+                           @Doc("The (optional) environment to unregister")
+                           final String environment,
                            final HttpServletResponse response) {
-        registry.remove(locationUri(id));
+        registry.remove(locationUri(id, environment));
         response.setStatus(SC_NO_CONTENT);
     }
 
@@ -254,17 +278,18 @@ public class RegistryController {
         try {
             final String title = entry.get("title").toString();
             final URI href = URI.create(entry.get("href").toString());
-            final URI describedBy = entry.containsKey("describedBy")
-                    ? URI.create(entry.get("describedBy").toString())
-                    : null;
-            return !title.isEmpty() && href.isAbsolute() && (describedBy == null || describedBy.isAbsolute());
+            return !title.isEmpty() && href.isAbsolute();
         } catch (final Exception e) {
             return false;
         }
     }
 
-    private URI locationUri(final String id) {
-        return URI.create(applicationBaseUri + "/registry/" + id);
+    private URI locationUri(final String id, final String environment) {
+        if (environment == null || environment.isEmpty()) {
+            return URI.create(applicationBaseUri + "/registry/" + id);
+        } else {
+            return URI.create(applicationBaseUri + "/registry/" + id + "?environment=" + environment);
+        }
     }
 
 }

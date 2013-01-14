@@ -52,12 +52,16 @@ public class ResourceLinkHelperTest {
     @Test
     public void mergingListsWithDifferentLinksShouldResultInMergedLinks() throws Exception {
         // when
+        final List<ResourceLink> first = asList(STOREFRONT_LINK, ABOUTPAGE_LINK);
+        final List<DirectLink> second = asList(SHOPPAGES_LINK, FOO_LINK);
         final List<? extends ResourceLink> resourceLinks = mergeResources(
-                asList(STOREFRONT_LINK, ABOUTPAGE_LINK),
-                asList(SHOPPAGES_LINK)
+                first,
+                second
         );
         // then
-        assertEquals(resourceLinks, asList(STOREFRONT_LINK, ABOUTPAGE_LINK, SHOPPAGES_LINK));
+        assertEquals(resourceLinks, asList(STOREFRONT_LINK, ABOUTPAGE_LINK, SHOPPAGES_LINK, FOO_LINK));
+        assertEquals(first.size(), 2);
+        assertEquals(second.size(), 2);
     }
 
     @Test
