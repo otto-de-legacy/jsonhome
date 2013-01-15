@@ -83,7 +83,7 @@ public abstract class ResourceLinkGenerator {
             final URI varTypeBaseUri = this.varTypeBaseUri != null ? this.varTypeBaseUri : relationType;
             if (relationType != null) {
                 final Hints hints = hintsGenerator.hintsOf(relationType, method);
-                if (resourcePath.matches(".*\\{.*\\}")) {
+                if (resourcePath.matches(".*\\{.*\\}.*")) {
                     resourceLink = templatedLink(
                             relationType,
                             resourcePath,
