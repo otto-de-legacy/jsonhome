@@ -29,7 +29,7 @@ import static de.otto.jsonhome.resource.Responses.addCacheControlHeaders;
 @Path("/json-home")
 public final class JsonHomeResource {
 
-    private final JsonHomeSource jsonHomeSource;
+    private JsonHomeSource jsonHomeSource;
     private int maxAge = 3600;
 
     public JsonHomeResource(JsonHomeSource jsonHomeSource) {
@@ -38,6 +38,10 @@ public final class JsonHomeResource {
 
     public JsonHomeResource() {
         this.jsonHomeSource = new JerseyJsonHomeSource(new JerseyJsonHomeGenerator(), new AnnotationScanner());
+    }
+
+    public void setJsonHomeSource(JsonHomeSource jsonHomeSource) {
+        this.jsonHomeSource = jsonHomeSource;
     }
 
     public void setMaxAge(int maxAge) {
