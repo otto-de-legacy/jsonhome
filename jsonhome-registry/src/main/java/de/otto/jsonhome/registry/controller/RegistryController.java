@@ -46,9 +46,13 @@ import static javax.servlet.http.HttpServletResponse.*;
 @RequestMapping("/registry")
 @Docs({
         @Doc(rel = "/rel/jsonhome/registry",
-             value = "A registry of json-home documents"),
+             value = {
+                     "A registry of json-home documents",
+                     "In order to registry a json-home document, POST an entry:",
+                     " {'href' : 'http://example.org/json-home', 'title' : 'My example json-home document'}"
+             }),
         @Doc(rel = "/rel/jsonhome/registry-entry",
-             value = "A single registry entry, referring to a json-home document.")
+             value = {"A single registry entry, referring to a json-home document."})
 })
 public class RegistryController {
 
