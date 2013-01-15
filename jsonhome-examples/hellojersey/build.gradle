@@ -8,6 +8,7 @@ repositories {
 
 dependencies {
     compile project(':jsonhome-jersey')
+    compile 'com.sun.jersey.contribs:jersey-freemarker:1.14'
     compile 'com.sun.jersey:jersey-core:1.14'
     compile "com.sun.jersey:jersey-json:1.14"
     compile 'com.sun.jersey:jersey-server:1.14'
