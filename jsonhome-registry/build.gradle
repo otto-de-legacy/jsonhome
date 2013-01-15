@@ -1,20 +1,64 @@
-apply plugin: 'war'
-apply plugin: 'jetty'
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     compile 'org.springframework:spring-webmvc:3.1.3.RELEASE'
     compile 'org.codehaus.jackson:jackson-mapper-asl:1.7.1'
     compile 'org.freemarker:freemarker:2.3.18'
-    compile project(':jsonhome-client')
+    compile project(':jsonhome-core')
+    compile project(':jsonhome-generator')
     compile project(':jsonhome-spring')
-    providedCompile 'javax.servlet:servlet-api:2.5'
+    compile project(':jsonhome-client')
     testCompile 'org.testng:testng:6.3.1'
     testCompile 'org.springframework:spring-test:3.1.3.RELEASE'
 }
 
-jettyRun.contextPath = '/'
-jettyRun.httpPort = 8082
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+            pom.project {
+                name 'jsonhome-registry'
+                packaging 'jar'
+                description 'Library used to write json-home registries for multiple json-home sources.'
+                url 'http://github.com/otto-de/jsonhome'
+
+                scm {
+                    url 'scm:git@github.com:otto-de/jsonhome.git'
+                    connection 'scm:git@github.com:otto-de/jsonhome.git'
+                    developerConnection 'scm:git@github.com:otto-de/jsonhome.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'gsteinacker'
+                        name 'Guido Steinacker'
+                    }
+                }
+            }
+        }
+    }
+}

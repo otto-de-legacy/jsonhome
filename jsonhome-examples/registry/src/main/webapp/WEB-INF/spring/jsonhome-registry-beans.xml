@@ -61,9 +61,10 @@
 
     <!--
      The controller used to serve the HTML representation of the json-home document. The dependencies are autowired.
-    -->
+
     <bean class="de.otto.jsonhome.controller.HtmlController"
           p:jsonHomeSource-ref="registryJsonHomeSource" />
+    -->
 
     <!--
      The JsonHomeSource used to get the JsonHome from all registered URIs.
@@ -73,8 +74,13 @@
           p:registry-ref="registry"/>
 
     <!--
-     Registry data is stored in a file. Adjust this if you want to have a different persistence.
-     -->
-    <bean id="registry" class="de.otto.jsonhome.registry.store.FileSystemRegistry" />
+     Registry data is stored in a file under ~/.jsonhome/registry.json.
 
+    <bean id="registry" class="de.otto.jsonhome.registry.store.FileSystemRegistry" />
+    -->
+    <!--
+     Registry data is stored in memory:
+    -->
+    <bean id="registry" class="de.otto.jsonhome.registry.store.InMemoryRegistry" />
+    
 </beans>
