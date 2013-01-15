@@ -93,8 +93,15 @@ public class FileSystemRegistry implements Registry {
     public Collection<RegistryEntry> getAllFrom(final String environment) {
         final Collection<RegistryEntry> filteredEntries = new ArrayList<RegistryEntry>();
         for (final RegistryEntry entry : registry.values()) {
-            if (entry.getHref().getQuery().matches(".*environment\\w=\\w" + environment)) {
-                filteredEntries.add(entry);
+            final String query = entry.getSelf().getQuery();
+            if (query == null) {
+                if (environment.isEmpty()) {
+                    filteredEntries.add(entry);
+                }
+            } else {
+                if (query.matches("environment=" + environment)) {
+                    filteredEntries.add(entry);
+                }
             }
         }
         return filteredEntries;

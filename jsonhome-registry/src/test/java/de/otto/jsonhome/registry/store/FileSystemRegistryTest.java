@@ -24,10 +24,12 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.testng.Assert.*;
 
 /**
@@ -64,6 +66,52 @@ public class FileSystemRegistryTest {
         final Map map = readRegistryAsMap();
         assertTrue(map.containsKey("registry"));
         assertEquals(map.get("registry"), emptyList());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldFindAllEntriesInDefaultEnvironment() throws IOException {
+        // given
+        final FileSystemRegistry registry = new FileSystemRegistry(file);
+        final RegistryEntry entryInDefaultEnv = new RegistryEntry(
+                URI.create("http://example.org/registry/42"),
+                "foo",
+                URI.create("http://example.org/foo/json-home")
+        );
+        final RegistryEntry entryInTestEnv = new RegistryEntry(
+                URI.create("http://example.org/registry/0815?environment=test"),
+                "foo",
+                URI.create("http://example.org/test/json-home")
+        );
+        registry.put(entryInDefaultEnv);
+        registry.put(entryInTestEnv);
+        // when
+        final Collection<RegistryEntry> entries = registry.getAllFrom("");
+        // then
+        assertEquals(entries, singletonList(entryInDefaultEnv));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldFindAllEntriesInTestEnvironment() throws IOException {
+        // given
+        final FileSystemRegistry registry = new FileSystemRegistry(file);
+        final RegistryEntry entryInDefaultEnv = new RegistryEntry(
+                URI.create("http://example.org/registry/42"),
+                "foo",
+                URI.create("http://example.org/foo/json-home")
+        );
+        final RegistryEntry entryInTestEnv = new RegistryEntry(
+                URI.create("http://example.org/registry/0815?environment=test"),
+                "foo",
+                URI.create("http://example.org/test/json-home")
+        );
+        registry.put(entryInDefaultEnv);
+        registry.put(entryInTestEnv);
+        // when
+        final Collection<RegistryEntry> entries = registry.getAllFrom("test");
+        // then
+        assertEquals(entries, singletonList(entryInTestEnv));
     }
 
     @Test
