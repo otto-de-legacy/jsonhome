@@ -6,8 +6,8 @@ import de.otto.jsonhome.client.JsonHomeClientException;
 import de.otto.jsonhome.client.NotFoundException;
 import de.otto.jsonhome.model.JsonHome;
 import de.otto.jsonhome.model.ResourceLink;
-import de.otto.jsonhome.registry.store.Registry;
-import de.otto.jsonhome.registry.store.RegistryEntry;
+import de.otto.jsonhome.registry.store.JsonHomeRef;
+import de.otto.jsonhome.registry.store.Registries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.Map;
 import static de.otto.jsonhome.model.JsonHome.jsonHome;
 
 /**
- * Provides access to a json-home document containing the merged json-home documents registered in the {@link de.otto.jsonhome.registry.store.Registry}.
+ * Provides access to a json-home document containing the merged json-home documents registered in the {@link de.otto.jsonhome.registry.store.Registries}.
  * <p/>
  * The service is responsible for retrieving all registered documents.
  *
@@ -34,7 +34,7 @@ public class RegistryBasedJsonHomeSource implements JsonHomeEnvSource {
     private static Logger LOG = LoggerFactory.getLogger(RegistryBasedJsonHomeSource.class);
 
     private final JsonHomeClient client;
-    private Registry registry;
+    private Registries registries;
 
     public RegistryBasedJsonHomeSource() {
         this.client = new HttpJsonHomeClient();
@@ -47,23 +47,23 @@ public class RegistryBasedJsonHomeSource implements JsonHomeEnvSource {
     }
 
     @Autowired
-    public void setRegistry(final Registry registry) {
-        this.registry = registry;
+    public void setRegistries(final Registries registries) {
+        this.registries = registries;
     }
 
     /**
-     * Returns the JsonHome document for the specified environment.
+     * Returns the JsonHome document for the specified registryName.
      *
-     * @param environment the environment (like develop, live) of this entry. Different registered environments
+     * @param registryName the registryName (like develop, live) of this entry. Different registered environments
      *                    are used to access different versions of json-home documents during development.
-     *                    The default environment is ""; null is not accepted.
-     * @return the json-home for the specified environment.
+     *                    The default registryName is ""; null is not accepted.
+     * @return the json-home for the specified registryName.
      */
-    public JsonHome getJsonHome(final String environment) {
+    public JsonHome getJsonHome(final String registryName) {
         final Map<URI, ResourceLink> allResourceLinks = new HashMap<URI, ResourceLink>();
-        for (final RegistryEntry registryEntry : registry.getAllFrom(environment)) {
+        for (final JsonHomeRef jsonHomeRef : registries.getRegistry(registryName).getAll()) {
             try {
-                final JsonHome jsonHome = client.get(registryEntry.getHref());
+                final JsonHome jsonHome = client.get(jsonHomeRef.getHref());
                 final Map<URI, ResourceLink> resources = jsonHome.getResources();
                 for (final URI uri : resources.keySet()) {
                     if (allResourceLinks.containsKey(uri)) {
@@ -74,10 +74,10 @@ public class RegistryBasedJsonHomeSource implements JsonHomeEnvSource {
                 }
                 allResourceLinks.putAll(resources);
             } catch (final NotFoundException e) {
-                LOG.warn("Unable to get json-home document {}: {}", registryEntry.getHref(), e.getMessage());
+                LOG.warn("Unable to get json-home document {}: {}", jsonHomeRef.getHref(), e.getMessage());
                 // After some retries, the json-home MAY automatically be unregistered here.
             } catch (final JsonHomeClientException e) {
-                LOG.warn("Unable to get json-home document {}: {}", registryEntry.getHref(), e.getMessage());
+                LOG.warn("Unable to get json-home document {}: {}", jsonHomeRef.getHref(), e.getMessage());
                 // After some retries, the json-home MAY automatically be unregistered here.
             }
         }

@@ -23,38 +23,38 @@ import java.net.URI;
  * @author Guido Steinacker
  * @since 18.11.12
  */
-public class RegistryEntryTest {
+public class JsonHomeRefTest {
 
     public static final String TITLE = "foo";
     public static final URI EXAMPLE_DOT_ORG = URI.create("http://example.org");
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void shouldThrowExceptionIfSelfIsNull() {
-        new RegistryEntry(null, TITLE, EXAMPLE_DOT_ORG);
+        new JsonHomeRef(null, TITLE, EXAMPLE_DOT_ORG);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void shouldThrowExceptionIfSelfIsNotAbsolute() {
-        new RegistryEntry(URI.create("/foo"), TITLE, EXAMPLE_DOT_ORG);
+        new JsonHomeRef(URI.create("/foo"), TITLE, EXAMPLE_DOT_ORG);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void shouldThrowExceptionIfTitleIsNull() {
-        new RegistryEntry(EXAMPLE_DOT_ORG, null, EXAMPLE_DOT_ORG);
+        new JsonHomeRef(EXAMPLE_DOT_ORG, null, EXAMPLE_DOT_ORG);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void shouldThrowExceptionIfTitleIsEmpty() {
-        new RegistryEntry(EXAMPLE_DOT_ORG, "", EXAMPLE_DOT_ORG);
+        new JsonHomeRef(EXAMPLE_DOT_ORG, "", EXAMPLE_DOT_ORG);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void shouldThrowExceptionIfHrefIsNull() {
-        new RegistryEntry(EXAMPLE_DOT_ORG, TITLE, null);
+        new JsonHomeRef(EXAMPLE_DOT_ORG, TITLE, null);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void shouldThrowExceptionIfHrefIsNotAbsolute() {
-        new RegistryEntry(EXAMPLE_DOT_ORG, TITLE, URI.create("/foo"));
+        new JsonHomeRef(EXAMPLE_DOT_ORG, TITLE, URI.create("/foo"));
     }
 }

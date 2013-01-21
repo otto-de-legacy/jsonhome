@@ -23,7 +23,7 @@ import java.net.URI;
  * @author Guido Steinacker
  * @since 14.11.12
  */
-public final class RegistryEntry {
+public final class JsonHomeRef {
 
     private final URI self;
     private final String title;
@@ -37,9 +37,9 @@ public final class RegistryEntry {
      *                    It is expected to have different 'self' URIs for different environments.
      * @param href the URI of the linked json-home document.
      */
-    public RegistryEntry(final URI self,
-                         final String title,
-                         final URI href) {
+    public JsonHomeRef(final URI self,
+                       final String title,
+                       final URI href) {
         if (self == null || !self.isAbsolute()) {
             throw new IllegalArgumentException("'self' must be an absolute URI.");
         }
@@ -86,7 +86,7 @@ public final class RegistryEntry {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        RegistryEntry entry = (RegistryEntry) o;
+        JsonHomeRef entry = (JsonHomeRef) o;
 
         if (href != null ? !href.equals(entry.href) : entry.href != null) return false;
         if (self != null ? !self.equals(entry.self) : entry.self != null) return false;
@@ -105,7 +105,7 @@ public final class RegistryEntry {
 
     @Override
     public String toString() {
-        return "RegistryEntry{" +
+        return "JsonHomeRef{" +
                 "self=" + self +
                 ", title='" + title + '\'' +
                 ", href=" + href +

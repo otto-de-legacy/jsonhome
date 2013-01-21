@@ -3,10 +3,10 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:p="http://www.springframework.org/schema/p"
-       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd
-              http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd"
+              http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd   http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd"
         >
 
     <util:properties id="testProps">
@@ -19,7 +19,7 @@
     <!--
      Configure the RegistryController.
      -->
-    <bean class="de.otto.jsonhome.registry.controller.RegistryController" />
+    <bean class="de.otto.jsonhome.registry.controller.RegistriesController" />
 
     <!--
      The controller used to serve the json-home documents. The dependencies are autowired.
@@ -33,11 +33,11 @@
      -->
     <bean id="registryJsonHomeSource"
           class="de.otto.jsonhome.registry.controller.RegistryBasedJsonHomeSource"
-          p:registry-ref="registry"/>
+          p:registries-ref="testRegistries"/>
 
     <!--
      Registry data is stored in a file. Adjust this if you want to have a different persistence.
      -->
-    <bean id="registry" class="de.otto.jsonhome.registry.store.InMemoryRegistry" />
+    <bean id="testRegistries" class="de.otto.jsonhome.registry.store.InMemoryRegistries" />
 
 </beans>

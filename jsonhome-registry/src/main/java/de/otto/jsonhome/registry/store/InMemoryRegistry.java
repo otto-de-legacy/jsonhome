@@ -1,8 +1,8 @@
 package de.otto.jsonhome.registry.store;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -12,12 +12,35 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class InMemoryRegistry implements Registry {
 
-    public static final ConcurrentMap<URI, RegistryEntry> registry = new ConcurrentHashMap<URI, RegistryEntry>();
+    private final ConcurrentMap<URI, JsonHomeRef> registry = new ConcurrentHashMap<URI, JsonHomeRef>();
+    private final String registryName;
 
+    public InMemoryRegistry(final String registryName) {
+        this.registryName = registryName;
+    }
+
+    public InMemoryRegistry(final String registryName, final List<JsonHomeRef> entries) {
+        this.registryName = registryName;
+        for (final JsonHomeRef entry : entries) {
+            registry.put(entry.getSelf(), entry);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean put(final RegistryEntry entry) {
-        final RegistryEntry registryEntry = findByHref(entry.getHref());
-        if (registryEntry != null && !registryEntry.getSelf().equals(entry.getSelf())) {
+    public String getName() {
+        return registryName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean put(final JsonHomeRef entry) {
+        final JsonHomeRef jsonHomeRef = findByHref(entry.getHref());
+        if (jsonHomeRef != null && !jsonHomeRef.getSelf().equals(entry.getSelf())) {
             throw new IllegalArgumentException("An entry with same href but different URI already exists.");
         } else {
             final Object prev = registry.put(entry.getSelf(), entry);
@@ -25,37 +48,36 @@ public class InMemoryRegistry implements Registry {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void remove(final URI uri) {
         registry.remove(uri);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Collection<RegistryEntry> getAllFrom(final String environment) {
-        final Collection<RegistryEntry> filteredEntries = new ArrayList<RegistryEntry>();
-        for (final RegistryEntry entry : registry.values()) {
-            final String query = entry.getSelf().getQuery();
-            if (query == null) {
-                if (environment.isEmpty()) {
-                    filteredEntries.add(entry);
-                }
-            } else {
-                if (query.matches("environment=" + environment)) {
-                    filteredEntries.add(entry);
-                }
-            }
-        }
-        return filteredEntries;
+    public Collection<JsonHomeRef> getAll() {
+        return registry.values();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public RegistryEntry findBy(final URI uri) {
+    public JsonHomeRef findBy(final URI uri) {
         return registry.get(uri);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public RegistryEntry findByHref(final URI href) {
-        for (final RegistryEntry entry : registry.values()) {
+    public JsonHomeRef findByHref(final URI href) {
+        for (final JsonHomeRef entry : registry.values()) {
             if (entry.getHref().equals(href)) {
                 return entry;
             }
@@ -63,6 +85,9 @@ public class InMemoryRegistry implements Registry {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void clear() {
         registry.clear();

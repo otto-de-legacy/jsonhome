@@ -1,7 +1,7 @@
 package de.otto.jsonhome.registry.controller;
 
 import de.otto.jsonhome.model.JsonHome;
-import de.otto.jsonhome.registry.store.Registry;
+import de.otto.jsonhome.registry.store.Registries;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,14 +31,14 @@ public class RegistryJsonHomeControllerTest extends AbstractTestNGSpringContextT
     public static final String TEST_JSON_HOME_URI = "http://www.example.org/test/json-home";
 
     @Autowired
-    private RegistryController registryController;
+    private RegistriesController registriesController;
 
     @Autowired
-    private Registry registry;
+    private Registries registries;
 
     @BeforeMethod
     public void beforeMethod() {
-        registry.clear();
+        registries.clear();
     }
 
     @Test
@@ -46,8 +46,8 @@ public class RegistryJsonHomeControllerTest extends AbstractTestNGSpringContextT
         // given:
         final RegistryJsonHomeController jsonHomeController = new RegistryJsonHomeController();
         jsonHomeController.setJsonHomeSource(getJsonHomeSource());
-        registryController.register("", buildEntry(JSON_HOME_URI), new MockHttpServletResponse());
-        registryController.register("test", buildEntry(TEST_JSON_HOME_URI), new MockHttpServletResponse());
+        registriesController.register("", buildEntry(JSON_HOME_URI), new MockHttpServletResponse());
+        registriesController.register("test", buildEntry(TEST_JSON_HOME_URI), new MockHttpServletResponse());
         // when:
         final Map<String, ?> json = jsonHomeController.getAsApplicationJson("", new MockHttpServletResponse());
         // then:
@@ -66,8 +66,8 @@ public class RegistryJsonHomeControllerTest extends AbstractTestNGSpringContextT
         // given:
         final RegistryJsonHomeController jsonHomeController = new RegistryJsonHomeController();
         jsonHomeController.setJsonHomeSource(getJsonHomeSource());
-        registryController.register("", buildEntry(JSON_HOME_URI), new MockHttpServletResponse());
-        registryController.register("test", buildEntry(TEST_JSON_HOME_URI), new MockHttpServletResponse());
+        registriesController.register("", buildEntry(JSON_HOME_URI), new MockHttpServletResponse());
+        registriesController.register("test", buildEntry(TEST_JSON_HOME_URI), new MockHttpServletResponse());
         // when:
         final Map<String, ?> json = jsonHomeController.getAsApplicationJson("test", new MockHttpServletResponse());
         // then:

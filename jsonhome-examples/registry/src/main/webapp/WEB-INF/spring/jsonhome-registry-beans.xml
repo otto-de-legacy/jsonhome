@@ -50,7 +50,7 @@
     <!--
      Configure the RegistryController.
      -->
-    <bean class="de.otto.jsonhome.registry.controller.RegistryController" />
+    <bean class="de.otto.jsonhome.registry.controller.RegistriesController" />
 
     <!--
      The controller used to serve the json-home documents. The dependencies are autowired.
@@ -71,16 +71,11 @@
      -->
     <bean id="registryJsonHomeSource"
           class="de.otto.jsonhome.registry.controller.RegistryBasedJsonHomeSource"
-          p:registry-ref="registry"/>
+          p:registries-ref="registries"/>
 
-    <!--
-     Registry data is stored in a file under ~/.jsonhome/registry.json.
-
-    <bean id="registry" class="de.otto.jsonhome.registry.store.FileSystemRegistry" />
-    -->
     <!--
      Registry data is stored in memory:
     -->
-    <bean id="registry" class="de.otto.jsonhome.registry.store.InMemoryRegistry" />
+    <bean id="registries" class="de.otto.jsonhome.registry.store.InMemoryRegistries" />
     
 </beans>

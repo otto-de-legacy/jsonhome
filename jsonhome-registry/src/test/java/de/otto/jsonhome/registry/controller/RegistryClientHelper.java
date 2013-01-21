@@ -13,24 +13,24 @@ import java.util.Map;
  */
 class RegistryClientHelper {
 
-    public static MockHttpServletResponse postEntry(final RegistryController controller,
+    public static MockHttpServletResponse postEntry(final RegistriesController controller,
                                               final String href) throws IOException {
         final MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setRequestURI("http://www.example.org/registry");
+        request.setRequestURI("http://www.example.org/registries/foo");
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        controller.register("", buildEntry(href), response);
+        controller.register("foo", buildEntry(href), response);
         return response;
     }
 
-    public static MockHttpServletResponse putEntry(final RegistryController controller,
+    public static MockHttpServletResponse putEntry(final RegistriesController controller,
                                              final String uri,
                                              final String href) throws IOException {
         final MockHttpServletRequest request = new MockHttpServletRequest();
         request.setRequestURI(uri);
         final MockHttpServletResponse response = new MockHttpServletResponse();
         controller.registerOrUpdate(
+                "foo",
                 uri.substring(uri.lastIndexOf("/") + 1),
-                "",
                 buildEntry(href),
                 response);
         return response;

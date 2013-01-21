@@ -25,13 +25,18 @@ import java.util.Collection;
 public interface Registry {
 
     /**
+     * Returns the name of the registry.
+     */
+    public String getName();
+
+    /**
      * Puts the registry entry to the registry.
      *
      * @param entry the registered entry.
      * @return true, if the entry was created, false if updated
      * @throws IllegalArgumentException if the entry's href is already registered with a different URI.
      */
-    public boolean put(final RegistryEntry entry);
+    public boolean put(final JsonHomeRef entry);
 
     /**
      * Removes the entry identified by the URI from the registry.
@@ -42,26 +47,23 @@ public interface Registry {
 
     /**
      * Returns a collection of all registered entries.
-     * @param environment the environment (like develop, live) of this entry. Different registered environments
-     *                    are used to access different versions of json-home documents during development.
-     *                    The default environment is ""; null is not accepted.
      * @return collection of entries.
      */
-    public Collection<RegistryEntry> getAllFrom(final String environment);
+    public Collection<JsonHomeRef> getAll();
 
     /**
      * Returns the entry identified by the URI.
      * @param uri URI of the entry.
-     * @return RegistryEntry
+     * @return JsonHomeRef
      */
-    public RegistryEntry findBy(final URI uri);
+    public JsonHomeRef findBy(final URI uri);
 
     /**
      * Returns the entry referring to the specified json-home URI.
      * @param href URI of the json-home document.
-     * @return RegistryEntry
+     * @return JsonHomeRef
      */
-    public RegistryEntry findByHref(final URI href);
+    public JsonHomeRef findByHref(final URI href);
 
     /**
      * Removes all entries from the registry.
