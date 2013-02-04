@@ -26,7 +26,6 @@ import static org.testng.Assert.*;
 @ContextConfiguration(locations = "classpath:/testSpringContext.xml")
 public class RegistryJsonHomeControllerTest extends AbstractTestNGSpringContextTests {
 
-    public static final String BASE_LOCATION = "http://www.example.org/registry/";
     public static final String JSON_HOME_URI = "http://www.example.org/json-home";
     public static final String TEST_JSON_HOME_URI = "http://www.example.org/test/json-home";
 
@@ -92,11 +91,6 @@ public class RegistryJsonHomeControllerTest extends AbstractTestNGSpringContextT
                                 emptyHints()
                         )
                 );
-            }
-
-            @Override
-            public JsonHome getJsonHome() {
-                return getJsonHome("");
             }
         };
     }

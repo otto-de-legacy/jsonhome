@@ -17,11 +17,4 @@ public interface JsonHomeEnvSource {
      */
     public JsonHome getJsonHome(String environment);
 
-    /**
-     * Returns a JsonHome instance.
-     *
-     * @return JsonHome.
-     */
-    public JsonHome getJsonHome();
-
 }

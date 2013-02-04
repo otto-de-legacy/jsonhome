@@ -30,6 +30,7 @@ public class RegistriesControllerTest extends AbstractTestNGSpringContextTests {
     public static final String LIVE_REGISTRY_URI = "http://www.example.org/registries/live";
     public static final String DEVELOP_REGISTRY_URI = "http://www.example.org/registries/develop";
     public static final String JSON_HOME_URI = "http://www.example.org/foo/bar";
+    public static final String JSON_HOME_URI2 = "http://www.example.org/bar/foo";
     public static final String JSON_HOME_DEV_URI = "http://www.example.org/dev/test";
 
     public static final Map<String, List<String>> LIVE_REGISTRY_CONTENT;
@@ -66,28 +67,28 @@ public class RegistriesControllerTest extends AbstractTestNGSpringContextTests {
         // given: an empty registry
         // when:
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        registriesController.createOrUpdateRegistry("live", response);
+        registriesController.createRegistry("live", response);
         // then:
         assertEquals(response.getStatus(), SC_CREATED);
         assertEquals(registriesController.getRegistries(), LIVE_REGISTRY_CONTENT);
     }
 
     @Test
-    public void shouldIgnoreToCreateARegistryTwice() {
+    public void mustNotCreateARegistryTwice() {
         // given:
-        registriesController.createOrUpdateRegistry("live", new MockHttpServletResponse());
+        registriesController.createRegistry("live", new MockHttpServletResponse());
         // when:
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        registriesController.createOrUpdateRegistry("live", response);
+        registriesController.createRegistry("live", response);
         // then:
-        assertEquals(response.getStatus(), SC_OK);
+        assertEquals(response.getStatus(), SC_CONFLICT);
         assertEquals(registriesController.getRegistries(), LIVE_REGISTRY_CONTENT);
     }
 
     @Test
     public void shouldDeleteAnExistingRegistry() {
         // given:
-        registriesController.createOrUpdateRegistry("live", new MockHttpServletResponse());
+        registriesController.createRegistry("live", new MockHttpServletResponse());
         // when:
         final MockHttpServletResponse response = new MockHttpServletResponse();
         registriesController.deleteRegistry("live", response);
@@ -120,9 +121,9 @@ public class RegistriesControllerTest extends AbstractTestNGSpringContextTests {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void shouldRegisterResourceAndReturnIDAsLocationHeader() throws IOException {
+    public void shouldRegisterRegistryEntryAndReturnIDAsLocationHeader() throws IOException {
         // given:
-        registriesController.createOrUpdateRegistry("live", new MockHttpServletResponse());
+        registriesController.createRegistry("live", new MockHttpServletResponse());
         final MockHttpServletResponse response = new MockHttpServletResponse();
         Map<String, String> entry = buildEntry(JSON_HOME_URI);
         // when:
@@ -136,10 +137,27 @@ public class RegistriesControllerTest extends AbstractTestNGSpringContextTests {
 
     @Test
     @SuppressWarnings("unchecked")
+    public void shouldUpdateRegistryEntry() throws IOException {
+        // given:
+        registriesController.createRegistry("live", new MockHttpServletResponse());
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        registriesController.register("live", buildEntry(JSON_HOME_URI), response);
+        final String location = response.getHeader("Location");
+        // when:
+        final Map<String, String> updatedEntry = buildEntry(JSON_HOME_URI2);
+        registriesController.registerOrUpdate("live", idFromLocation(location),  updatedEntry, response);
+        // then:
+        assertEquals(response.getStatus(), SC_NO_CONTENT);
+        final Map<String, String> entry = registriesController.getEntry("live", idFromLocation(location), new MockHttpServletResponse());
+        assertEquals(entry.get("href"), updatedEntry.get("href"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
     public void shouldRegisterResourceInDifferentEnvironmentsAndReturnIDAsLocationHeader() throws IOException {
         // given:
-        registriesController.createOrUpdateRegistry("foo", new MockHttpServletResponse());
-        registriesController.createOrUpdateRegistry("test", new MockHttpServletResponse());
+        registriesController.createRegistry("foo", new MockHttpServletResponse());
+        registriesController.createRegistry("test", new MockHttpServletResponse());
         final MockHttpServletResponse firstResponse = new MockHttpServletResponse();
         final MockHttpServletResponse secondResponse = new MockHttpServletResponse();
         Map<String, String> defaultEntry = buildEntry(JSON_HOME_URI);
@@ -160,7 +178,7 @@ public class RegistriesControllerTest extends AbstractTestNGSpringContextTests {
     @SuppressWarnings("unchecked")
     public void shouldFindEnvironmentSpecificJsonHome() throws IOException {
         // given:
-        registriesController.createOrUpdateRegistry("foo", new MockHttpServletResponse());
+        registriesController.createRegistry("foo", new MockHttpServletResponse());
         final MockHttpServletResponse response = new MockHttpServletResponse();
         Map<String, String> entry = buildEntry(JSON_HOME_DEV_URI);
         // when:
@@ -174,7 +192,7 @@ public class RegistriesControllerTest extends AbstractTestNGSpringContextTests {
     @Test
     public void shouldRegisterNewEntry() throws Exception {
         // given
-        registriesController.createOrUpdateRegistry("foo", new MockHttpServletResponse());
+        registriesController.createRegistry("foo", new MockHttpServletResponse());
         // when
         final MockHttpServletResponse response = postEntry(registriesController, "http://www.example.org/example/foo");
         // then
@@ -194,7 +212,7 @@ public class RegistriesControllerTest extends AbstractTestNGSpringContextTests {
     @Test
     public void shouldFailToRegisterEntryWithSameHref() throws Exception {
         // given
-        registriesController.createOrUpdateRegistry("foo", new MockHttpServletResponse());
+        registriesController.createRegistry("foo", new MockHttpServletResponse());
         MockHttpServletResponse response = postEntry(registriesController, "http://www.example.org/example/foo");
         final String location = response.getHeader("Location");
         // when
@@ -211,7 +229,7 @@ public class RegistriesControllerTest extends AbstractTestNGSpringContextTests {
     @Test
     public void shouldUpdateExistingEntry() throws Exception {
         // given
-        registriesController.createOrUpdateRegistry("foo", new MockHttpServletResponse());
+        registriesController.createRegistry("foo", new MockHttpServletResponse());
         final MockHttpServletResponse response = postEntry(registriesController, "http://www.example.org/example/foo");
         final String location = response.getHeader("Location");
         // when
@@ -228,7 +246,7 @@ public class RegistriesControllerTest extends AbstractTestNGSpringContextTests {
     @Test
     public void shouldCreateEntryWithGivenId() throws Exception {
         // given
-        registriesController.createOrUpdateRegistry("foo", new MockHttpServletResponse());
+        registriesController.createRegistry("foo", new MockHttpServletResponse());
         // when
         final MockHttpServletResponse response = putEntry(registriesController, "http://www.example.org/registries/foo/42", "http://www.example.org/example/bar");
         // then
@@ -243,7 +261,7 @@ public class RegistriesControllerTest extends AbstractTestNGSpringContextTests {
     @Test
     public void shouldDeleteEntry() throws Exception {
         // given
-        registriesController.createOrUpdateRegistry("foo", new MockHttpServletResponse());
+        registriesController.createRegistry("foo", new MockHttpServletResponse());
         MockHttpServletResponse response = postEntry(registriesController, "http://www.example.org/example/foo");
         final String location = response.getHeader("Location");
         // when

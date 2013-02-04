@@ -96,13 +96,15 @@ public class RegistriesController {
     @RequestMapping(
             value = "/registries/{registryName}",
             method = RequestMethod.PUT)
-    public void createOrUpdateRegistry(@PathVariable final String registryName,
-                                       final HttpServletResponse response) {
+    public void createRegistry(@PathVariable final String registryName,
+                               final HttpServletResponse response) {
         if (registries.getRegistry(registryName) == null) {
             this.registries.createRegistry(registryName);
             response.setStatus(SC_CREATED);
         } else {
-            response.setStatus(SC_OK);
+            try {
+                response.sendError(SC_CONFLICT, "Registry '" + registryName + "' already exists.");
+            } catch (IOException e) { }
         }
     }
 

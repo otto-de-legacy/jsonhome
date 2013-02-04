@@ -60,34 +60,36 @@ public class RegistryBasedJsonHomeSource implements JsonHomeEnvSource {
      * @return the json-home for the specified registryName.
      */
     public JsonHome getJsonHome(final String registryName) {
-        final Map<URI, ResourceLink> allResourceLinks = new HashMap<URI, ResourceLink>();
-        for (final JsonHomeRef jsonHomeRef : registries.getRegistry(registryName).getAll()) {
-            try {
-                final JsonHome jsonHome = client.get(jsonHomeRef.getHref());
-                final Map<URI, ResourceLink> resources = jsonHome.getResources();
-                for (final URI uri : resources.keySet()) {
-                    if (allResourceLinks.containsKey(uri)) {
-                        LOG.warn("Duplicate entries found for resource {}: entry '{}', is overridden by '{}'",
-                                new Object[] {uri, allResourceLinks.get(uri), resources.get(uri)});
+        if (registries.getRegistry(registryName) == null) {
+            final String msg = "Registry '" + registryName + "' does not exist.";
+            LOG.warn(msg);
+            throw new IllegalArgumentException(msg);
+        } else {
+            final Map<URI, ResourceLink> allResourceLinks = new HashMap<URI, ResourceLink>();
+            for (final JsonHomeRef jsonHomeRef : registries.getRegistry(registryName).getAll()) {
+                try {
+                    final JsonHome jsonHome = client.get(jsonHomeRef.getHref());
+                    final Map<URI, ResourceLink> resources = jsonHome.getResources();
+                    for (final URI uri : resources.keySet()) {
+                        if (allResourceLinks.containsKey(uri)) {
+                            LOG.warn("Duplicate entries found for resource {}: entry '{}', is overridden by '{}'",
+                                    new Object[] {uri, allResourceLinks.get(uri), resources.get(uri)});
+                        }
+                        allResourceLinks.put(uri, resources.get(uri));
                     }
-                    allResourceLinks.put(uri, resources.get(uri));
+                    allResourceLinks.putAll(resources);
+                } catch (final NotFoundException e) {
+                    LOG.warn("Unable to get json-home document {}: {}", jsonHomeRef.getHref(), e.getMessage());
+                    // After some retries, the json-home MAY automatically be unregistered here.
+                } catch (final JsonHomeClientException e) {
+                    LOG.warn("Unable to get json-home document {}: {}", jsonHomeRef.getHref(), e.getMessage());
+                    // After some retries, the json-home MAY automatically be unregistered here.
                 }
-                allResourceLinks.putAll(resources);
-            } catch (final NotFoundException e) {
-                LOG.warn("Unable to get json-home document {}: {}", jsonHomeRef.getHref(), e.getMessage());
-                // After some retries, the json-home MAY automatically be unregistered here.
-            } catch (final JsonHomeClientException e) {
-                LOG.warn("Unable to get json-home document {}: {}", jsonHomeRef.getHref(), e.getMessage());
-                // After some retries, the json-home MAY automatically be unregistered here.
             }
+            LOG.debug("Returning json-home instance containing {} relation types: {}",
+                    allResourceLinks.size(), allResourceLinks.keySet());
+            return jsonHome(allResourceLinks.values());
         }
-        LOG.debug("Returning json-home instance containing {} relation types: {}",
-                allResourceLinks.size(), allResourceLinks.keySet());
-        return jsonHome(allResourceLinks.values());
     }
 
-    @Override
-    public JsonHome getJsonHome() {
-        return getJsonHome("");
-    }
 }
