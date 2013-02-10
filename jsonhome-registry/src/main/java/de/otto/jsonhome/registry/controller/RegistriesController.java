@@ -46,12 +46,36 @@ import static javax.servlet.http.HttpServletResponse.*;
 @Controller
 @Docs({
         @Doc(rel = "/rel/jsonhome/registries",
-             value = "The collection of known registries."),
+             value = {"The collection of known registries:",
+                     "<pre><code>{\n" +
+                             "\"self\" : \"http://example.org/registries\",\n" +
+                             "\"registries\" : [\n" +
+                             "      \"http://example.org/registries/live\",\n" +
+                             "      \"http://example.org/registries/test\"\n" +
+                             "  ]\n" +
+                             "}\n" +
+                             "</pre></code>"
+             }
+        ),
         @Doc(rel = "/rel/jsonhome/registry",
              value = {
-                     "A registry of json-home documents",
-                     "In order to registry a json-home document, POST an entry:",
-                     " {'href' : 'http://example.org/json-home', 'title' : 'My example json-home document'}"
+                     "A registry of json-home documents:",
+                     "<pre><code>{\n" +
+                     "      \"name\" : \"live\",\n" +
+                     "      \"self\" : \"http://example.org/registries/live\",\n" +
+                     "      \"container\" : \"http://example.org/registries\",\n" +
+                     "      \"links\" : [\n" +
+                     "          {\n" +
+                     "              \"title\" : \"Home document of application foo\",\n" +
+                     "              \"href\" : \"http://example.org/foo/json-home\"\n" +
+                     "          },\n" +
+                     "          {\n" +
+                     "              \"title\" : \"Home document of application bar\",\n" +
+                     "              \"href\" : \"http://example.org/bar/json-home\n" +
+                     "          }\n" +
+                     "      ]\n" +
+                     "}\n" +
+                     "</pre></code>"
              }),
         @Doc(rel = "/rel/jsonhome/registry-entry",
              value = {"A single registry entry, referring to a json-home document."})

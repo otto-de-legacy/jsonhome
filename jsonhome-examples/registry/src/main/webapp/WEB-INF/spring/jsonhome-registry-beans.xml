@@ -10,9 +10,9 @@
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
     <!--
-     Import the jsonhome Spring configuration for freemarker rendering.
+     Import the jsonhome Spring configuration to publish the registry's json-home document.
      -->
-    <import resource="classpath*:spring/jsonhome-freemarker-beans.xml" />
+    <import resource="classpath*:spring/jsonhome-beans.xml" />
 
     <!--
      Definition of the properties needed to configure the jsonhome controllers:
