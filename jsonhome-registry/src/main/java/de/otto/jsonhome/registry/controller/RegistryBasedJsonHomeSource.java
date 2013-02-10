@@ -6,8 +6,8 @@ import de.otto.jsonhome.client.JsonHomeClientException;
 import de.otto.jsonhome.client.NotFoundException;
 import de.otto.jsonhome.model.JsonHome;
 import de.otto.jsonhome.model.ResourceLink;
-import de.otto.jsonhome.registry.store.JsonHomeRef;
-import de.otto.jsonhome.registry.store.Registries;
+import de.otto.jsonhome.registry.store.Link;
+import de.otto.jsonhome.registry.store.RegistryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.Map;
 import static de.otto.jsonhome.model.JsonHome.jsonHome;
 
 /**
- * Provides access to a json-home document containing the merged json-home documents registered in the {@link de.otto.jsonhome.registry.store.Registries}.
+ * Provides access to a json-home document containing the merged json-home documents registered in the {@link de.otto.jsonhome.registry.store.RegistryRepository}.
  * <p/>
  * The service is responsible for retrieving all registered documents.
  *
@@ -34,7 +34,7 @@ public class RegistryBasedJsonHomeSource implements JsonHomeEnvSource {
     private static Logger LOG = LoggerFactory.getLogger(RegistryBasedJsonHomeSource.class);
 
     private final JsonHomeClient client;
-    private Registries registries;
+    private RegistryRepository registries;
 
     public RegistryBasedJsonHomeSource() {
         this.client = new HttpJsonHomeClient();
@@ -47,7 +47,7 @@ public class RegistryBasedJsonHomeSource implements JsonHomeEnvSource {
     }
 
     @Autowired
-    public void setRegistries(final Registries registries) {
+    public void setRegistries(final RegistryRepository registries) {
         this.registries = registries;
     }
 
@@ -60,15 +60,15 @@ public class RegistryBasedJsonHomeSource implements JsonHomeEnvSource {
      * @return the json-home for the specified registryName.
      */
     public JsonHome getJsonHome(final String registryName) {
-        if (registries.getRegistry(registryName) == null) {
-            final String msg = "Registry '" + registryName + "' does not exist.";
+        if (registries.getLinks(registryName) == null) {
+            final String msg = "Links '" + registryName + "' does not exist.";
             LOG.warn(msg);
             throw new IllegalArgumentException(msg);
         } else {
             final Map<URI, ResourceLink> allResourceLinks = new HashMap<URI, ResourceLink>();
-            for (final JsonHomeRef jsonHomeRef : registries.getRegistry(registryName).getAll()) {
+            for (final Link link : registries.getLinks(registryName).getAll()) {
                 try {
-                    final JsonHome jsonHome = client.get(jsonHomeRef.getHref());
+                    final JsonHome jsonHome = client.get(link.getHref());
                     final Map<URI, ResourceLink> resources = jsonHome.getResources();
                     for (final URI uri : resources.keySet()) {
                         if (allResourceLinks.containsKey(uri)) {
@@ -79,10 +79,10 @@ public class RegistryBasedJsonHomeSource implements JsonHomeEnvSource {
                     }
                     allResourceLinks.putAll(resources);
                 } catch (final NotFoundException e) {
-                    LOG.warn("Unable to get json-home document {}: {}", jsonHomeRef.getHref(), e.getMessage());
+                    LOG.warn("Unable to get json-home document {}: {}", link.getHref(), e.getMessage());
                     // After some retries, the json-home MAY automatically be unregistered here.
                 } catch (final JsonHomeClientException e) {
-                    LOG.warn("Unable to get json-home document {}: {}", jsonHomeRef.getHref(), e.getMessage());
+                    LOG.warn("Unable to get json-home document {}: {}", link.getHref(), e.getMessage());
                     // After some retries, the json-home MAY automatically be unregistered here.
                 }
             }

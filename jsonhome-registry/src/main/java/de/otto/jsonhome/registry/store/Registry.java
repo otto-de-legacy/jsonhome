@@ -16,57 +16,64 @@
 package de.otto.jsonhome.registry.store;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
+import static java.util.Collections.unmodifiableList;
 
 /**
+ * An immutable named collection of Registry.
+ *
  * @author Guido Steinacker
  * @since 14.11.12
  */
-public interface Registry {
+public final class Registry {
+
+    private final String name;
+    private final List<Link> links;
+
+    public Registry(final String name, final List<Link> links) {
+        if (name == null) {
+            throw new NullPointerException("Name of Links must not be null");
+        }
+        if (name.isEmpty()) {
+            throw new IllegalArgumentException("Name of Links must not be empty");
+        }
+        this.name = name;
+        this.links = unmodifiableList(new ArrayList<Link>(links));
+    }
 
     /**
-     * Returns the name of the registry.
-     */
-    public String getName();
-
-    /**
-     * Puts the registry entry to the registry.
+     * Returns the name of the link collection.
      *
-     * @param entry the registered entry.
-     * @return true, if the entry was created, false if updated
-     * @throws IllegalArgumentException if the entry's href is already registered with a different URI.
+     * @return name of the links;
      */
-    public boolean put(final JsonHomeRef entry);
+    public String getName() {
+        return name;
+    }
 
     /**
-     * Removes the entry identified by the URI from the registry.
+     * Returns an unmodifiable collection of all registered links.
      *
-     * @param uri the URI of the entry.
-     */
-    public void remove(final URI uri);
-
-    /**
-     * Returns a collection of all registered entries.
      * @return collection of entries.
      */
-    public Collection<JsonHomeRef> getAll();
+    public Collection<Link> getAll() {
+        return links;
+    }
 
     /**
-     * Returns the entry identified by the URI.
-     * @param uri URI of the entry.
-     * @return JsonHomeRef
+     * Returns the entry referring to the specified href.
+     *
+     * @param href URI of the link.
+     * @return Link
      */
-    public JsonHomeRef findBy(final URI uri);
-
-    /**
-     * Returns the entry referring to the specified json-home URI.
-     * @param href URI of the json-home document.
-     * @return JsonHomeRef
-     */
-    public JsonHomeRef findByHref(final URI href);
-
-    /**
-     * Removes all entries from the registry.
-     */
-    void clear();
+    public Link findByHref(final URI href) {
+        for (final Link link : links) {
+            if (link.getHref().equals(href)) {
+                return link;
+            }
+        }
+        return null;
+    }
 }

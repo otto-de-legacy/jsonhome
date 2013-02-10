@@ -11,7 +11,7 @@
 
     <util:properties id="testProps">
         <prop key="jsonhome.relationTypeBaseUri">http://specs.example.org</prop>
-        <prop key="jsonhome.applicationBaseUri">http://www.example.org</prop>
+        <prop key="jsonhome.applicationBaseUri">http://example.org</prop>
         <prop key="jsonhome.defaultRegistry">default</prop>
     </util:properties>
 
@@ -37,8 +37,10 @@
           p:registries-ref="testRegistries"/>
 
     <!--
-     Registry data is stored in a file. Adjust this if you want to have a different persistence.
+     Registry data is stored in a RegistryRepository instance.
+     The tests make use of an in-memory implementation. In real live applications, this should
+     be replaced with some kind of file- or database-based implementation.
      -->
-    <bean id="testRegistries" class="de.otto.jsonhome.registry.store.InMemoryRegistries" />
+    <bean id="testRegistries" class="de.otto.jsonhome.registry.store.InMemoryRegistryRepository" />
 
 </beans>

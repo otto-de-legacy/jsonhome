@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +27,6 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
  * @since 08.01.13
  */
 @Controller
-@RequestMapping("/json-home")
 public class RegistryJsonHomeController {
 
     private static Logger LOG = LoggerFactory.getLogger(JsonHomeController.class);
@@ -62,13 +61,12 @@ public class RegistryJsonHomeController {
         LOG.info("MaxAge is {}", maxAge);
     }
 
-    @RequestMapping(produces = {"application/json-home"})
+    @RequestMapping(
+            value = "{registry}/json-home",
+            produces = {"application/json-home"})
     @ResponseBody
-    public Map<String, ?> getAsApplicationJsonHome(@RequestParam(required = false)
-                                                   @Doc(value = {
-                                                           "Optionally selects a registry.",
-                                                           "By default, the configured default registry is returned."}
-                                                   )
+    public Map<String, ?> getAsApplicationJsonHome(@PathVariable
+                                                   @Doc(value = "The name of the json-home registry.")
                                                    final String registry,
                                                    final HttpServletResponse response) {
         LOG.info("Returning json-home in application/json-home format.");
@@ -79,13 +77,12 @@ public class RegistryJsonHomeController {
         return toRepresentation(jsonHomeSource.getJsonHome(selectedRegistry), APPLICATION_JSONHOME);
     }
 
-    @RequestMapping(produces = {"application/json"})
+    @RequestMapping(
+            value = "{registry}/json-home",
+            produces = {"application/json"})
     @ResponseBody
-    public Map<String, ?> getAsApplicationJson(@RequestParam(required = false)
-                                               @Doc(value = {
-                                                       "Optionally selects a registry.",
-                                                       "By default, the configured default registry is returned."}
-                                               )
+    public Map<String, ?> getAsApplicationJson(@PathVariable
+                                               @Doc(value = "The name of the json-home registry.")
                                                final String registry,
                                                final HttpServletResponse response) {
         LOG.info("Returning json-home in application/json format.");

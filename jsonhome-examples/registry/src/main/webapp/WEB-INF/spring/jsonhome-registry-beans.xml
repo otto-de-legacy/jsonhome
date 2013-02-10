@@ -76,6 +76,6 @@
     <!--
      Registry data is stored in memory:
     -->
-    <bean id="registries" class="de.otto.jsonhome.registry.store.InMemoryRegistries" />
+    <bean id="registries" class="de.otto.jsonhome.registry.store.InMemoryRegistryRepository" />
     
 </beans>

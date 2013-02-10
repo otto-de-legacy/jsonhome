@@ -18,9 +18,8 @@ package de.otto.jsonhome.registry.controller;
 import de.otto.jsonhome.annotation.Doc;
 import de.otto.jsonhome.annotation.Docs;
 import de.otto.jsonhome.annotation.Rel;
-import de.otto.jsonhome.registry.store.JsonHomeRef;
-import de.otto.jsonhome.registry.store.Registries;
 import de.otto.jsonhome.registry.store.Registry;
+import de.otto.jsonhome.registry.store.RegistryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +28,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.net.URI;
-import java.util.*;
+import java.util.Map;
 
-import static de.otto.jsonhome.registry.controller.RegistriesConverter.*;
-import static java.util.UUID.randomUUID;
+import static de.otto.jsonhome.registry.controller.RegistriesConverter.knownRegistriesToJson;
+import static de.otto.jsonhome.registry.controller.RegistryConverter.jsonToLinks;
+import static de.otto.jsonhome.registry.controller.RegistryConverter.linksToJson;
+import static java.net.URI.create;
 import static javax.servlet.http.HttpServletResponse.*;
 
 /**
@@ -60,80 +60,88 @@ public class RegistriesController {
 
     private static final Logger LOG = LoggerFactory.getLogger(RegistriesController.class);
 
-    private Registries registries;
+    private RegistryRepository registryRepository;
     private URI applicationBaseUri;
 
     @Value("${jsonhome.applicationBaseUri}")
     public void setApplicationBaseUri(final String baseUri) {
-        this.applicationBaseUri = URI.create(baseUri);
+        this.applicationBaseUri = create(baseUri);
         LOG.info("ApplicationbaseUri is {}", applicationBaseUri.toString());
     }
 
     /**
      * Injects the registry implementation used to store registry entries.
      *
-     * @param registries the Registry used by the controller.
+     * @param registryRepository the Registry used by the controller.
      */
     @Autowired
-    public void setRegistries(final Registries registries) {
-        this.registries = registries;
+    public void setRegistryRepository(final RegistryRepository registryRepository) {
+        this.registryRepository = registryRepository;
     }
 
+    /**
+     * Returns the registries as a list of URLs.
+     *
+     * <pre><code>
+     *     GET /registries
+     *
+     *     {
+     *          "self" : "http://example.org/registries",
+     *          "registries" : [
+     *              "http://example.org/registries/live",
+     *              "http://example.org/registries/test"
+     *          ]
+     *     }
+     * </code></pre>
+     * <p/>
+     * HTTP status codes returned by this method:
+     * <ul>
+     *     <li>200 OK: if the resource was successfully returned.</li>
+     * </ul>
+     * @param response the HttpServletResponse
+     */
     @Rel("/rel/jsonhome/registries")
     @RequestMapping(
             value = "/registries",
             method = RequestMethod.GET,
             produces = "application/json")
     @ResponseBody
-    public Map<String, List<String>> getRegistries() {
-        final Set<String> registryNames = this.registries.getKnownRegistryNames();
-        final List<String> registryNameList = new ArrayList<String>(registryNames);
-        Collections.sort(registryNameList);
-        return registriesToMap(applicationBaseUri, registryNameList);
-    }
-
-    @Rel("/rel/jsonhome/registry")
-    @RequestMapping(
-            value = "/registries/{registryName}",
-            method = RequestMethod.PUT)
-    public void createRegistry(@PathVariable final String registryName,
-                               final HttpServletResponse response) {
-        if (registries.getRegistry(registryName) == null) {
-            this.registries.createRegistry(registryName);
-            response.setStatus(SC_CREATED);
-        } else {
-            try {
-                response.sendError(SC_CONFLICT, "Registry '" + registryName + "' already exists.");
-            } catch (IOException e) { }
-        }
-    }
-
-    @Rel("/rel/jsonhome/registry")
-    @RequestMapping(
-            value = "/registries/{registryName}",
-            method = RequestMethod.DELETE)
-    public void deleteRegistry(@PathVariable final String registryName,
-                               final HttpServletResponse response) {
-        this.registries.deleteRegistry(registryName);
+    public Map<String, ?> getRegistries(final HttpServletResponse response) {
         response.setStatus(SC_OK);
+        return knownRegistriesToJson(applicationBaseUri, registryRepository.getKnownNames());
     }
 
     /**
-     * Returns the contents of the registry in application/json format. The returned document will look like this:
+     * Returns the contents of the registry in application/json format.
+     *
      * <code><pre>
+     *     GET /registries/live
+     *
      *     {
-     *         "&lt;registryName>" : [
+     *         "name" : "live",
+     *         "self" : "http://example.org/registries/live",
+     *         "container" : "http://example.org/registries",
+     *         "links" : [
      *              {
-     *                  "item" : "&lt;uri of the entry>",
-     *                  "title" : "Some title",
-     *                  "href" : "&lt;uri of the json-home>",
+     *                  "title" : "Home document of application foo",
+     *                  "href" : "http://example.org/foo/json-home"
      *              },
      *              {
-     *                  ...
+     *                  "title" : "Home document of application bar",
+     *                  "href" : "http://example.org/bar/json-home
      *              }
      *         ]
      *     }
      * </pre></code>
+     *
+     * The attributes 'name', 'self' and 'container' are added by the server and will be ignored during PUT operations.
+     * <p/>
+     * HTTP status codes returned by this method:
+     * <ul>
+     *     <li>200 OK: if the resource was found.</li>
+     *     <li>404 NOT FOUND: if the document was not found.</li>
+     * </ul>
+     *
      * @param response HttpServletResponse with cache-control header and application/json in body.
      * @return application/json
      */
@@ -147,198 +155,86 @@ public class RegistriesController {
                                       @Doc("The name of the requested registry.")
                                       final String registryName,
                                       final HttpServletResponse response) {
-        final Registry registry = registries.getRegistry(registryName);
-        LOG.info("Returning registry containing {} entries.", registry.getAll().size());
-        response.setHeader("Cache-Control", "max-age=3600");
-        return registryEntriesToMap(registry);
-    }
-
-    /**
-     * Returns a single registry entry in application/json format. The returned document will look like this:
-     * <code><pre>
-     *     {
-     *          "title" : "Some title",
-     *          "href" : "&lt;uri of the json-home>",
-     *     }
-     * </pre></code>
-     * @param response HttpServletResponse with cache-control header and application/json in body.
-     * @return application/json
-     */
-    @Rel("/rel/jsonhome/registry-entry")
-    @RequestMapping(
-            value = "/registries/{registryName}/{id}",
-            method = RequestMethod.GET,
-            produces = "application/json")
-    @ResponseBody
-    public Map<String, String> getEntry(@PathVariable
-                                        @Doc("The name of the requested registry.")
-                                        final String registryName,
-                                        @PathVariable
-                                        @Doc("Identifier of the registry entry.")
-                                        final String id,
-                                        final HttpServletResponse response) throws IOException {
-        if (registries.getRegistry(registryName) == null) {
-            response.sendError(SC_NOT_FOUND, "Registry " + registryName + " does not exist.");
-            return null;
-        } else {
+        final Registry registry = registryRepository.getLinks(registryName);
+        if (registry != null) {
+            LOG.info("Returning links containing {} entries.", registry.getAll().size());
             response.setHeader("Cache-Control", "max-age=3600");
-            final URI uri = locationUri(registryName, id);
-            final JsonHomeRef entry = registries.getRegistry(registryName).findBy(uri);
-            if (entry == null) {
-                LOG.info("Entry {} not found in registry.", uri);
-                response.setStatus(SC_NOT_FOUND);
-                return null;
-            } else {
-                LOG.info("Returning entry {}", uri);
-                final Map<String, String> map = registryEntryToMap(entry);
-                map.put("collection", applicationBaseUri.toString() + "/registries");
-                return map;
-            }
+            return linksToJson(applicationBaseUri, registry);
+        } else {
+            LOG.info("Links {} does not exist", registryName);
+            response.setStatus(SC_NOT_FOUND);
+            return null;
         }
     }
 
     /**
-     * Registers a new json-home document.
-     * <p/>
-     * If registration is successful, the 'Location' header is used to return the URI of the generated registry entry.
-     * In this case, HTTP 201 created is returned.
-     * <p/>
-     * If the URI of the json-home document is already registered, HTTP 409 conflict is returned.
-     * In this case the registry is not changed.
-     * <p/>
-     * The body of the request is expected to have the following attributes in json format:
-     * <code><pre>
+     * Creates or updates a registry.
+     *
+     * <pre><code>
+     *     PUT /registries/live
+     *
      *     {
-     *          "title" : "Some title",
-     *          "href" : "&lt;uri of the json-home>",
+     *         "links" : [
+     *              {
+     *                  "title" : "Home document of application foo",
+     *                  "href" : "http://example.org/foo/json-home"
+     *              },
+     *              {
+     *                  "title" : "Home document of application bar",
+     *                  "href" : "http://example.org/bar/json-home
+     *              }
+     *         ]
      *     }
-     * </pre></code>
+     * </code></pre>
+     *
+     * The server will add the following attributes to the document: 'name', 'self', 'container'. These attributes
+     * are overwritten, if provided by the caller.
      * <p/>
      * HTTP status codes returned by this method:
      * <ul>
-     *     <li>201 created: If the entry was successfully registered.</li>
-     *     <li>400 bad request: The body of the request is not conforming to the described format.</li>
-     *     <li>409 conflict: The URI of the json-home document is already registered.</li>
+     *     <li>201 CREATED: if the resource was successfully created.</li>
+     *     <li>204 NO CONTENT: if the resource was successfully updated.</li>
+     *     <li>400 BAD REQUEST: if the document was syntactically incorrect.</li>
      * </ul>
-     * @param entry application/json document, like { href="http://example.org", title="Example" }
-     * @param response HttpServletResponse
      */
     @Rel("/rel/jsonhome/registry")
     @RequestMapping(
             value = "/registries/{registryName}",
-            method = RequestMethod.POST,
-            consumes = "application/json")
-    public void register(@PathVariable
-                         @Doc("The name of registry.")
-                         final String registryName,
-                         @RequestBody
-                         final Map<String, String> entry,
-                         final HttpServletResponse response) throws IOException {
-        if (registries.getRegistry(registryName) == null) {
-            response.sendError(SC_NOT_FOUND, "Registry " + registryName + " does not exist.");
-        } else if (!isValid(entry)) {
-            LOG.info("Entry {} is not valid.", entry);
-            response.sendError(SC_BAD_REQUEST, "The request does not contain a valid entry.");
+            method = RequestMethod.PUT)
+    public void putRegistry(@PathVariable
+                            @Doc("The name of registry.")
+                            final String registryName,
+                            @RequestBody
+                            final Map<String, Object> registry,
+                            final HttpServletResponse response) {
+        if (registryRepository.getLinks(registryName) == null) {
+            response.setStatus(SC_CREATED);
         } else {
-            final URI location = locationUri(registryName, randomUUID().toString());
-            entry.put("self", location.toString());
-            try {
-                LOG.info("Registering new registry-entry {}", location);
-                registries.getRegistry(registryName).put(registryEntryFromMap(entry));
-                response.setHeader("Location", location.toString());
-                response.setStatus(SC_CREATED);
-            } catch (final IllegalArgumentException e) {
-                LOG.info("Entry {} is already registered with a different id", location);
-                // href is already registered under different URI
-                response.sendError(SC_CONFLICT, "The referred json-home is already registered with a different id.");
-            }
+            response.setStatus(SC_NO_CONTENT);
         }
+
+        registry.put("name", registryName);
+        this.registryRepository.createOrUpdateLinks(jsonToLinks(registry));
     }
 
     /**
-     * Registers or updates a json-home document.
-     * <p/>
-     * If the home document is registered, <code>HTTP 201 created</code> is returned,
-     * if updated <code>HTTP 204 no content</code>.
-     * <p/>
-     * If the URI of the json-home document is already registered, <code>HTTP 409 conflict</code> is returned.
-     * In this case the registry is not changed.
-     * <p/>
-     * The body of the request is expected to have the following attributes in json format:
-     * <code><pre>
-     *     {
-     *          "title" : "Some title",
-     *          "href" : "&lt;uri of the json-home>",
-     *     }
-     * </pre></code>
-     * Attribute <code>self</code> inside the document will be ignored.
+     * Deletes the specified registry.
      * <p/>
      * HTTP status codes returned by this method:
      * <ul>
-     *     <li>201 created: If the entry was registered.</li>
-     *     <li>204 no content: The entry was updated.</li>
-     *     <li>400 bad request: The body of the request is not conforming to the described format.</li>
-     *     <li>409 conflict: The URI of the json-home document is already registered.</li>
+     *     <li>204 NO CONTENT: if the resource was successfully deleted or did not exist.</li>
      * </ul>
-     * @param entry application/json document, like { href="http://example.org", title="Example" }
-     * @param response HttpServletResponse
+     * @param registryName the name of the deleted registry
+     * @param response the response object
      */
-    @Rel("/rel/jsonhome/registry-entry")
+    @Rel("/rel/jsonhome/registry")
     @RequestMapping(
-            value = "/{registryName}/{id}",
-            method = RequestMethod.PUT,
-            consumes = "application/json")
-    public void registerOrUpdate(@PathVariable @Doc("The name of registry.")
-                                 final String registryName,
-                                 @PathVariable @Doc("Identifier of the registry entry.")
-                                 final String id,
-                                 @RequestBody
-                                 final Map<String, String> entry,
-                                 final HttpServletResponse response) throws IOException {
-        if (registries.getRegistry(registryName) == null) {
-            response.sendError(SC_CONFLICT, "The registry does not exist.");
-        } else if (!isValid(entry)) {
-            response.sendError(SC_BAD_REQUEST, "The request does not contain a valid entry.");
-        } else {
-            final URI location = locationUri(registryName, id);
-            entry.put("self", location.toString());
-            try {
-                if (registries.getRegistry(registryName).put(registryEntryFromMap(entry))) {
-                    response.setStatus(SC_CREATED);
-                } else {
-                    response.setStatus(SC_NO_CONTENT);
-                }
-
-            } catch (final IllegalArgumentException e) {
-                // href is already registered under different URI
-                response.sendError(SC_CONFLICT, "The referred json-home is already registered with a different id.");
-            }
-        }
-    }
-
-    @RequestMapping(
-            value = "/{registryName}/{id}",
+            value = "/registries/{registryName}",
             method = RequestMethod.DELETE)
-    public void unregister(@PathVariable @Doc("The name of registry.")
-                           final String registryName,
-                           @PathVariable @Doc("Identifier of the registry entry.")
-                           final String id,
-                           final HttpServletResponse response) {
-        registries.getRegistry(registryName).remove(locationUri(registryName, id));
+    public void deleteRegistry(@PathVariable final String registryName,
+                               final HttpServletResponse response) {
+        this.registryRepository.deleteLinks(registryName);
         response.setStatus(SC_NO_CONTENT);
     }
 
-    private boolean isValid(Map<String, ?> entry) {
-        try {
-            final String title = entry.get("title").toString();
-            final URI href = URI.create(entry.get("href").toString());
-            return !title.isEmpty() && href.isAbsolute();
-        } catch (final Exception e) {
-            return false;
-        }
-    }
-
-    private URI locationUri(final String registryName, final String id) {
-        return URI.create(applicationBaseUri + "/registries/" + registryName + "/" + id);
-    }
 }

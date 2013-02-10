@@ -42,7 +42,7 @@ public class SpringControllerTest extends AbstractTestNGSpringContextTests {
         assertNotNull(fooResource);
         final Map<String, String> hrefVars = (Map<String, String>) fooResource.get("href-vars");
         assertEquals(hrefVars.get("fooId"), "http://specs.example.org/rel/foo#fooId");
-        assertEquals(fooResource.get("href-template"), "http://www.example.org/{fooId}");
+        assertEquals(fooResource.get("href-template"), "http://example.org/{fooId}");
     }
 
 

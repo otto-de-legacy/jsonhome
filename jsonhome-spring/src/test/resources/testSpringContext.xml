@@ -9,7 +9,7 @@
         >
 
     <util:properties id="testProps">
-        <prop key="jsonhome.applicationBaseUri">http://www.example.org</prop>
+        <prop key="jsonhome.applicationBaseUri">http://example.org</prop>
         <prop key="jsonhome.relationTypeBaseUri">http://specs.example.org</prop>
         <prop key="jsonhome.varTypeBaseUri" />
     </util:properties>

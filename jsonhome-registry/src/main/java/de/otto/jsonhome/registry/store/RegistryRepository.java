@@ -18,38 +18,45 @@ package de.otto.jsonhome.registry.store;
 import java.util.Set;
 
 /**
+ * A repository used to store {@link Registry}.
+ * <p/>
+ * The registry are identified by their names.
+ *
  * @author Guido Steinacker
  * @since 14.11.12
  */
-public interface Registries {
+public interface RegistryRepository {
 
     /**
-     * Creates a new empty {@link Registry}.
-     * @param registryName the unique of the registry.
-     */
-    public void createRegistry(final String registryName);
-
-    /**
-     * Deletes a {@link Registry}.
+     * Creates or updates Registry.
+     * <p/>
+     * An existing Registry instance with the same name as the Registry provided as parameter will be be replaced.
      *
-     * @param registryName the name of the deleted registry.
+     * @param registry the Registry instance.
      */
-    public void deleteRegistry(final String registryName);
+    public void createOrUpdateLinks(final Registry registry);
 
     /**
-     * Returns the names of all known registries.
+     * Deletes a {@link Registry} instance identified by it's name.
+     *
+     * @param name the name of the deleted registry.
+     */
+    public void deleteLinks(final String name);
+
+    /**
+     * Returns the names of all known Registry instances.
      *
      * @return registry names.
      */
-    public Set<String> getKnownRegistryNames();
+    public Set<String> getKnownNames();
 
     /**
      * Returns the registry with the specifed name, or null if no such registry exists.
      */
-    public Registry getRegistry(String registryName);
+    public Registry getLinks(String links);
 
     /**
-     * Removes all registries.
+     * Removes all Registry from the repository.
      */
     void clear();
 }

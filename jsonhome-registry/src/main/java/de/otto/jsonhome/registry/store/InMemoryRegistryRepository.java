@@ -5,9 +5,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * In-memory implementation of the {@link Registry} interface.
+ * In-memory implementation of the {@link RegistryRepository} interface.
  */
-public class InMemoryRegistries implements Registries {
+public class InMemoryRegistryRepository implements RegistryRepository {
 
     public final ConcurrentMap<String, Registry> registry = new ConcurrentHashMap<String, Registry>();
 
@@ -15,28 +15,28 @@ public class InMemoryRegistries implements Registries {
      * {@inheritDoc}
      */
     @Override
-    public void createRegistry(final String registryName) {
-        registry.putIfAbsent(registryName, new InMemoryRegistry(registryName));
+    public void createOrUpdateLinks(Registry registry) {
+        this.registry.put(registry.getName(), registry);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void deleteRegistry(final String registryName) {
-        registry.remove(registryName);
+    public void deleteLinks(final String name) {
+        registry.remove(name);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Set<String> getKnownRegistryNames() {
+    public Set<String> getKnownNames() {
         return registry.keySet();
     }
 
     @Override
-    public Registry getRegistry(final String registryName) {
+    public Registry getLinks(final String registryName) {
         return registry.get(registryName);
     }
 

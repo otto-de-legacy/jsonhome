@@ -19,42 +19,36 @@ import org.testng.annotations.Test;
 
 import java.net.URI;
 
+import static org.testng.Assert.assertEquals;
+
 /**
  * @author Guido Steinacker
  * @since 18.11.12
  */
-public class JsonHomeRefTest {
+public class LinkTest {
 
     public static final String TITLE = "foo";
     public static final URI EXAMPLE_DOT_ORG = URI.create("http://example.org");
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionIfSelfIsNull() {
-        new JsonHomeRef(null, TITLE, EXAMPLE_DOT_ORG);
+    @Test()
+    public void shouldSetTitleToEmptyStringIfTitleIsNull() {
+        final Link link = new Link(null, EXAMPLE_DOT_ORG);
+        assertEquals(link.getTitle(), "");
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionIfSelfIsNotAbsolute() {
-        new JsonHomeRef(URI.create("/foo"), TITLE, EXAMPLE_DOT_ORG);
+    @Test
+    public void shouldAcceptEmptyTitle() {
+        final Link link = new Link("", EXAMPLE_DOT_ORG);
+        assertEquals(link.getTitle(), "");
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionIfTitleIsNull() {
-        new JsonHomeRef(EXAMPLE_DOT_ORG, null, EXAMPLE_DOT_ORG);
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionIfTitleIsEmpty() {
-        new JsonHomeRef(EXAMPLE_DOT_ORG, "", EXAMPLE_DOT_ORG);
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = NullPointerException.class)
     public void shouldThrowExceptionIfHrefIsNull() {
-        new JsonHomeRef(EXAMPLE_DOT_ORG, TITLE, null);
+        new Link(TITLE, null);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void shouldThrowExceptionIfHrefIsNotAbsolute() {
-        new JsonHomeRef(EXAMPLE_DOT_ORG, TITLE, URI.create("/foo"));
+        new Link(TITLE, URI.create("/foo"));
     }
 }

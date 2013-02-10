@@ -18,49 +18,32 @@ package de.otto.jsonhome.registry.store;
 import java.net.URI;
 
 /**
- * A registry entry, referring to a json-home document by href.
+ * A link to a resource, consisting of a title, link-relation type and href.
  *
  * @author Guido Steinacker
  * @since 14.11.12
  */
-public final class JsonHomeRef {
+public final class Link {
 
-    private final URI self;
     private final String title;
     private final URI href;
 
     /**
-     * Creates a new registry entry, referring to a json-home document.
+     * Creates a new link to a resource.
      *
-     * @param self the URI identifying the registry entry.
-     * @param title the title, describing the system offering the json-home document.
-     *                    It is expected to have different 'self' URIs for different environments.
+     * @param title the title of the link.
      * @param href the URI of the linked json-home document.
      */
-    public JsonHomeRef(final URI self,
-                       final String title,
-                       final URI href) {
-        if (self == null || !self.isAbsolute()) {
-            throw new IllegalArgumentException("'self' must be an absolute URI.");
+    public Link(final String title,
+                final URI href) {
+        if (href == null) {
+            throw new NullPointerException("'rel' must not be null.");
         }
-        if (title == null || title.isEmpty()) {
-            throw new IllegalArgumentException("'title' must not be empty.");
-        }
-        if (href == null || !href.isAbsolute()) {
+        if (!href.isAbsolute()) {
             throw new IllegalArgumentException("'href' must be an absolute URI.");
         }
-        this.self = self;
-        this.title = title;
+        this.title = title != null ? title : "";
         this.href = href;
-    }
-
-    /**
-     * The URI of this registry entry.
-     *
-     * @return absolute URI
-     */
-    public URI getSelf() {
-        return self;
     }
 
     /**
@@ -86,28 +69,25 @@ public final class JsonHomeRef {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        JsonHomeRef entry = (JsonHomeRef) o;
+        Link link = (Link) o;
 
-        if (href != null ? !href.equals(entry.href) : entry.href != null) return false;
-        if (self != null ? !self.equals(entry.self) : entry.self != null) return false;
-        if (title != null ? !title.equals(entry.title) : entry.title != null) return false;
+        if (href != null ? !href.equals(link.href) : link.href != null) return false;
+        if (title != null ? !title.equals(link.title) : link.title != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = self != null ? self.hashCode() : 0;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
+        int result = title != null ? title.hashCode() : 0;
         result = 31 * result + (href != null ? href.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "JsonHomeRef{" +
-                "self=" + self +
-                ", title='" + title + '\'' +
+        return "Link{" +
+                "title='" + title + '\'' +
                 ", href=" + href +
                 '}';
     }
