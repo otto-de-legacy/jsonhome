@@ -157,12 +157,14 @@ public class RegistriesControllerTest extends AbstractTestNGSpringContextTests {
         registriesController.putRegistry("live", registry, new MockHttpServletResponse());
         // when:
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        registriesController.putRegistry("live", registryLiveWithSingleLinkTo("foo"), response);
+        final Map<String, Object> updatedRegistry = registryLiveWithSingleLinkTo("foo");
+        updatedRegistry.put("title", "A different title");
+        registriesController.putRegistry("live", updatedRegistry, response);
         // then:
         assertEquals(response.getStatus(), SC_NO_CONTENT);
         assertEquals(
                 registriesController.getRegistry("live", new MockHttpServletResponse()),
-                registryLiveWithSingleLinkTo("foo"));
+                updatedRegistry);
     }
 
     /* DELETE /registries/live */

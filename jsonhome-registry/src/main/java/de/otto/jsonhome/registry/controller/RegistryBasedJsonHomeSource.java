@@ -60,13 +60,13 @@ public class RegistryBasedJsonHomeSource implements JsonHomeEnvSource {
      * @return the json-home for the specified registryName.
      */
     public JsonHome getJsonHome(final String registryName) {
-        if (registries.getLinks(registryName) == null) {
+        if (registries.get(registryName) == null) {
             final String msg = "Links '" + registryName + "' does not exist.";
             LOG.warn(msg);
             throw new IllegalArgumentException(msg);
         } else {
             final Map<URI, ResourceLink> allResourceLinks = new HashMap<URI, ResourceLink>();
-            for (final Link link : registries.getLinks(registryName).getAll()) {
+            for (final Link link : registries.get(registryName).getAll()) {
                 try {
                     final JsonHome jsonHome = client.get(link.getHref());
                     final Map<URI, ResourceLink> resources = jsonHome.getResources();

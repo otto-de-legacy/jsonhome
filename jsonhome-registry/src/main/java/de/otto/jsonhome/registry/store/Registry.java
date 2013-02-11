@@ -31,9 +31,10 @@ import static java.util.Collections.unmodifiableList;
 public final class Registry {
 
     private final String name;
+    private final String title;
     private final List<Link> links;
 
-    public Registry(final String name, final List<Link> links) {
+    public Registry(final String name, final String title, final List<Link> links) {
         if (name == null) {
             throw new NullPointerException("Name of Links must not be null");
         }
@@ -41,6 +42,7 @@ public final class Registry {
             throw new IllegalArgumentException("Name of Links must not be empty");
         }
         this.name = name;
+        this.title = title;
         this.links = unmodifiableList(new ArrayList<Link>(links));
     }
 
@@ -51,6 +53,15 @@ public final class Registry {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Returns the human-readable title of the registry.
+     *
+     * @return title
+     */
+    public String getTitle() {
+        return title;
     }
 
     /**
@@ -75,5 +86,18 @@ public final class Registry {
             }
         }
         return null;
+    }
+
+    public Link asLinkFor(final URI baseUri) {
+        final URI uri;
+        if (baseUri.toString().endsWith("/")) {
+            uri = baseUri.resolve("registries/" + name);
+        } else {
+            uri = URI.create(baseUri.toString() + "/registries/" + name);
+        }
+        return new Link(
+                uri,
+                title
+        );
     }
 }

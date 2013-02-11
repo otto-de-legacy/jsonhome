@@ -10,9 +10,9 @@
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
     <!--
-     Import the jsonhome Spring configuration to publish the registry's json-home document.
+     Import the Spring configuration to publish the registry's json-home documents as HTML.
      -->
-    <import resource="classpath*:spring/jsonhome-beans.xml" />
+    <import resource="classpath*:spring/jsonhome-freemarker-beans.xml" />
 
     <!--
      Definition of the properties needed to configure the jsonhome controllers:
@@ -53,18 +53,17 @@
     <bean class="de.otto.jsonhome.registry.controller.RegistriesController" />
 
     <!--
-     The controller used to serve the json-home documents. The dependencies are autowired.
+     The controller used to serve the json-home documents.
     -->
     <bean class="de.otto.jsonhome.registry.controller.RegistryJsonHomeController"
           p:maxAgeSeconds = "3600"
           p:jsonHomeSource-ref="registryJsonHomeSource" />
 
     <!--
-     The controller used to serve the HTML representation of the json-home document. The dependencies are autowired.
-
-    <bean class="de.otto.jsonhome.controller.HtmlController"
-          p:jsonHomeSource-ref="registryJsonHomeSource" />
+     The controller used to serve the HTML representation of the json-home documents.
     -->
+    <bean class="de.otto.jsonhome.registry.controller.RegistryHtmlController"
+          p:jsonHomeSource-ref="registryJsonHomeSource" />
 
     <!--
      The JsonHomeSource used to get the JsonHome from all registered URIs.

@@ -28,14 +28,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
 
-import static de.otto.jsonhome.registry.controller.RegistriesConverter.knownRegistriesToJson;
-import static de.otto.jsonhome.registry.controller.RegistryConverter.jsonToLinks;
-import static de.otto.jsonhome.registry.controller.RegistryConverter.linksToJson;
+import static de.otto.jsonhome.registry.controller.RegistriesConverter.registriesToJson;
+import static de.otto.jsonhome.registry.controller.RegistryConverter.jsonToRegistry;
+import static de.otto.jsonhome.registry.controller.RegistryConverter.registryToJson;
 import static java.net.URI.create;
 import static javax.servlet.http.HttpServletResponse.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * Controller responsible for requests to the <code>/registry</code> resource.
@@ -48,13 +51,19 @@ import static javax.servlet.http.HttpServletResponse.*;
         @Doc(rel = "/rel/jsonhome/registries",
              value = {"The collection of known registries:",
                      "<pre><code>{\n" +
-                             "\"self\" : \"http://example.org/registries\",\n" +
-                             "\"registries\" : [\n" +
-                             "      \"http://example.org/registries/live\",\n" +
-                             "      \"http://example.org/registries/test\"\n" +
-                             "  ]\n" +
-                             "}\n" +
-                             "</pre></code>"
+                     "      \"self\" : \"http://example.org/registries\",\n" +
+                     "      \"registries\" : [\n" +
+                     "          {\n" +
+                     "              \"href\" : \"http://example.org/registries/live\"\n" +
+                     "              \"title\" : \"Home documents of the live environment\",\n" +
+                     "          },\n" +
+                     "          {\n" +
+                     "              \"href\" : \"http://example.org/registries/test\n" +
+                     "              \"title\" : \"Home documents of the testing environment\",\n" +
+                     "          }\n" +
+                     "      ]\n" +
+                     "}\n" +
+                     "</pre></code>"
              }
         ),
         @Doc(rel = "/rel/jsonhome/registry",
@@ -62,23 +71,22 @@ import static javax.servlet.http.HttpServletResponse.*;
                      "A registry of json-home documents:",
                      "<pre><code>{\n" +
                      "      \"name\" : \"live\",\n" +
+                     "      \"title\" : \"Home documents of the live environment\",\n" +
                      "      \"self\" : \"http://example.org/registries/live\",\n" +
                      "      \"container\" : \"http://example.org/registries\",\n" +
-                     "      \"links\" : [\n" +
+                     "      \"service\" : [\n" +
                      "          {\n" +
-                     "              \"title\" : \"Home document of application foo\",\n" +
                      "              \"href\" : \"http://example.org/foo/json-home\"\n" +
+                     "              \"title\" : \"Home document of application foo\",\n" +
                      "          },\n" +
                      "          {\n" +
-                     "              \"title\" : \"Home document of application bar\",\n" +
                      "              \"href\" : \"http://example.org/bar/json-home\n" +
+                     "              \"title\" : \"Home document of application bar\",\n" +
                      "          }\n" +
                      "      ]\n" +
                      "}\n" +
                      "</pre></code>"
-             }),
-        @Doc(rel = "/rel/jsonhome/registry-entry",
-             value = {"A single registry entry, referring to a json-home document."})
+             })
 })
 public class RegistriesController {
 
@@ -112,8 +120,8 @@ public class RegistriesController {
      *     {
      *          "self" : "http://example.org/registries",
      *          "registries" : [
-     *              "http://example.org/registries/live",
-     *              "http://example.org/registries/test"
+     *              { "href" : "http://example.org/registries/live", "title" : "Live environment" },
+     *              { "href" : "http://example.org/registries/test", "title" : "Testing environment" }
      *          ]
      *     }
      * </code></pre>
@@ -132,7 +140,7 @@ public class RegistriesController {
     @ResponseBody
     public Map<String, ?> getRegistries(final HttpServletResponse response) {
         response.setStatus(SC_OK);
-        return knownRegistriesToJson(applicationBaseUri, registryRepository.getKnownNames());
+        return registriesToJson(applicationBaseUri, registryRepository);
     }
 
     /**
@@ -143,9 +151,10 @@ public class RegistriesController {
      *
      *     {
      *         "name" : "live",
+     *         "title" : "Live environment",
      *         "self" : "http://example.org/registries/live",
      *         "container" : "http://example.org/registries",
-     *         "links" : [
+     *         "service" : [
      *              {
      *                  "title" : "Home document of application foo",
      *                  "href" : "http://example.org/foo/json-home"
@@ -179,11 +188,11 @@ public class RegistriesController {
                                       @Doc("The name of the requested registry.")
                                       final String registryName,
                                       final HttpServletResponse response) {
-        final Registry registry = registryRepository.getLinks(registryName);
+        final Registry registry = registryRepository.get(registryName);
         if (registry != null) {
             LOG.info("Returning links containing {} entries.", registry.getAll().size());
             response.setHeader("Cache-Control", "max-age=3600");
-            return linksToJson(applicationBaseUri, registry);
+            return registryToJson(applicationBaseUri, registry);
         } else {
             LOG.info("Links {} does not exist", registryName);
             response.setStatus(SC_NOT_FOUND);
@@ -198,7 +207,8 @@ public class RegistriesController {
      *     PUT /registries/live
      *
      *     {
-     *         "links" : [
+     *         "title" : "Live environment",
+     *         "service" : [
      *              {
      *                  "title" : "Home document of application foo",
      *                  "href" : "http://example.org/foo/json-home"
@@ -231,14 +241,14 @@ public class RegistriesController {
                             @RequestBody
                             final Map<String, Object> registry,
                             final HttpServletResponse response) {
-        if (registryRepository.getLinks(registryName) == null) {
+        if (registryRepository.get(registryName) == null) {
             response.setStatus(SC_CREATED);
         } else {
             response.setStatus(SC_NO_CONTENT);
         }
 
         registry.put("name", registryName);
-        this.registryRepository.createOrUpdateLinks(jsonToLinks(registry));
+        this.registryRepository.createOrUpdate(jsonToRegistry(registry));
     }
 
     /**
@@ -257,8 +267,12 @@ public class RegistriesController {
             method = RequestMethod.DELETE)
     public void deleteRegistry(@PathVariable final String registryName,
                                final HttpServletResponse response) {
-        this.registryRepository.deleteLinks(registryName);
+        this.registryRepository.delete(registryName);
         response.setStatus(SC_NO_CONTENT);
     }
+
+    @ResponseStatus(value = BAD_REQUEST, reason = "Illegal resource format")
+    @ExceptionHandler({IllegalArgumentException.class, NullPointerException.class})
+    public void handleBadRequest() {}
 
 }

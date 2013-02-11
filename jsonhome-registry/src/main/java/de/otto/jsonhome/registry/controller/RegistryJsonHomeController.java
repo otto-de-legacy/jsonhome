@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -47,18 +48,14 @@ public class RegistryJsonHomeController {
         LOG.info("RelationTypeBaseUri is {}", relationTypeBaseUri);
     }
 
-    @Value("${jsonhome.defaultRegistry}")
-    public void setDefaultRegistry(final String defaultRegistry) {
-        this.defaultRegistry = defaultRegistry;
-    }
-
-    public URI relationTypeBaseUri() {
-        return relationTypeBaseUri;
-    }
-
     public void setMaxAgeSeconds(int maxAge) {
         this.maxAge = maxAge;
         LOG.info("MaxAge is {}", maxAge);
+    }
+
+    @Value("${jsonhome.defaultRegistry}")
+    public void setDefaultRegistry(final String defaultRegistry) {
+        this.defaultRegistry = defaultRegistry;
     }
 
     @RequestMapping(
@@ -73,8 +70,7 @@ public class RegistryJsonHomeController {
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=" + maxAge);
         response.setHeader("Vary", "Accept");
-        final String selectedRegistry = registry != null ? registry : defaultRegistry;
-        return toRepresentation(jsonHomeSource.getJsonHome(selectedRegistry), APPLICATION_JSONHOME);
+        return toRepresentation(jsonHomeSource.getJsonHome(registry), APPLICATION_JSONHOME);
     }
 
     @RequestMapping(
@@ -89,9 +85,8 @@ public class RegistryJsonHomeController {
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=" + maxAge);
         response.setHeader("Vary", "Accept");
-        final String selectedRegistry = registry != null ? registry : defaultRegistry;
         try {
-            return toRepresentation(jsonHomeSource.getJsonHome(selectedRegistry), APPLICATION_JSON);
+            return toRepresentation(jsonHomeSource.getJsonHome(registry), APPLICATION_JSON);
         } catch (final IllegalArgumentException e) {
             try { response.sendError(SC_NOT_FOUND, e.getMessage()); } catch (IOException ignore) { }
             throw e;

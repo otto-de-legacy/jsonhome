@@ -18,7 +18,7 @@ package de.otto.jsonhome.registry.store;
 import java.net.URI;
 
 /**
- * A link to a resource, consisting of a title, link-relation type and href.
+ * A link to a resource, consisting of a title and href.
  *
  * @author Guido Steinacker
  * @since 14.11.12
@@ -31,13 +31,13 @@ public final class Link {
     /**
      * Creates a new link to a resource.
      *
-     * @param title the title of the link.
      * @param href the URI of the linked json-home document.
+     * @param title the title of the link.
      */
-    public Link(final String title,
-                final URI href) {
+    public Link(final URI href,
+                final String title) {
         if (href == null) {
-            throw new NullPointerException("'rel' must not be null.");
+            throw new NullPointerException("'href' must not be null.");
         }
         if (!href.isAbsolute()) {
             throw new IllegalArgumentException("'href' must be an absolute URI.");

@@ -10,16 +10,13 @@ import static java.util.Collections.singletonList;
  */
 public class RegistryFixture {
 
-    public static Map<String, List<String>> emptyRegistry() {
-        return new HashMap<String, List<String>>();
-    }
-
     /**
      *     {
      *         "name" : "live",
+     *         "title" : "Registry of the live environment",
      *         "self" : "http://example.org/registries/live",
      *         "container" : "http://example.org/registries",
-     *         "links" : [
+     *         "service" : [
      *              {
      *                  "title" : "Home document of application foo",
      *                  "href" : "http://example.org/foo/json-home"
@@ -36,9 +33,10 @@ public class RegistryFixture {
 
         final Map<String, Object> map = new LinkedHashMap<String, Object>();
         map.put("name", "live");
+        map.put("title", "Registry of the live environment");
         map.put("self", "http://example.org/registries/live");
         map.put("container", "http://example.org/registries");
-        map.put("links", singletonList(link));
+        map.put("service", singletonList(link));
 
         return map;
     }
@@ -46,16 +44,17 @@ public class RegistryFixture {
     /**
      *  {
      *      "name" : "live",
-     *      "links" : [
+     *      "title" : "Registry of the live environment",
+     *      "self" : "http://example.org/registries/live",
+     *      "container" : "http://example.org/registries",
+     *      "service" : [
      *          {
      *              "title" : "Home document of the foo application",
      *              "href" : "http://example.org/foo/json-home",
-     *              "rel" : "json-home"
      *          },
      *          {
      *              "title" : "Home document of the bar application",
      *              "href" : "http://example.org/bar/json-home",
-     *              "rel" : "json-home"
      *          }
      *      ]
      *  }
@@ -76,9 +75,10 @@ public class RegistryFixture {
 
         final Map<String, Object> map = new LinkedHashMap<String, Object>();
         map.put("name", "live");
+        map.put("title", "Registry of the live environment");
         map.put("self", "http://example.org/registries/live");
         map.put("container", "http://example.org/registries");
-        map.put("links", entries);
+        map.put("service", entries);
         return map;
     }
 }

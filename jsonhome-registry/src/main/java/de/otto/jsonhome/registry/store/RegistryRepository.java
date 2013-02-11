@@ -34,14 +34,14 @@ public interface RegistryRepository {
      *
      * @param registry the Registry instance.
      */
-    public void createOrUpdateLinks(final Registry registry);
+    public void createOrUpdate(Registry registry);
 
     /**
      * Deletes a {@link Registry} instance identified by it's name.
      *
      * @param name the name of the deleted registry.
      */
-    public void deleteLinks(final String name);
+    public void delete(String name);
 
     /**
      * Returns the names of all known Registry instances.
@@ -53,7 +53,7 @@ public interface RegistryRepository {
     /**
      * Returns the registry with the specifed name, or null if no such registry exists.
      */
-    public Registry getLinks(String links);
+    public Registry get(String registryName);
 
     /**
      * Removes all Registry from the repository.

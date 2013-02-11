@@ -32,23 +32,23 @@ public class LinkTest {
 
     @Test()
     public void shouldSetTitleToEmptyStringIfTitleIsNull() {
-        final Link link = new Link(null, EXAMPLE_DOT_ORG);
+        final Link link = new Link(EXAMPLE_DOT_ORG, null);
         assertEquals(link.getTitle(), "");
     }
 
     @Test
     public void shouldAcceptEmptyTitle() {
-        final Link link = new Link("", EXAMPLE_DOT_ORG);
+        final Link link = new Link(EXAMPLE_DOT_ORG, "");
         assertEquals(link.getTitle(), "");
     }
 
     @Test(expectedExceptions = NullPointerException.class)
     public void shouldThrowExceptionIfHrefIsNull() {
-        new Link(TITLE, null);
+        new Link(null, TITLE);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void shouldThrowExceptionIfHrefIsNotAbsolute() {
-        new Link(TITLE, URI.create("/foo"));
+        new Link(URI.create("/foo"), TITLE);
     }
 }

@@ -24,6 +24,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static de.otto.jsonhome.registry.controller.LinkConverter.jsonToLink;
+import static de.otto.jsonhome.registry.controller.LinkConverter.linkToJson;
 import static java.net.URI.create;
 
 /**
@@ -36,16 +38,17 @@ public class RegistryConverter {
 
     private RegistryConverter() {}
 
-    public static Registry jsonToLinks(final Map<String, ?> map) {
+    public static Registry jsonToRegistry(final Map<String, ?> map) {
         try {
             final List<Link> links = new ArrayList<Link>();
             @SuppressWarnings("unchecked")
-            final List<Map<String,String>> linksMap = (List<Map<String, String>>) map.get("links");
+            final List<Map<String,String>> linksMap = (List<Map<String, String>>) map.get("service");
             for (final Map<String, String> linkMap : linksMap) {
                 links.add(jsonToLink(linkMap));
             }
             return new Registry(
-                    map.get("name").toString(),
+                    (String) map.get("name"),
+                    (String) map.get("title"),
                     links
             );
         } catch (final NullPointerException e) {
@@ -53,32 +56,18 @@ public class RegistryConverter {
         }
     }
 
-    public static Link jsonToLink(Map<String, String> linkMap) {
-        return new Link(
-                linkMap.get("title"),
-                create(linkMap.get("href"))
-        );
-    }
-
-    public static Map<String, Object> linksToJson(final URI baseUri, final Registry registry) {
+    public static Map<String, Object> registryToJson(final URI baseUri, final Registry registry) {
         final Map<String, Object> content = new LinkedHashMap<String, Object>();
         content.put("name", registry.getName());
+        content.put("title", registry.getTitle());
         content.put("self", baseUri + "/registries/" + registry.getName());
         content.put("container", baseUri + "/registries");
         final List<Map<String,String>> linksList = new ArrayList<Map<String, String>>();
         for (final Link link : registry.getAll()) {
-            final Map<String, String> linkMap = linkToJson(link);
-            linksList.add(linkMap);
+            linksList.add(linkToJson(link));
         }
-        content.put("links", linksList);
+        content.put("service", linksList);
         return content;
-    }
-
-    public static Map<String, String> linkToJson(final Link link) {
-        final Map<String, String> linkMap = new LinkedHashMap<String, String>();
-        linkMap.put("title", link.getTitle());
-        linkMap.put("href", link.getHref().toString());
-        return linkMap;
     }
 
 }

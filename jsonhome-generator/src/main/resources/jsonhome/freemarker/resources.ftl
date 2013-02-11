@@ -19,7 +19,7 @@
         <tbody>
 <#list resources as resource>
         <tr>
-            <td><a href="${resource.linkRelationType}">${resource.linkRelationType}</a></td>
+            <td><a href="${resource.linkRelationType}${relQuery!""}">${resource.linkRelationType}</a></td>
             <td>
     <#if resource.hints.docs.hasDescription()>
         <#list resource.hints.docs.description as doc>

@@ -15,7 +15,7 @@ public class InMemoryRegistryRepository implements RegistryRepository {
      * {@inheritDoc}
      */
     @Override
-    public void createOrUpdateLinks(Registry registry) {
+    public void createOrUpdate(Registry registry) {
         this.registry.put(registry.getName(), registry);
     }
 
@@ -23,7 +23,7 @@ public class InMemoryRegistryRepository implements RegistryRepository {
      * {@inheritDoc}
      */
     @Override
-    public void deleteLinks(final String name) {
+    public void delete(final String name) {
         registry.remove(name);
     }
 
@@ -36,7 +36,7 @@ public class InMemoryRegistryRepository implements RegistryRepository {
     }
 
     @Override
-    public Registry getLinks(final String registryName) {
+    public Registry get(final String registryName) {
         return registry.get(registryName);
     }
 

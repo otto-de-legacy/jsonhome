@@ -38,7 +38,7 @@ public class InMemoryRegistryRepositoryTest {
         // given
         final RegistryRepository registries = new InMemoryRegistryRepository();
         // when
-        final Registry registry = registries.getLinks("does not exist");
+        final Registry registry = registries.get("does not exist");
         // then
         assertNull(registry);
     }
@@ -48,9 +48,9 @@ public class InMemoryRegistryRepositoryTest {
         // given
         final RegistryRepository registries = new InMemoryRegistryRepository();
         // when
-        registries.createOrUpdateLinks(new Registry("foo", Collections.<Link>emptyList()));
+        registries.createOrUpdate(new Registry("foo", "", Collections.<Link>emptyList()));
         // then
-        final Registry registry = registries.getLinks("foo");
+        final Registry registry = registries.get("foo");
         assertEquals(registry.getAll(), emptyList());
     }
 
@@ -58,18 +58,18 @@ public class InMemoryRegistryRepositoryTest {
     public void shouldDeleteLinks() {
         // given
         final RegistryRepository registries = new InMemoryRegistryRepository();
-        registries.createOrUpdateLinks(new Registry("foo", Collections.<Link>emptyList()));
+        registries.createOrUpdate(new Registry("foo", "", Collections.<Link>emptyList()));
         // when
-        registries.deleteLinks("foo");
+        registries.delete("foo");
         // then
-        assertNull(registries.getLinks("foo"));
+        assertNull(registries.get("foo"));
     }
 
     @Test
     public void shouldClearAllRegistries() {
         // given
         final RegistryRepository registries = new InMemoryRegistryRepository();
-        registries.createOrUpdateLinks(new Registry("foo", Collections.<Link>emptyList()));
+        registries.createOrUpdate(new Registry("foo", "", Collections.<Link>emptyList()));
         // when
         registries.clear();
         // then
@@ -90,7 +90,7 @@ public class InMemoryRegistryRepositoryTest {
     public void shouldReturnKnownRegistryNames() {
         // given
         final RegistryRepository registries = new InMemoryRegistryRepository();
-        registries.createOrUpdateLinks(new Registry("foo", Collections.<Link>emptyList()));
+        registries.createOrUpdate(new Registry("foo", "", Collections.<Link>emptyList()));
         // when
         final Set<String> knownRegistryNames = registries.getKnownNames();
         // then
@@ -103,17 +103,15 @@ public class InMemoryRegistryRepositoryTest {
         // given
         final RegistryRepository repository = new InMemoryRegistryRepository();
         final Link liveJsonHome = new Link(
-                "foo",
-                URI.create("http://example.org/live/json-home")
+                URI.create("http://example.org/live/json-home"), "foo"
         );
         final Link testJsonHome = new Link(
-                "foo",
-                URI.create("http://example.org/test/json-home")
+                URI.create("http://example.org/test/json-home"), "foo"
         );
-        repository.createOrUpdateLinks(new Registry("test", singletonList(testJsonHome)));
-        repository.createOrUpdateLinks(new Registry("live", singletonList(liveJsonHome)));
+        repository.createOrUpdate(new Registry("test", "", singletonList(testJsonHome)));
+        repository.createOrUpdate(new Registry("live", "", singletonList(liveJsonHome)));
         // when
-        final Collection<Link> entries = repository.getLinks("live").getAll();
+        final Collection<Link> entries = repository.get("live").getAll();
         // then
         assertEquals(entries, singletonList(liveJsonHome));
     }
