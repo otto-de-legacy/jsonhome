@@ -24,10 +24,16 @@ package de.otto.jsonhome.model;
 */
 public enum Precondition {
 
-    NONE, ETAG, LAST_MODIFIED;
+    NONE(""), ETAG("etag"), LAST_MODIFIED("last-modified");
+
+    private final String representation;
+
+    private Precondition(final String representation) {
+        this.representation = representation;
+    }
 
     public String toString() {
-        return name().toLowerCase();
+        return representation;
     }
 
 }

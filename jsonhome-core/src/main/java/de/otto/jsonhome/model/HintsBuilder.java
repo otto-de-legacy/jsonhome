@@ -18,6 +18,7 @@ package de.otto.jsonhome.model;
 import java.util.*;
 
 import static de.otto.jsonhome.model.Documentation.emptyDocs;
+import static de.otto.jsonhome.model.Hints.hints;
 import static java.util.Arrays.asList;
 
 /**
@@ -34,6 +35,7 @@ public class HintsBuilder {
     private final Set<String> acceptPut = new LinkedHashSet<String>();
     private final Set<String> acceptPatch = new LinkedHashSet<String>();
     private final List<Precondition> preconditionReq = new ArrayList<Precondition>();
+    private final List<Authentication> authReq = new ArrayList<Authentication>();
     private Documentation docs = emptyDocs();
     private Status status = Status.OK;
 
@@ -42,16 +44,6 @@ public class HintsBuilder {
 
     public static HintsBuilder hintsBuilder() {
         return new HintsBuilder();
-    }
-
-    public static HintsBuilder copyOf(final Hints hints) {
-        return new HintsBuilder()
-                .allowing(hints.getAllows())
-                .representedAs(hints.getRepresentations())
-                .acceptingForPut(hints.getAcceptPut())
-                .acceptingForPost(hints.getAcceptPost())
-                .acceptingForPatch(hints.getAcceptPatch())
-                .with(hints.getDocs());
     }
 
     public HintsBuilder allowing(final Allow... allows) {
@@ -119,19 +111,25 @@ public class HintsBuilder {
         return this;
     }
 
+    public HintsBuilder withAuthRequired(final List<Authentication> authReq) {
+        this.authReq.addAll(authReq);
+        return this;
+    }
+
     public HintsBuilder withStatus(final Status status) {
         this.status = status;
         return this;
     }
 
     public Hints build() {
-        return Hints.hints(
+        return hints(
                 allows,
                 new ArrayList<String>(representations),
                 new ArrayList<String>(acceptPut),
                 new ArrayList<String>(acceptPost),
                 new ArrayList<String>(acceptPatch),
                 preconditionReq,
+                authReq,
                 status,
                 docs
         );

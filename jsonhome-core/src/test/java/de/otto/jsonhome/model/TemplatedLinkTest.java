@@ -23,6 +23,7 @@ import java.util.Collections;
 import static de.otto.jsonhome.fixtures.LinkFixtures.*;
 import static de.otto.jsonhome.model.Allow.*;
 import static de.otto.jsonhome.model.Documentation.emptyDocs;
+import static de.otto.jsonhome.model.Hints.hints;
 import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 import static java.net.URI.create;
@@ -47,7 +48,7 @@ public class TemplatedLinkTest {
                 RESOURCELINK_SHOP_STOREFRONT,
                 REL_PAGE_HREF,
                 asList(hrefVar("pageId", VAR_TYPE_PAGEID, emptyDocs())),
-                Hints.hints(
+                hints(
                         of(GET),
                         asList("text/html")));
         // when
@@ -63,7 +64,7 @@ public class TemplatedLinkTest {
                 RESOURCELINK_SHOP_PAGE,
                 "/foo/{fooId}",
                 asList(hrefVar("fooId", VAR_TYPE_PAGEID, emptyDocs())),
-                Hints.hints(
+                hints(
                         of(GET),
                         asList("text/html")
                 )
@@ -81,7 +82,7 @@ public class TemplatedLinkTest {
                 RESOURCELINK_SHOP_PAGE,
                 REL_PAGE_HREF,
                 asList(hrefVar("pageId", VAR_TYPE_PAGEID, emptyDocs())),
-                Hints.hints(
+                hints(
                         of(PUT),
                         asList("text/html", "application/json")
                 )
@@ -100,7 +101,7 @@ public class TemplatedLinkTest {
                 RESOURCELINK_SHOP_PAGE,
                 REL_PAGE_HREF,
                 asList(hrefVar("pageId", VAR_TYPE_PAGEID, emptyDocs())),
-                Hints.hints(
+                hints(
                         of(GET),
                         asList("text/html", "application/foo")
                 )
@@ -125,7 +126,7 @@ public class TemplatedLinkTest {
                 RESOURCELINK_SHOP_PAGE,
                 "pages/foo/{pageId}",
                 asList(hrefVar("pageId", VAR_TYPE_PAGEID)),
-                Hints.hints(
+                hints(
                         of(GET),
                         asList("text/html", "application/json")
                 )
@@ -143,7 +144,7 @@ public class TemplatedLinkTest {
                 RESOURCELINK_SHOP_PAGE,
                 "pages/{pageId}",
                 asList(hrefVar("foo", VAR_TYPE_PAGEID)),
-                Hints.hints(
+                hints(
                         of(GET),
                         asList("text/html", "application/json")
                 )
@@ -160,13 +161,14 @@ public class TemplatedLinkTest {
                 RESOURCELINK_SHOP_PAGE,
                 REL_PAGE_HREF,
                 asList(hrefVar("pageId", VAR_TYPE_PAGEID)),
-                Hints.hints(
+                hints(
                         of(GET, PUT),
                         asList("application/foo"),
                         asList("application/json"),
                         Collections.<String>emptyList(),
                         Collections.<String>emptyList(),
                         Collections.<Precondition>emptyList(),
+                        Collections.<Authentication>emptyList(),
                         Status.OK,
                         emptyDocs()
                 )
@@ -175,13 +177,14 @@ public class TemplatedLinkTest {
                 RESOURCELINK_SHOP_PAGE,
                 REL_PAGE_HREF,
                 asList(hrefVar("pageId", VAR_TYPE_PAGEID)),
-                Hints.hints(
+                hints(
                         of(GET, PUT),
                         asList("application/foo"),
                         asList("application/foo"),
                         Collections.<String>emptyList(),
                         Collections.<String>emptyList(),
                         Collections.<Precondition>emptyList(),
+                        Collections.<Authentication>emptyList(),
                         Status.OK,
                         emptyDocs()
                 )
@@ -201,13 +204,14 @@ public class TemplatedLinkTest {
                 RESOURCELINK_SHOP_PAGE,
                 REL_PAGE_HREF,
                 asList(hrefVar("pageId", VAR_TYPE_PAGEID)),
-                Hints.hints(
+                hints(
                         of(GET, POST),
                         asList("application/foo"),
                         Collections.<String>emptyList(),
                         Collections.<String>emptyList(),
                         asList("application/json"),
                         Collections.<Precondition>emptyList(),
+                        Collections.<Authentication>emptyList(),
                         Status.OK,
                         emptyDocs()
                 )
@@ -216,13 +220,14 @@ public class TemplatedLinkTest {
                 RESOURCELINK_SHOP_PAGE,
                 REL_PAGE_HREF,
                 asList(hrefVar("pageId", VAR_TYPE_PAGEID)),
-                Hints.hints(
+                hints(
                         of(GET, POST),
                         asList("application/foo"),
                         Collections.<String>emptyList(),
                         asList("application/foo"),
                         Collections.<String>emptyList(),
                         Collections.<Precondition>emptyList(),
+                        Collections.<Authentication>emptyList(),
                         Status.OK,
                         emptyDocs()
                 )

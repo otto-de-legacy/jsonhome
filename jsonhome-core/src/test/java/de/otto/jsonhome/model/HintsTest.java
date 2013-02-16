@@ -20,10 +20,13 @@ import org.testng.annotations.Test;
 import java.util.Set;
 
 import static de.otto.jsonhome.model.Allow.*;
+import static de.otto.jsonhome.model.Authentication.authReq;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
+import static de.otto.jsonhome.model.Precondition.ETAG;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 /**
  * @author Guido Steinacker
@@ -105,5 +108,93 @@ public class HintsTest {
         assertEquals(merged.getRepresentations(), asList("text/html", "text/plain", "application/json"));
         assertEquals(merged.getAcceptPut(), asList("bar/foo"));
         assertEquals(merged.getAcceptPost(), asList("foo/bar"));
+    }
+
+    @Test
+    public void shouldMergePreconditionReq() {
+        // given
+        final Hints firstHints = hintsBuilder()
+                .allowing(of(GET))
+                .build();
+        final Hints secondHints = hintsBuilder()
+                .allowing(of(PUT))
+                .requiring(ETAG)
+                .build();
+        // when
+        final Hints merged = firstHints.mergeWith(secondHints);
+        // then
+        assertEquals(merged.getAllows(), of(GET, PUT));
+        assertEquals(merged.getPreconditionReq(), asList(ETAG));
+    }
+
+    @Test
+    public void shouldMergeAuthReq() {
+        // given
+        final Hints firstHints = hintsBuilder()
+                .allowing(of(GET))
+                .build();
+        final Hints secondHints = hintsBuilder()
+                .allowing(of(PUT))
+                .withAuthRequired(asList(authReq("Basic", asList("private"))))
+                .build();
+        // when
+        final Hints merged = firstHints.mergeWith(secondHints);
+        // then
+        assertEquals(merged.getAllows(), of(GET, PUT));
+        assertEquals(merged.getAuthReq(), asList(authReq("Basic", asList("private"))));
+    }
+
+    @Test
+    public void shouldMergeEqualAuthReq() {
+        // given
+        final Hints firstHints = hintsBuilder()
+                .allowing(of(GET))
+                .withAuthRequired(asList(authReq("Basic", asList("private"))))
+                .build();
+        final Hints secondHints = hintsBuilder()
+                .allowing(of(PUT))
+                .withAuthRequired(asList(authReq("Basic", asList("private"))))
+                .build();
+        // when
+        final Hints merged = firstHints.mergeWith(secondHints);
+        // then
+        assertEquals(merged.getAllows(), of(GET, PUT));
+        assertEquals(merged.getAuthReq(), asList(authReq("Basic", asList("private"))));
+    }
+
+    @Test
+    public void shouldMergeMultipleAuthReqSchemes() {
+        // given
+        final Hints firstHints = hintsBuilder()
+                .allowing(of(GET))
+                .withAuthRequired(asList(authReq("Basic", asList("private"))))
+                .build();
+        final Hints secondHints = hintsBuilder()
+                .allowing(of(PUT))
+                .withAuthRequired(asList(authReq("Digest", asList("private"))))
+                .build();
+        // when
+        final Hints merged = firstHints.mergeWith(secondHints);
+        // then
+        assertEquals(merged.getAllows(), of(GET, PUT));
+        assertEquals(merged.getAuthReq(), asList(authReq("Basic", asList("private")), authReq("Digest", asList("private"))));
+    }
+
+    @Test
+    public void shouldMergeMultipleAuthReqRealms() {
+        // given
+        final Hints firstHints = hintsBuilder()
+                .allowing(of(GET))
+                .withAuthRequired(asList(authReq("Basic", asList("private"))))
+                .build();
+        final Hints secondHints = hintsBuilder()
+                .allowing(of(PUT))
+                .withAuthRequired(asList(authReq("Basic", asList("foo"))))
+                .build();
+        // when
+        final Hints merged = firstHints.mergeWith(secondHints);
+        // then
+        assertEquals(merged.getAllows(), of(GET, PUT));
+        assertEquals(merged.getAuthReq(), asList(authReq("Basic", asList("foo", "private"))));
     }
 }

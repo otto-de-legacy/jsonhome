@@ -23,6 +23,7 @@ import java.util.*;
 
 import static de.otto.jsonhome.fixtures.ControllerFixtures.*;
 import static de.otto.jsonhome.model.Allow.*;
+import static de.otto.jsonhome.model.Authentication.authReq;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static de.otto.jsonhome.model.Precondition.ETAG;
@@ -260,7 +261,7 @@ public class SpringJsonHomeGeneratorTest {
     }
 
     @Test
-    public void shouldHaveAcceptPostHintIfPostSupportsDifferentMediaTypeThangenerate() {
+    public void shouldHaveAcceptPostHintIfPostSupportsDifferentMediaTypeThanGenerate() {
         // given
         final JsonHome foo = jsonHomeFor(ROOT_URI).with(ControllerWithAcceptPutAndAcceptPost.class).generate();
         // when
@@ -276,13 +277,24 @@ public class SpringJsonHomeGeneratorTest {
 
     @Test
     public void resourceWithRequiredPreconditionShouldHaveHintWithPreconditionReq() {
-        //
+        // given
         final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ControllerWithRequiredPrecondition.class).generate();
         // when
         final Hints hints = jsonHome.getResourceFor(create("http://example.org/rel/foo")).getHints();
         // then
         assertFalse(hints.getPreconditionReq().isEmpty());
         assertEquals(hints.getPreconditionReq(), asList(ETAG));
+    }
+
+    @Test
+    public void resourceWithRequiredAuthShouldHaveHintWithPreconditionAuth() {
+        // given
+        final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ControllerWithHints.class).generate();
+        // when
+        final Hints hints = jsonHome.getResourceFor(create("http://example.org/rel/foobar")).getHints();
+        // then
+        assertFalse(hints.getAuthReq().isEmpty());
+        assertEquals(hints.getAuthReq(), asList(authReq("Basic", asList("foo")), authReq("Digest", asList("bar"))));
     }
 
     @Test

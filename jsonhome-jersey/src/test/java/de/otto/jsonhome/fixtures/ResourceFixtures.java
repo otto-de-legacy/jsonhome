@@ -1,16 +1,14 @@
 package de.otto.jsonhome.fixtures;
 
 import de.otto.jsonhome.PATCH;
-import de.otto.jsonhome.annotation.Doc;
-import de.otto.jsonhome.annotation.Docs;
-import de.otto.jsonhome.annotation.Hints;
-import de.otto.jsonhome.annotation.Rel;
+import de.otto.jsonhome.annotation.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import static de.otto.jsonhome.model.Precondition.ETAG;
+import static de.otto.jsonhome.model.Precondition.LAST_MODIFIED;
 import static de.otto.jsonhome.model.Status.DEPRECATED;
 
 public class ResourceFixtures {
@@ -145,6 +143,25 @@ public class ResourceFixtures {
         @Rel("/rel/bar")
         @Path("/bar")
         void bar() {}
+    }
+
+    @Path("/foo")
+    public static class ResourceWithHints {
+
+        @Rel("/rel/bar")
+        @GET
+        @Path("/pre")
+        @Hints(preconditionReq = {ETAG, LAST_MODIFIED})
+        public void methodWithPreconditionsRequired() {}
+
+        @Rel("/rel/foobar")
+        @GET
+        @Path("/auth")
+        @Hints(authReq = {
+                @Auth(scheme="Basic", realms={"foo"}),
+                @Auth(scheme="Digest", realms={"bar"})
+        })
+        public void methodWithAuthRequired() {}
     }
 
 }

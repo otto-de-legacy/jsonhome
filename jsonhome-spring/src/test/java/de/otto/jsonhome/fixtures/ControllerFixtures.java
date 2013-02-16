@@ -16,11 +16,16 @@
 package de.otto.jsonhome.fixtures;
 
 import de.otto.jsonhome.annotation.*;
+import de.otto.jsonhome.model.Precondition;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static de.otto.jsonhome.model.Precondition.ETAG;
+import static de.otto.jsonhome.model.Precondition.LAST_MODIFIED;
 import static de.otto.jsonhome.model.Status.DEPRECATED;
+import static java.util.Arrays.asList;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -139,19 +144,46 @@ public class ControllerFixtures {
         public
         void bar(String bar, String requestParam) {}
     }
+static class TestAuth {
+    private final String scheme;
+    private final List<String> realms;
 
+    TestAuth(String scheme, List<String> realms) {
+        this.scheme = scheme;
+        this.realms = realms;
+    }
+}
     @Controller
     @RequestMapping(value = "/foo")
-    public static class ControllerWithDeprecatedResource {
-        public
+    public static class ControllerWithHints {
         @Rel("/rel/foo")
+        @RequestMapping("/dep")
         @Hints(status = DEPRECATED)
-        void foo() {}
+        public void deprecatedMethod() {}
 
-        public
         @Rel("/rel/bar")
-        @RequestMapping(value = "/bar")
-        void bar() {}
+        @RequestMapping("/pre")
+        @Hints(preconditionReq = {ETAG, LAST_MODIFIED})
+        public void methodWithPreconditionsRequired() {}
+
+        @Rel("/rel/foobar")
+        @RequestMapping("/auth")
+        @Hints(authReq = {
+                @Auth(scheme="Basic", realms={"foo"}),
+                @Auth(scheme="Digest", realms={"bar"})
+        })
+        public void methodWithAuthRequired() {}
+    }
+
+    @Controller
+    public static class ControllerWithDifferentProducesAndConsumes {
+        @RequestMapping(
+                method = RequestMethod.POST,
+                consumes = "application/x-www-form-urlencoded",
+                produces = "text/html"
+        )
+        @Rel("/rel/product/form")
+        public void postSomething(final String foo) {}
     }
 
 }

@@ -25,6 +25,7 @@ import static de.otto.jsonhome.model.Allow.GET;
 import static de.otto.jsonhome.model.Allow.PUT;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.Documentation.emptyDocs;
+import static de.otto.jsonhome.model.Hints.hints;
 import static de.otto.jsonhome.model.Precondition.ETAG;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -51,7 +52,7 @@ public class DirectLinkTest {
     public void mergeWithShouldFailIfOtherHasDifferentHref() {
         // given
         final DirectLink storeFrontLink = STOREFRONT_LINK;
-        final DirectLink linkWithDifferentHref = directLink(LinkFixtures.RESOURCELINK_SHOP_STOREFRONT, LinkFixtures.ABS_SHOPPAGES_HREF, Hints.hints(of(GET), asList("text/html", "application/json")));
+        final DirectLink linkWithDifferentHref = directLink(LinkFixtures.RESOURCELINK_SHOP_STOREFRONT, LinkFixtures.ABS_SHOPPAGES_HREF, hints(of(GET), asList("text/html", "application/json")));
         // when
         storeFrontLink.mergeWith(linkWithDifferentHref);
         // then an exception is thrown
@@ -61,7 +62,7 @@ public class DirectLinkTest {
     public void mergeWithShouldMergeAllowsSpec() {
         // given
         final DirectLink storeFrontLink = STOREFRONT_LINK;
-        final DirectLink linkWithDifferentHref = directLink(LinkFixtures.RESOURCELINK_SHOP_STOREFRONT, LinkFixtures.ABS_STOREFRONT_HREF, Hints.hints(of(PUT), singletonList("text/html")));
+        final DirectLink linkWithDifferentHref = directLink(LinkFixtures.RESOURCELINK_SHOP_STOREFRONT, LinkFixtures.ABS_STOREFRONT_HREF, hints(of(PUT), singletonList("text/html")));
         // when
         final ResourceLink resourceLink = storeFrontLink.mergeWith(linkWithDifferentHref);
         // then
@@ -72,7 +73,7 @@ public class DirectLinkTest {
     public void mergeWithShouldMergeRepresentations() {
         // given
         final DirectLink storeFrontLink = STOREFRONT_LINK;
-        final DirectLink linkWithDifferentHref = directLink(LinkFixtures.RESOURCELINK_SHOP_STOREFRONT, LinkFixtures.ABS_STOREFRONT_HREF, Hints.hints(of(GET), singletonList("application/json")));
+        final DirectLink linkWithDifferentHref = directLink(LinkFixtures.RESOURCELINK_SHOP_STOREFRONT, LinkFixtures.ABS_STOREFRONT_HREF, hints(of(GET), singletonList("application/json")));
         // when
         final ResourceLink resourceLink = storeFrontLink.mergeWith(linkWithDifferentHref);
         // then
@@ -86,12 +87,13 @@ public class DirectLinkTest {
         final DirectLink linkWithDifferentHref = directLink(
                 LinkFixtures.RESOURCELINK_SHOP_STOREFRONT,
                 LinkFixtures.ABS_STOREFRONT_HREF,
-                Hints.hints(
+                hints(
                         of(GET), singletonList("application/json"),
                         Collections.<String>emptyList(),
                         Collections.<String>emptyList(),
                         Collections.<String>emptyList(),
                         asList(ETAG),
+                        Collections.<Authentication>emptyList(),
                         Status.OK,
                         emptyDocs()
                 )

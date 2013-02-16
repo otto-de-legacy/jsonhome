@@ -23,19 +23,19 @@ import de.otto.jsonhome.model.Precondition;
 import de.otto.jsonhome.model.Status;
 import org.testng.annotations.Test;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static de.otto.jsonhome.converter.HintsConverter.toJsonHomeRepresentation;
 import static de.otto.jsonhome.converter.HintsConverter.toRepresentation;
 import static de.otto.jsonhome.converter.JsonHomeMediaType.APPLICATION_JSON;
 import static de.otto.jsonhome.converter.JsonHomeMediaType.APPLICATION_JSONHOME;
 import static de.otto.jsonhome.model.Allow.*;
+import static de.otto.jsonhome.model.Authentication.authReq;
 import static de.otto.jsonhome.model.Documentation.documentation;
 import static de.otto.jsonhome.model.Documentation.emptyDocs;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
 import static de.otto.jsonhome.model.Precondition.ETAG;
+import static de.otto.jsonhome.model.Precondition.LAST_MODIFIED;
 import static java.net.URI.create;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
@@ -55,14 +55,13 @@ public class HintsConverterTest {
         final List<String> representations = asList("text/html", "text/plain");
         final List<String> acceptPut = asList("foo/bar");
         final List<String> acceptPost = asList("bar/foo");
-        final List<Precondition> preconditions = asList(ETAG);
         final Hints hints = hintsBuilder()
                 .allowing(allows)
                 .representedAs(representations)
                 .acceptingForPut(acceptPut)
                 .acceptingForPost(acceptPost)
                 .with(emptyDocs())
-                .requiring(preconditions)
+                .requiring(asList(ETAG, LAST_MODIFIED))
                 .withStatus(Status.DEPRECATED)
                 .build();
         // when
@@ -73,8 +72,26 @@ public class HintsConverterTest {
         assertEquals(map.get("representations"), representations);
         assertEquals(map.get("accept-put"), acceptPut);
         assertEquals(map.get("accept-post"), acceptPost);
-        assertEquals(map.get("precondition-req"), preconditions);
+        assertEquals(map.get("precondition-req"), asList("etag", "last-modified"));
         assertEquals(map.get("status"), "deprecated");
+    }
+
+    @Test
+    public void testAuthReq() {
+        // given
+        final Hints hints = hintsBuilder().withAuthRequired(asList(
+                authReq("Basic", asList("private"))))
+                .build();
+        // when
+        final Map<String, ?> map = toJsonHomeRepresentation(hints);
+        // then
+        assertEquals(map.keySet().size(), 3);
+        List<Map<String, Object>> expectedAuthReq = new ArrayList<Map<String, Object>>();
+        Map<String, Object> auth = new HashMap<String, Object>();
+        auth.put("scheme", "Basic");
+        auth.put("realms", asList("private"));
+        expectedAuthReq.add(auth);
+        assertEquals(map.get("auth-req"), expectedAuthReq);
     }
 
     @Test

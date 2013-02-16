@@ -23,6 +23,7 @@ import java.util.Collections;
 import static de.otto.jsonhome.model.Allow.GET;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.Documentation.emptyDocs;
+import static de.otto.jsonhome.model.Hints.hints;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
 import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static java.util.Arrays.asList;
@@ -46,12 +47,13 @@ public class LinkFixtures {
     public static final DirectLink STOREFRONT_LINK = directLink(
             RESOURCELINK_SHOP_STOREFRONT,
             ABS_STOREFRONT_HREF,
-            Hints.hints(of(GET),
+            hints(of(GET),
                     asList("text/html", "application/json"),
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<Precondition>emptyList(),
+                    Collections.<Authentication>emptyList(),
                     Status.OK,
                     emptyDocs()
             ));
@@ -59,13 +61,14 @@ public class LinkFixtures {
     public static final DirectLink SHOPPAGES_LINK = directLink(
             RESOURCELINK_SHOP_PAGES,
             ABS_SHOPPAGES_HREF,
-            Hints.hints(
+            hints(
                     of(GET),
                     asList("text/html", "application/json"),
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<Precondition>emptyList(),
+                    Collections.<Authentication>emptyList(),
                     Status.OK,
                     emptyDocs()));
 
@@ -82,13 +85,14 @@ public class LinkFixtures {
     public static final DirectLink FOO_LINK = directLink(
             RESOURCELINK_FOO,
             ABS_SHOPPAGES_HREF,
-            Hints.hints(
+            hints(
                     of(GET),
                     asList("text/html"),
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<Precondition>emptyList(),
+                    Collections.<Authentication>emptyList(),
                     Status.OK,
                     emptyDocs()));
 

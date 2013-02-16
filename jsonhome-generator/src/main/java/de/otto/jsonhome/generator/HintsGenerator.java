@@ -18,6 +18,7 @@
 
 package de.otto.jsonhome.generator;
 
+import de.otto.jsonhome.annotation.Auth;
 import de.otto.jsonhome.model.*;
 
 import java.lang.reflect.Method;
@@ -62,6 +63,7 @@ public abstract class HintsGenerator {
                 .allowing(allows)
                 .with(docsGenerator.documentationFrom(relationType, method.getDeclaringClass()))
                 .requiring(preconditionsFrom(method))
+                .withAuthRequired(requiredAuthenticationFrom(method))
                 .withStatus(statusFrom(method));
 
         final List<String> produced = producedRepresentationsOf(method);
@@ -103,6 +105,31 @@ public abstract class HintsGenerator {
         final de.otto.jsonhome.annotation.Hints annotation = findAnnotation(method, de.otto.jsonhome.annotation.Hints.class);
         if (annotation != null && annotation.preconditionReq() != null) {
             return asList(annotation.preconditionReq());
+        } else {
+            return emptyList();
+        }
+    }
+
+    /**
+     * Analyses the method and returns the list of required HTTP authentication methods expected by the method.
+     * <p/>
+     * This implementation is using the {@link de.otto.jsonhome.annotation.Hints} annotation to determine the
+     * expected authentications.
+     *
+     * @param method Method responsible for handling an HTTP request.
+     * @return List of Authentication, or an empty list.
+     */
+    protected List<Authentication> requiredAuthenticationFrom(final Method method) {
+        final de.otto.jsonhome.annotation.Hints annotation = findAnnotation(method, de.otto.jsonhome.annotation.Hints.class);
+        if (annotation != null && annotation.authReq() != null && annotation.authReq().length > 0) {
+            final List<Authentication> authReq = new ArrayList<Authentication>();
+            for (final Auth auth : annotation.authReq()) {
+                authReq.add(Authentication.authReq(
+                        auth.scheme(),
+                        asList(auth.realms())
+                ));
+            }
+            return authReq;
         } else {
             return emptyList();
         }

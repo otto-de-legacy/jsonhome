@@ -2,6 +2,7 @@ package de.otto.jsonhome.generator;
 
 
 import de.otto.jsonhome.annotation.Rel;
+import de.otto.jsonhome.fixtures.ResourceFixtures;
 import de.otto.jsonhome.model.Allow;
 import de.otto.jsonhome.model.Hints;
 import org.testng.annotations.Test;
@@ -16,8 +17,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 
+import static de.otto.jsonhome.fixtures.ResourceFixtures.ResourceWithHints;
+import static de.otto.jsonhome.model.Authentication.authReq;
+import static de.otto.jsonhome.model.Precondition.ETAG;
+import static de.otto.jsonhome.model.Precondition.LAST_MODIFIED;
 import static java.net.URI.create;
+import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 public class JerseyHintsGeneratorTest {
 
@@ -67,6 +74,32 @@ public class JerseyHintsGeneratorTest {
         assertEquals(hints.getAllows(), EnumSet.of(Allow.PUT));
         assertEquals(hints.getRepresentations(), Collections.<String>emptyList());
         assertEquals(hints.getAcceptPut(), Collections.<String>emptyList());
+    }
+
+    @Test
+    public void shouldFindRequiredPrecondition() throws NoSuchMethodException {
+        // given
+        final JerseyHintsGenerator generator = new JerseyHintsGenerator(RELATION_TYPE_BASE_URI);
+        final Class<?> controller = ResourceWithHints.class;
+        // when
+        final Hints hints = generator.hintsOf(
+                create("/rel/bar"),
+                controller.getMethod("methodWithPreconditionsRequired"));
+        // then
+        assertEquals(hints.getPreconditionReq(), asList(ETAG, LAST_MODIFIED));
+    }
+
+    @Test
+    public void shouldFindRequiredAuthentication() throws NoSuchMethodException {
+        // given
+        final JerseyHintsGenerator generator = new JerseyHintsGenerator(RELATION_TYPE_BASE_URI);
+        final Class<?> controller = ResourceWithHints.class;
+        // when
+        final Hints hints = generator.hintsOf(
+                create("/rel/bar"),
+                controller.getMethod("methodWithAuthRequired"));
+        // then
+        assertEquals(hints.getAuthReq(), asList(authReq("Basic", asList("foo")), authReq("Digest", asList("bar"))));
     }
 
 }

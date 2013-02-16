@@ -18,17 +18,21 @@
 
 package de.otto.jsonhome.generator;
 
-import de.otto.jsonhome.annotation.Rel;
+import de.otto.jsonhome.model.Authentication;
 import de.otto.jsonhome.model.Hints;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.annotations.Test;
 
 import java.net.URI;
 
+import static de.otto.jsonhome.fixtures.ControllerFixtures.ControllerWithDifferentProducesAndConsumes;
+import static de.otto.jsonhome.fixtures.ControllerFixtures.ControllerWithHints;
+import static de.otto.jsonhome.model.Authentication.authReq;
+import static de.otto.jsonhome.model.Precondition.ETAG;
+import static de.otto.jsonhome.model.Precondition.LAST_MODIFIED;
 import static java.net.URI.create;
 import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 /**
  * @author Guido Steinacker
@@ -37,17 +41,6 @@ import static org.testng.Assert.assertEquals;
 public class SpringHintsGeneratorTest {
 
     public static final URI RELATION_TYPE_BASE_URI = create("http://example.org");
-
-    class ControllerWithDifferentProducesAndConsumes {
-
-        @RequestMapping(
-                method = RequestMethod.POST,
-                consumes = "application/x-www-form-urlencoded",
-                produces = "text/html"
-        )
-        @Rel("/rel/product/form")
-        public void postSomething(final String foo) {}
-    }
 
     @Test
     public void testMethodWithTwoRepresentations() throws Exception {
@@ -61,5 +54,31 @@ public class SpringHintsGeneratorTest {
         // then
         assertEquals(hints.getRepresentations(), asList("text/html"));
         assertEquals(hints.getAcceptPost(), asList("application/x-www-form-urlencoded"));
+    }
+
+    @Test
+    public void shouldFindRequiredPrecondition() throws NoSuchMethodException {
+        // given
+        final SpringHintsGenerator generator = new SpringHintsGenerator(RELATION_TYPE_BASE_URI);
+        final Class<?> controller = ControllerWithHints.class;
+        // when
+        final Hints hints = generator.hintsOf(
+                create("/rel/bar"),
+                controller.getMethod("methodWithPreconditionsRequired"));
+        // then
+        assertEquals(hints.getPreconditionReq(), asList(ETAG, LAST_MODIFIED));
+    }
+
+    @Test
+    public void shouldFindRequiredAuthentication() throws NoSuchMethodException {
+        // given
+        final SpringHintsGenerator generator = new SpringHintsGenerator(RELATION_TYPE_BASE_URI);
+        final Class<?> controller = ControllerWithHints.class;
+        // when
+        final Hints hints = generator.hintsOf(
+                create("/rel/bar"),
+                controller.getMethod("methodWithAuthRequired"));
+        // then
+        assertEquals(hints.getAuthReq(), asList(authReq("Basic", asList("foo")), authReq("Digest", asList("bar"))));
     }
 }

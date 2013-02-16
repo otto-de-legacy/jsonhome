@@ -15,7 +15,6 @@
  */
 package de.otto.jsonhome.controller;
 
-import de.otto.jsonhome.fixtures.ControllerFixtures;
 import de.otto.jsonhome.generator.JsonHomeGenerator;
 import de.otto.jsonhome.generator.JsonHomeSource;
 import de.otto.jsonhome.generator.SpringJsonHomeGenerator;
@@ -141,6 +140,50 @@ public class JsonHomeControllerTest {
         final Map<String, ?> relFoo = resources.get("http://otto.de/rel/foo");
         assertNotNull(relFoo);
         assertEquals(asMap(relFoo.get("hints")).get("docs"), "http://example.org/doc/foo");
+    }
+
+    @Test
+    public void shouldContainPreconditionReqEtag() {
+        // given
+        final JsonHomeController controller = jsonHomeController(
+                ControllerWithHints.class,
+                "http://example.org",
+                "http://otto.de");
+        // when
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        final Map<String, ?> resourcesMap = controller.getAsApplicationJsonHome(response);
+        // then
+        @SuppressWarnings("unchecked")
+        final Map<String, Map<String, ?>> resources = (Map<String, Map<String, ?>>) resourcesMap.get("resources");
+        final Map<String, ?> relFoo = resources.get("http://otto.de/rel/bar");
+        assertNotNull(relFoo);
+        assertEquals(asMap(relFoo.get("hints")).get("precondition-req"), asList("etag", "last-modified"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldContainAuthReq() {
+        // given
+        final JsonHomeController controller = jsonHomeController(
+                ControllerWithHints.class,
+                "http://example.org",
+                "http://otto.de");
+        // when
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        final Map<String, ?> resourcesMap = controller.getAsApplicationJsonHome(response);
+        // then
+        @SuppressWarnings("unchecked")
+        final Map<String, Map<String, ?>> resources = (Map<String, Map<String, ?>>) resourcesMap.get("resources");
+        final Map<String, ?> relFoo = resources.get("http://otto.de/rel/foobar");
+        assertNotNull(relFoo);
+        final Map<String, Object> basicAuth = new HashMap<String, Object>();
+        basicAuth.put("scheme", "Basic");
+        basicAuth.put("realms", asList("foo"));
+        final Map<String, Object> digestAuth = new HashMap<String, Object>();
+        digestAuth.put("scheme", "Digest");
+        digestAuth.put("realms", asList("bar"));
+        assertEquals(asMap(relFoo.get("hints")).get("auth-req"), asList(
+                basicAuth, digestAuth));
     }
 
     @SuppressWarnings("unchecked")

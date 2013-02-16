@@ -18,11 +18,12 @@
 
 package de.otto.jsonhome.converter;
 
+import de.otto.jsonhome.model.Authentication;
 import de.otto.jsonhome.model.Hints;
+import de.otto.jsonhome.model.Precondition;
 import de.otto.jsonhome.model.Status;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static de.otto.jsonhome.converter.JsonHomeMediaType.APPLICATION_JSONHOME;
 
@@ -69,7 +70,27 @@ public final class HintsConverter {
             jsonHints.put("accept-patch", hints.getAcceptPatch());
         }
         if (!hints.getPreconditionReq().isEmpty()) {
-            jsonHints.put("precondition-req", hints.getPreconditionReq());
+            final List<String> strings = new ArrayList<String>();
+            for (final Precondition precondition : hints.getPreconditionReq()) {
+                strings.add(precondition.toString());
+            }
+            jsonHints.put("precondition-req", strings);
+        }
+        if (!hints.getAuthReq().isEmpty()) {
+            final List<Map<String,?>> authReq = new ArrayList<Map<String, ?>>();
+            for (final Authentication authentication : hints.getAuthReq()) {
+                final Map<String, Object> authMap = new HashMap<String, Object>();
+                authMap.put("scheme", authentication.getScheme());
+                if (!authentication.getRealms().isEmpty()) {
+                    final List<String> realms = new ArrayList<String>();
+                    for (final String realm : authentication.getRealms()) {
+                        realms.add(realm);
+                    }
+                    authMap.put("realms", realms);
+                }
+                authReq.add(authMap);
+            }
+            jsonHints.put("auth-req", authReq);
         }
         if (!hints.getStatus().equals(Status.OK)) {
             jsonHints.put("status", hints.getStatus().name().toLowerCase());

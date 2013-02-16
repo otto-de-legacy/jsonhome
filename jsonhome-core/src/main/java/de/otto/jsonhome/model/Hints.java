@@ -51,6 +51,7 @@ public final class Hints {
     private final List<String> acceptPost;
     private final List<String> acceptPatch;
     private final List<Precondition> preconditionReq;
+    private final List<Authentication> authReq;
     private final Status status;
     private final Documentation docs;
 
@@ -80,6 +81,7 @@ public final class Hints {
                 Collections.<String>emptyList(),
                 Collections.<String>emptyList(),
                 Collections.<Precondition>emptyList(),
+                Collections.<Authentication>emptyList(),
                 Status.OK,
                 emptyDocs());
     }
@@ -90,9 +92,16 @@ public final class Hints {
                               final List<String> acceptPost,
                               final List<String> acceptPatch,
                               final List<Precondition> preconditionReq,
+                              final List<Authentication> authReq,
                               final Status status,
                               final Documentation docs) {
-        return new Hints(allows, representations, acceptPut, acceptPost, acceptPatch, preconditionReq, status, docs);
+        return new Hints(
+                allows,
+                representations, acceptPut, acceptPost, acceptPatch,
+                preconditionReq,
+                authReq,
+                status,
+                docs);
     }
 
     private Hints(final Set<Allow> allows,
@@ -101,6 +110,7 @@ public final class Hints {
                   final List<String> acceptPost,
                   final List<String> acceptPatch,
                   final List<Precondition> preconditionReq,
+                  final List<Authentication> authReq,
                   final Status status,
                   final Documentation docs) {
         if (!acceptPost.isEmpty() && !allows.contains(Allow.POST)) {
@@ -118,6 +128,7 @@ public final class Hints {
         this.acceptPost = acceptPost;
         this.acceptPatch = acceptPatch;
         this.preconditionReq = unmodifiableList(new ArrayList<Precondition>(preconditionReq));
+        this.authReq = unmodifiableList(new ArrayList<Authentication>(authReq));
         this.status = status != null ? status : Status.OK;
         this.docs = docs != null ? docs : emptyDocs();
     }
@@ -167,6 +178,13 @@ public final class Hints {
     }
 
     /**
+     * @return the required authentication.
+     */
+    public List<Authentication> getAuthReq() {
+        return authReq;
+    }
+
+    /**
      * @return Status specifies whether the resource is OK, DEPRECATED or GONE.
      */
     public Status getStatus() {
@@ -201,6 +219,7 @@ public final class Hints {
         acceptPatch.addAll(other.getAcceptPatch());
         final Set<Precondition> preconditionReq = new LinkedHashSet<Precondition>(this.preconditionReq);
         preconditionReq.addAll(other.getPreconditionReq());
+        final List<Authentication> mergedAuth = mergeAuthReq(other.getAuthReq());
         return hints(
                 allows,
                 new ArrayList<String>(representations),
@@ -208,9 +227,29 @@ public final class Hints {
                 new ArrayList<String>(acceptPost),
                 new ArrayList<String>(acceptPatch),
                 new ArrayList<Precondition>(preconditionReq),
+                mergedAuth,
                 status.mergeWith(other.getStatus()),
                 docs.mergeWith(other.getDocs())
         );
+    }
+
+    private List<Authentication> mergeAuthReq(final List<Authentication> otherAuthReq) {
+        final Map<String, Set<String>> authReq = new TreeMap<String, Set<String>>();
+        for (final Authentication auth : this.authReq) {
+            authReq.put(auth.getScheme(), new TreeSet<String>(auth.getRealms()));
+        }
+        for (final Authentication auth : otherAuthReq) {
+            if (authReq.containsKey(auth.getScheme())) {
+                authReq.get(auth.getScheme()).addAll(auth.getRealms());
+            } else {
+                authReq.put(auth.getScheme(), new TreeSet<String>(auth.getRealms()));
+            }
+        }
+        final List<Authentication> mergedAuth = new ArrayList<Authentication>();
+        for (final String scheme : authReq.keySet()) {
+            mergedAuth.add(Authentication.authReq(scheme, new ArrayList<String>(authReq.get(scheme))));
+        }
+        return mergedAuth;
     }
 
     @Override
@@ -220,9 +259,11 @@ public final class Hints {
 
         Hints hints = (Hints) o;
 
+        if (acceptPatch != null ? !acceptPatch.equals(hints.acceptPatch) : hints.acceptPatch != null) return false;
         if (acceptPost != null ? !acceptPost.equals(hints.acceptPost) : hints.acceptPost != null) return false;
         if (acceptPut != null ? !acceptPut.equals(hints.acceptPut) : hints.acceptPut != null) return false;
         if (allows != null ? !allows.equals(hints.allows) : hints.allows != null) return false;
+        if (authReq != null ? !authReq.equals(hints.authReq) : hints.authReq != null) return false;
         if (docs != null ? !docs.equals(hints.docs) : hints.docs != null) return false;
         if (preconditionReq != null ? !preconditionReq.equals(hints.preconditionReq) : hints.preconditionReq != null)
             return false;
@@ -239,7 +280,9 @@ public final class Hints {
         result = 31 * result + (representations != null ? representations.hashCode() : 0);
         result = 31 * result + (acceptPut != null ? acceptPut.hashCode() : 0);
         result = 31 * result + (acceptPost != null ? acceptPost.hashCode() : 0);
+        result = 31 * result + (acceptPatch != null ? acceptPatch.hashCode() : 0);
         result = 31 * result + (preconditionReq != null ? preconditionReq.hashCode() : 0);
+        result = 31 * result + (authReq != null ? authReq.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (docs != null ? docs.hashCode() : 0);
         return result;
@@ -254,6 +297,7 @@ public final class Hints {
                 ", acceptPost=" + acceptPost +
                 ", acceptPatch=" + acceptPatch +
                 ", preconditionReq=" + preconditionReq +
+                ", authReq=" + authReq +
                 ", status=" + status +
                 ", docs=" + docs +
                 '}';
