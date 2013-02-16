@@ -15,10 +15,14 @@
  */
 package de.otto.jsonhome.example.order;
 
+import de.otto.jsonhome.annotation.Auth;
 import de.otto.jsonhome.annotation.Doc;
+import de.otto.jsonhome.annotation.Hints;
 import de.otto.jsonhome.annotation.Rel;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 
@@ -42,6 +46,7 @@ public class BasketController {
             produces = "text/html"
     )
     @Rel("/rel/get-shopping-basket")
+    @Hints(authReq = @Auth(scheme = "Basic", realms = {"foo", "bar"}))
     public ModelAndView getBasketAsHtml(@Doc("The unique identifier of the requested shopping basket.")
                                         @PathVariable final long basketId) {
         throw new UnsupportedOperationException("not yet implemented");
@@ -53,6 +58,7 @@ public class BasketController {
             produces = "application/json"
     )
     @Rel("/rel/get-shopping-basket")
+    @Hints(authReq = @Auth(scheme = "Basic", realms = {"foo", "bar"}))
     public ModelAndView getBasketAsJson(@Doc("The unique identifier of the requested shopping basket.")
                                         @PathVariable final long basketId) {
         throw new UnsupportedOperationException("not yet implemented");

@@ -66,6 +66,17 @@
         <td>The required preconditions for PUT, POST or PATCH.</td>
     </tr>
     <tr>
+        <th>Auth-Req</th>
+        <td>
+            <ul>
+            <#list hints.authReq as authReq>
+                <li>Scheme: ${authReq.scheme}<#if authReq.realms?has_content>; Realms: <#list authReq.realms as realm>${realm}<#if realm_has_next>, </#if></#list></#if></li>
+            </#list>
+            </ul>
+        </td>
+        <td>The HTTP authentication used by this resource.</td>
+    </tr>
+    <tr>
         <th>Status</th>
         <td>
             ${hints.status}
