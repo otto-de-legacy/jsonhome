@@ -20,8 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 
 /**
  * Information about the authentication scheme of a HTTP resource described in the Hints.
@@ -30,7 +29,7 @@ import static java.lang.annotation.ElementType.TYPE;
  * @author Guido Steinacker
  * @since 15.09.12
  */
-@Target({TYPE, PARAMETER})
+@Target({ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Auth {
