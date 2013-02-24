@@ -3,24 +3,30 @@ package de.otto.jsonhome.controller;
 import org.markdown4j.Markdown4jProcessor;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
-import java.io.*;
-
-import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.HEAD;
 
 /**
  * Controller serving the /docs resource based on markdown documents.
+ * <p/>
+ * The implementation makes use of the Markdown4j library.
  *
  * @author Guido Steinacker
  * @since 17.02.13
+ * @see <a href="http://code.google.com/p/markdown4j">Markdown4j</a>
  */
 @Controller
 @RequestMapping("/docs")
