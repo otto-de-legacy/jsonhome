@@ -13,6 +13,21 @@ subprojects {
 
     repositories {
         mavenCentral()
+
+        add(new org.apache.ivy.plugins.resolver.FileSystemResolver()) {
+            name = 'localLibRepository'
+            addArtifactPattern "$projectDir/../lib/[organisation]/[module]-[revision](-[classifier]).[ext]"
+            descriptor = 'optional'
+            checkmodified = true
+        }
+
+        add(new org.apache.ivy.plugins.resolver.FileSystemResolver()) {
+            name = 'localExampleRepository'
+            addArtifactPattern "$projectDir/../../lib/[organisation]/[module]-[revision](-[classifier]).[ext]"
+            descriptor = 'optional'
+            checkmodified = true
+        }
+
     }
 
     jar {

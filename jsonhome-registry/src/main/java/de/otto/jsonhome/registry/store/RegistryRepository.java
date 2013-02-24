@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * A repository used to store {@link Registry}.
  * <p/>
- * The registry are identified by their names.
+ * The registries are identified by their names.
  *
  * @author Guido Steinacker
  * @since 14.11.12

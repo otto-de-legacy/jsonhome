@@ -48,6 +48,13 @@
     <mvc:resources mapping="/jsonhome/**" location="classpath:/jsonhome/**" />
 
     <!--
+     Configuration of the DocController, used to serve /docs resources.
+    -->
+    <bean class="de.otto.jsonhome.controller.DocController">
+        <property name="rootDir" value="classpath:/example/*" />
+    </bean>
+
+    <!--
      Configure the RegistryController.
      -->
     <bean class="de.otto.jsonhome.registry.controller.RegistriesController" />
@@ -73,7 +80,7 @@
           p:registries-ref="registries"/>
 
     <!--
-     Registry data is stored in memory:
+     Registry data is stored in memory. Not a good idea in production environments.
     -->
     <bean id="registries" class="de.otto.jsonhome.registry.store.InMemoryRegistryRepository" />
     

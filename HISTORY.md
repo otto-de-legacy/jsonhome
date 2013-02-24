@@ -10,9 +10,14 @@ earlier versions will be tracked, as well as new features, bug fixes, and so on.
 
 ### 0.3.1 Features
 
-* Registry: Multiple environment support.
-* Core: Configurable base URIs of href-var types in fragment or sub-resource notation.
+* Feature: It is now possible to create multiple registries, containing different sets of json-home documents.
+* Feature: The registry is now able to serve json-home documents, describing the link-relations of all registered applications.
+* Feature: New DocController with Markdown support. This may be used to serve documentation of vendor-specific
+  media-types, link-relation types, and so on. The DocController is currently available in the jsonhome-spring module
+  and can also be used in combination with the jsonhome-registry. 
+* Fearure: Configurable base URIs of href-var types in fragment or sub-resource notation.
   This requires a new property jsonhome.varTypeBaseUri to be configured in your application
+* Feature: Support of the 'auth-req' hint.
 
 ### 0.3.1 Known Incompatibilities to 0.3.0
 
