@@ -1,6 +1,7 @@
 package de.otto.jsonhome.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
@@ -23,6 +24,10 @@ public final class Authentication {
 
     public static Authentication authReq(final String scheme, final List<String> realms) {
         return new Authentication(scheme, realms);
+    }
+
+    public static Authentication authReq(final String scheme) {
+        return new Authentication(scheme, Collections.<String>emptyList());
     }
 
     public String getScheme() {

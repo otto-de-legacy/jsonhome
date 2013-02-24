@@ -1,7 +1,6 @@
 package de.otto.jsonhome.parser;
 
 import de.otto.jsonhome.model.JsonHome;
-import de.otto.jsonhome.model.Precondition;
 import de.otto.jsonhome.model.Status;
 import org.testng.annotations.Test;
 
@@ -10,12 +9,15 @@ import java.net.URI;
 import java.util.EnumSet;
 
 import static de.otto.jsonhome.model.Allow.*;
+import static de.otto.jsonhome.model.Authentication.authReq;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.Documentation.docLink;
 import static de.otto.jsonhome.model.Documentation.documentation;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
 import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static de.otto.jsonhome.model.JsonHome.jsonHome;
+import static de.otto.jsonhome.model.Precondition.ETAG;
+import static de.otto.jsonhome.model.Precondition.LAST_MODIFIED;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 import static java.net.URI.create;
 import static java.util.Arrays.asList;
@@ -61,7 +63,7 @@ public class JacksonJsonHomeParserTest {
                                 .allowing(EnumSet.of(GET, HEAD))
                                 .representedAs(asList("text/html", "text/plain"))
                                 .with(docLink(URI.create("http://de.wikipedia.org/wiki/Homepage")))
-                                .requiring(Precondition.ETAG)
+                                .requiring(ETAG)
                                 .withStatus(Status.DEPRECATED)
                                 .build()
                 )
@@ -110,6 +112,60 @@ public class JacksonJsonHomeParserTest {
                                 .representedAs(asList("application/json"))
                                 .acceptingForPut(asList("application/example-product", "application/json"))
                                 .acceptingForPost("application/json")
+                                .build()
+                )
+        ));
+    }
+
+    @Test
+    public void shouldParseMultiplePreconditions() throws Exception {
+        // given
+        final String jsonHomeDocument = "{\n" +
+                "  \"resources\" : {" +
+                "\"http://example.org/jsonhome-example/rel/storefront\" : {\n" +
+                "      \"href\" : \"http://example.org/jsonhome-example/storefront\",\n" +
+                "      \"hints\" : {\n" +
+                "        \"precondition-req\" : [\"etag\", \"last-modified\"]\n" +
+                "      }\n" +
+                "    }}}";
+        // when
+        final JsonHome jsonHome = new JacksonJsonHomeParser()
+                .parse(new ByteArrayInputStream(jsonHomeDocument.getBytes()));
+        // then
+        assertEquals(jsonHome, jsonHome(
+                directLink(
+                        create("http://example.org/jsonhome-example/rel/storefront"),
+                        create("http://example.org/jsonhome-example/storefront"),
+                        hintsBuilder()
+                                .requiring(ETAG, LAST_MODIFIED)
+                                .build()
+                )
+        ));
+    }
+
+    @Test
+    public void shouldParseMultipleRequiredAuth() throws Exception {
+        // given
+        final String jsonHomeDocument = "{\n" +
+                "  \"resources\" : {" +
+                "\"http://example.org/jsonhome-example/rel/storefront\" : {\n" +
+                "      \"href\" : \"http://example.org/jsonhome-example/storefront\",\n" +
+                "      \"hints\" : {\n" +
+                "        \"auth-req\" : [{\"scheme\" : \"Basic\", \"realms\" : [\"public\", \"private\"]}, {\"scheme\" : \"Digest\"}]\n" +
+                "      }\n" +
+                "    }}}";
+        // when
+        final JsonHome jsonHome = new JacksonJsonHomeParser()
+                .parse(new ByteArrayInputStream(jsonHomeDocument.getBytes()));
+        // then
+        assertEquals(jsonHome, jsonHome(
+                directLink(
+                        create("http://example.org/jsonhome-example/rel/storefront"),
+                        create("http://example.org/jsonhome-example/storefront"),
+                        hintsBuilder()
+                                .withAuthRequired(asList(
+                                        authReq("Basic", asList("public", "private")),
+                                        authReq("Digest")))
                                 .build()
                 )
         ));

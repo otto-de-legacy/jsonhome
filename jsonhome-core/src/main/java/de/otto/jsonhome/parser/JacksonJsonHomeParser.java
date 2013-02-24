@@ -15,11 +15,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import static de.otto.jsonhome.model.Authentication.authReq;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.Documentation.documentation;
 import static de.otto.jsonhome.model.HintsBuilder.hintsBuilder;
 import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static de.otto.jsonhome.model.JsonHomeBuilder.jsonHomeBuilder;
+import static de.otto.jsonhome.model.Precondition.preconditionOf;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 
 /**
@@ -121,8 +123,28 @@ public class JacksonJsonHomeParser implements JsonHomeParser {
             if (hints.has("precondition-req")) {
                 final Iterator<JsonNode> iterator = hints.get("precondition-req").getElements();
                 while (iterator.hasNext()) {
-                    builder.requiring(Precondition.valueOf(iterator.next().getTextValue().toUpperCase()));
+                    final String textValue = iterator.next().getTextValue();
+                    if (!textValue.isEmpty()) {
+                        builder.requiring(preconditionOf(textValue));
+                    }
                 }
+            }
+            if (hints.has("auth-req")) {
+                final List<Authentication> authentications = new ArrayList<Authentication>();
+                final Iterator<JsonNode> iterator = hints.get("auth-req").getElements();
+                while (iterator.hasNext()) {
+                    final JsonNode authNode = iterator.next();
+                    final String scheme = authNode.get("scheme").getTextValue();
+                    final List<String> realms = new ArrayList<String>();
+                    if (authNode.has("realms")) {
+                        final Iterator<JsonNode> realmIter = authNode.get("realms").getElements();
+                        while (realmIter.hasNext()) {
+                            realms.add(realmIter.next().getTextValue());
+                        }
+                    }
+                    authentications.add(authReq(scheme, realms));
+                }
+                builder.withAuthRequired(authentications);
             }
             if (hints.has("accept-put")) {
                 final Iterator<JsonNode> iterator = hints.get("accept-put").getElements();

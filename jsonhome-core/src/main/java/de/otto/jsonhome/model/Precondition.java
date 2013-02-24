@@ -32,6 +32,15 @@ public enum Precondition {
         this.representation = representation;
     }
 
+    public static Precondition preconditionOf(final String value) {
+        for (final Precondition precondition : Precondition.values()) {
+            if (precondition.toString().equals(value)) {
+                return precondition;
+            }
+        }
+        throw new IllegalArgumentException("Unknown precondition " + value);
+    }
+
     public String toString() {
         return representation;
     }
