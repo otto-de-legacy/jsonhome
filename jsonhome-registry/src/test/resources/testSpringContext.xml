@@ -33,7 +33,7 @@
      The JsonHomeSource used to get the JsonHome from all registered URIs.
      -->
     <bean id="registryJsonHomeSource"
-          class="de.otto.jsonhome.registry.controller.RegistryBasedJsonHomeSource"
+          class="de.otto.jsonhome.registry.controller.DefaultRegistryJsonHomeSource"
           p:registries-ref="testRegistries"/>
 
     <!--

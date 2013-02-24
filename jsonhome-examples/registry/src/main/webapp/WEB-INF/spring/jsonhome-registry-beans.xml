@@ -70,18 +70,37 @@
      The controller used to serve the HTML representation of the json-home documents.
     -->
     <bean class="de.otto.jsonhome.registry.controller.RegistryHtmlController"
-          p:jsonHomeSource-ref="registryJsonHomeSource" />
+          p:registryJsonHomeSource-ref="registryJsonHomeSource"
+          p:jsonHomeSource-ref="jsonHomeSource"/>
 
     <!--
      The JsonHomeSource used to get the JsonHome from all registered URIs.
      -->
     <bean id="registryJsonHomeSource"
-          class="de.otto.jsonhome.registry.controller.RegistryBasedJsonHomeSource"
-          p:registries-ref="registries"/>
+          class="de.otto.jsonhome.registry.controller.DefaultRegistryJsonHomeSource" />
 
     <!--
      Registry data is stored in memory. Not a good idea in production environments.
-    -->
-    <bean id="registries" class="de.otto.jsonhome.registry.store.InMemoryRegistryRepository" />
-    
+     -->
+    <bean id="registries"
+          class="de.otto.jsonhome.registry.store.InMemoryRegistryRepository" />
+
+    <!--
+     The controller used to serve the json-home document of the registry. The dependencies are autowired.
+     -->
+    <bean class="de.otto.jsonhome.controller.JsonHomeController"
+          p:maxAgeSeconds = "3600">
+        <property name="jsonHomeSource" ref="jsonHomeSource" />
+    </bean>
+
+    <!--
+     The JsonHomeSource used by the RegistryHtmlController to get the json-home of the registry itself.
+     -->
+    <bean id="jsonHomeSource" class="de.otto.jsonhome.controller.GeneratorBasedJsonHomeSource">
+        <property name="jsonHomeGenerator">
+            <!-- The JsonHomeGenerator used to generate the json-home of the /registries resources. -->
+            <bean class="de.otto.jsonhome.generator.SpringJsonHomeGenerator" />
+        </property>
+    </bean>
+
 </beans>

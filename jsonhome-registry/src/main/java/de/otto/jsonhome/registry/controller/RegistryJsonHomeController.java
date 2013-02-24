@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -32,13 +31,13 @@ public class RegistryJsonHomeController {
 
     private static Logger LOG = LoggerFactory.getLogger(JsonHomeController.class);
 
-    private JsonHomeEnvSource jsonHomeSource;
+    private RegistryJsonHomeSource jsonHomeSource;
     private URI relationTypeBaseUri;
     private int maxAge = 3600;
     private String defaultRegistry = "default";
 
     @Autowired
-    public void setJsonHomeSource(final JsonHomeEnvSource jsonHomeSource) {
+    public void setJsonHomeSource(final RegistryJsonHomeSource jsonHomeSource) {
         this.jsonHomeSource = jsonHomeSource;
     }
 

@@ -29,14 +29,14 @@ import static de.otto.jsonhome.model.JsonHome.jsonHome;
  * @since 20.11.12
  */
 @Component
-public class RegistryBasedJsonHomeSource implements JsonHomeEnvSource {
+public class DefaultRegistryJsonHomeSource implements RegistryJsonHomeSource {
 
-    private static Logger LOG = LoggerFactory.getLogger(RegistryBasedJsonHomeSource.class);
+    private static Logger LOG = LoggerFactory.getLogger(DefaultRegistryJsonHomeSource.class);
 
     private final JsonHomeClient client;
     private RegistryRepository registries;
 
-    public RegistryBasedJsonHomeSource() {
+    public DefaultRegistryJsonHomeSource() {
         this.client = new HttpJsonHomeClient();
     }
 

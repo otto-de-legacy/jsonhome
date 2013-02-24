@@ -8,7 +8,7 @@ import de.otto.jsonhome.model.JsonHome;
  * @author Guido Steinacker
  * @since 20.11.12
  */
-public interface JsonHomeEnvSource {
+public interface RegistryJsonHomeSource {
 
     /**
      * Returns a JsonHome instance for a specified environment.

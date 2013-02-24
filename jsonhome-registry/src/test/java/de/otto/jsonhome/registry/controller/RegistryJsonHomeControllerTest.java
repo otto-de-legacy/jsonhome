@@ -56,8 +56,8 @@ public class RegistryJsonHomeControllerTest extends AbstractTestNGSpringContextT
         assertEquals(href, "http://example.org/fooResource");
     }
 
-    private JsonHomeEnvSource getJsonHomeSource() {
-        return new JsonHomeEnvSource() {
+    private RegistryJsonHomeSource getJsonHomeSource() {
+        return new RegistryJsonHomeSource() {
             @Override
             public JsonHome getJsonHome(final String environment) {
                 return jsonHome(
