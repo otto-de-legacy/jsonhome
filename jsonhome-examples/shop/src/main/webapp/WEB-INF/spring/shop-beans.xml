@@ -88,4 +88,10 @@
         <property name="suffix" value=".ftl"/>
     </bean>
 
+    <!--
+     A DocController is used to show some more information about the link-relation types.
+    -->
+    <bean class="de.otto.jsonhome.controller.DocController">
+        <property name="rootDir" value="classpath:/docs/*" />
+    </bean>
 </beans>

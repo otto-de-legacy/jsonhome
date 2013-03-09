@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/storefront")
 @Rel("/rel/storefront")
 @Doc(rel = "/rel/storefront",
-     link = "http://de.wikipedia.org/wiki/Homepage"
+     link = "docs/rel/storefront.md"
 )
 public class StorefrontController {
 

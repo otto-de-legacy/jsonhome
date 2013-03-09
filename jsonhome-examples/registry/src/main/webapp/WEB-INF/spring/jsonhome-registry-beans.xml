@@ -51,7 +51,7 @@
      Configuration of the DocController, used to serve /docs resources.
     -->
     <bean class="de.otto.jsonhome.controller.DocController">
-        <property name="rootDir" value="classpath:/example/*" />
+        <property name="rootDir" value="classpath:/docs/*" />
     </bean>
 
     <!--
