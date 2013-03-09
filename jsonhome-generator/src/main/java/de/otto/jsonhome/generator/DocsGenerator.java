@@ -21,7 +21,6 @@ package de.otto.jsonhome.generator;
 import de.otto.jsonhome.annotation.Doc;
 import de.otto.jsonhome.annotation.Docs;
 import de.otto.jsonhome.model.Documentation;
-import org.springframework.core.annotation.AnnotationUtils;
 
 import java.net.URI;
 import java.util.Collections;
@@ -64,13 +63,13 @@ public class DocsGenerator {
         Docs docs = findAnnotation(controller, Docs.class);
         if (docs != null) {
             for (final Doc relDoc : docs.value()) {
-                if (linkRelationTypeOf(relDoc.rel()).equals(relationType)) {
+                if (absoluteUriOf(relDoc.rel()).equals(relationType)) {
                     return documentationFrom(relDoc);
                 }
             }
         } else {
             Doc relDoc = findAnnotation(controller, Doc.class);
-            if (relDoc != null && linkRelationTypeOf(relDoc.rel()).equals(relationType)) {
+            if (relDoc != null && absoluteUriOf(relDoc.rel()).equals(relationType)) {
                 return documentationFrom(relDoc);
             }
         }
@@ -104,7 +103,8 @@ public class DocsGenerator {
         final String[] description = doc.value();
         return documentation(
                 description != null ? asList(description) : Collections.<String>emptyList(),
-                link != null && !link.isEmpty() ? URI.create(link) : null);
+                absoluteUriOf(link)
+        );
     }
 
     /**
@@ -115,10 +115,22 @@ public class DocsGenerator {
      * @param link absolute or relative relation-type URI.
      * @return absolute URI, uniquely identifying a link-relation type.
      */
-    private URI linkRelationTypeOf(final String link) {
-        return create(link.startsWith("http://")
-                ? link
-                : relationTypeBaseUri + link);
+    private URI absoluteUriOf(final String link) {
+        if (link != null && !link.isEmpty()) {
+            if (link.startsWith("http://")) {
+                return create(link);
+            } else {
+                final String baseUri = relationTypeBaseUri.toString();
+                if (baseUri.endsWith("/") || link.startsWith("/")) {
+                    return create(baseUri + link);
+                } else {
+                    return create(baseUri + "/" + link);
+                }
+
+            }
+        } else {
+            return null;
+        }
     }
 
 }
