@@ -201,25 +201,24 @@ the resource itself - but this is up to you. Providing a full "REST client" is o
 
 ## 3. More Features
 
-A more complete support of the json-home spec is already planned, please have a look at the GitHub Issues. Release
-1.0 should support the full specification, as soon as the specification itself will be final. 
+There are some more features like:
+* jsonhome-jersey: a Jersey based implementation of jsonhome.
+* jsonhome-registry: a standalone server used to serve json-home documents for different environments (develop, test, live). The registry is also able to aggregate multiple json-home documents into one single document.
+* DocController: a (currently only Spring-based) controller used to serve Markdown documents.
+* HtmlController: a (currently only Spring-based) controller used serve a HTML representation of your json-home, enriched with documentation.
 
-For example, there will be a separate module used to serve json-home documents that are aggregated from different
-sources. This is intended for situations, where your API consists of resources handled by separate servers. For example:
-a web shop, having a product-system and a separate order-system. 
+## 4. Project Status
 
-Some things from the specification are still missing. Only "optional" information contained in the hints, but anyway.
-The missing parts will be added before release 1.0.
+As of draft-nottingham-json-home-02, only two things are still missing:
+* accept-patch is not supported for Spring. We have to update to Spring 3.2 to implement this.
+* accept-ranges is not yet implemented.
 
-## 4. Work in Progress!
+Draft-nottingham-json-home-03 should be published in a few days or weeks. This will open more 'to be implemented' features.
 
-* The project is in an early state. Many details will change in the next weeks, possibly in an incompatible way.
-* The json-home specification is still a draft, it might change (and will be extended) itself in the next months.
-* This library does not yet fully support the current draft specification.
-* But: it is already working. You can use it to easily generate json-home documents for your RESTful Spring application.
-JAX-RS support is already planned and will be added to version 0.2 in the next few weeks.
+A full support of the json-home spec is already planned, please have a look at the GitHub Issues. Release
+1.0 should support the final specification. Until then, minor releases of the jsonhome project will be published. 
 
-The library is actively used (and developed) at otto (http://www.otto.de).
+The library is actively used (and developed) at otto (http://www.otto.de). You may consider it as "Beta" software.
 
 ## 5. Licensing
 
