@@ -2,7 +2,6 @@ package de.otto.jsonhome.generator;
 
 
 import de.otto.jsonhome.annotation.Rel;
-import de.otto.jsonhome.fixtures.ResourceFixtures;
 import de.otto.jsonhome.model.Allow;
 import de.otto.jsonhome.model.Hints;
 import org.testng.annotations.Test;
@@ -42,7 +41,7 @@ public class JerseyHintsGeneratorTest {
     @Test
     public void testMethodWithProducesAndConsumes() throws Exception {
         // given
-        final JerseyHintsGenerator generator = new JerseyHintsGenerator(RELATION_TYPE_BASE_URI);
+        final JerseyHintsGenerator generator = new JerseyHintsGenerator(RELATION_TYPE_BASE_URI, null);
         final Class<?> resource = ResourceWithDifferentProducesAndConsumes.class;
         // when
         final Hints hints = generator.hintsOf(
@@ -64,7 +63,7 @@ public class JerseyHintsGeneratorTest {
     @Test
     public void testMethodWithHttpMethodOnly() throws Exception {
         // given
-        final JerseyHintsGenerator generator = new JerseyHintsGenerator(RELATION_TYPE_BASE_URI);
+        final JerseyHintsGenerator generator = new JerseyHintsGenerator(RELATION_TYPE_BASE_URI, null);
         final Class<?> resource = ResourceWithOnlyPut.class;
         // when
         final Hints hints = generator.hintsOf(
@@ -79,7 +78,7 @@ public class JerseyHintsGeneratorTest {
     @Test
     public void shouldFindRequiredPrecondition() throws NoSuchMethodException {
         // given
-        final JerseyHintsGenerator generator = new JerseyHintsGenerator(RELATION_TYPE_BASE_URI);
+        final JerseyHintsGenerator generator = new JerseyHintsGenerator(RELATION_TYPE_BASE_URI, null);
         final Class<?> controller = ResourceWithHints.class;
         // when
         final Hints hints = generator.hintsOf(
@@ -92,7 +91,7 @@ public class JerseyHintsGeneratorTest {
     @Test
     public void shouldFindRequiredAuthentication() throws NoSuchMethodException {
         // given
-        final JerseyHintsGenerator generator = new JerseyHintsGenerator(RELATION_TYPE_BASE_URI);
+        final JerseyHintsGenerator generator = new JerseyHintsGenerator(RELATION_TYPE_BASE_URI, null);
         final Class<?> controller = ResourceWithHints.class;
         // when
         final Hints hints = generator.hintsOf(

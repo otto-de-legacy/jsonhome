@@ -33,7 +33,7 @@ public class ResourceLinkGeneratorTest {
             super(APPLICATION_BASE_URI,
                     RELATION_TYPE_BASE_URI,
                     baseVarTypeUri,
-                    new HintsGenerator(RELATION_TYPE_BASE_URI) {
+                    new HintsGenerator(RELATION_TYPE_BASE_URI, null) {
                         @Override
                         protected Set<Allow> allowedHttpMethodsOf(final Method method) {
                             return singleton(GET);
@@ -49,7 +49,7 @@ public class ResourceLinkGeneratorTest {
                             return emptyList();
                         }
                     },
-                    new HrefVarsGenerator(RELATION_TYPE_BASE_URI) {
+                    new HrefVarsGenerator(RELATION_TYPE_BASE_URI, null) {
                         @Override
                         protected boolean hasRequestParam(final ParameterInfo parameterInfo) {
                             return true;

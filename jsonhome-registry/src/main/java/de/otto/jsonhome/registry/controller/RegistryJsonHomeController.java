@@ -32,29 +32,16 @@ public class RegistryJsonHomeController {
     private static Logger LOG = LoggerFactory.getLogger(JsonHomeController.class);
 
     private RegistryJsonHomeSource jsonHomeSource;
-    private URI relationTypeBaseUri;
     private int maxAge = 3600;
-    private String defaultRegistry = "default";
 
     @Autowired
     public void setJsonHomeSource(final RegistryJsonHomeSource jsonHomeSource) {
         this.jsonHomeSource = jsonHomeSource;
     }
 
-    @Value("${jsonhome.relationTypeBaseUri}")
-    public void setRelationTypeBaseUri(String relationTypeBaseUri) {
-        this.relationTypeBaseUri = create(relationTypeBaseUri);
-        LOG.info("RelationTypeBaseUri is {}", relationTypeBaseUri);
-    }
-
     public void setMaxAgeSeconds(int maxAge) {
         this.maxAge = maxAge;
         LOG.info("MaxAge is {}", maxAge);
-    }
-
-    @Value("${jsonhome.defaultRegistry}")
-    public void setDefaultRegistry(final String defaultRegistry) {
-        this.defaultRegistry = defaultRegistry;
     }
 
     @RequestMapping(

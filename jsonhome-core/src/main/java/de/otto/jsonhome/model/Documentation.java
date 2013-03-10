@@ -36,50 +36,102 @@ import static java.util.Collections.unmodifiableList;
 public final class Documentation {
 
     private final List<String> description;
+    private final String detailedDescription;
     private final URI link;
 
-    private Documentation(final List<String> description, final URI link) {
+    private Documentation(final List<String> description, final String detailedDescription, final URI link) {
         this.description = description != null
                 ? unmodifiableList(new ArrayList<String>(description))
                 : Collections.<String>emptyList();
+        this.detailedDescription = detailedDescription != null ? detailedDescription : "";
         this.link = link;
     }
 
     public static Documentation emptyDocs() {
-        return new Documentation(null, null);
+        return new Documentation(null, null, null);
     }
 
-    public static Documentation documentation(final List<String> description) {
-        return new Documentation(description, null);
-    }
-
-    public static Documentation documentation(final List<String> description, final URI docUri) {
-        return new Documentation(description, docUri);
+    public static Documentation documentation(final List<String> description, final String detailedDescription, final URI docUri) {
+        return new Documentation(description, detailedDescription, docUri);
     }
 
     public static Documentation docLink(final URI docUri) {
-        return new Documentation(null, docUri);
+        return new Documentation(null, null, docUri);
     }
 
+    /**
+     * Returns the list of paragraphs describing the annotated link-relation type or var type of a resource.
+     * <p/>
+     * This description is filled from {@link de.otto.jsonhome.annotation.Doc#value()}.
+     *
+     * @return list of paragraphs or empty list.
+     */
     public List<String> getDescription() {
         return description;
     }
 
+    /**
+     * Returns true if there is a non-empty description, false otherwise.
+     *
+     * @return boolean
+     */
     public boolean hasDescription() {
-        return description != null && description.size() > 0 && !description.get(0).isEmpty();
+        return description.size() > 0 && !description.get(0).isEmpty();
     }
 
+    /**
+     * Returns the HTML description of the annotated link-relation type or var type of a resource.
+     * <p/>
+     * The detailed description is generated from a Markdown document included using
+     * {@link de.otto.jsonhome.annotation.Doc#include()}.
+     *
+     * @return HTML or empty String.
+     */
+    public String getDetailedDescription() {
+        return detailedDescription;
+    }
+
+    /**
+     * Returns true if there is some non-empty detailed description, false otherwise.
+     *
+     * @return boolean
+     */
+    public boolean hasDetailedDescription() {
+        return !detailedDescription.isEmpty();
+    }
+
+    /**
+     * Returns a link to an external document providing additional documentation.
+     * <p/>
+     * The link is retrieved from {@link de.otto.jsonhome.annotation.Doc#link()}
+     *
+     * @return URI or null
+     */
     public URI getLink() {
         return link;
     }
 
+    /**
+     * Returns true if there is a link to an external documentation, false otherwise.
+     *
+     * @return boolean
+     */
     public boolean hasLink() {
         return link != null && !link.toString().isEmpty();
     }
 
+    /**
+     * Merges this Documentation instance with another instance.
+     * <p/>
+     * If both instances have values for an attribute, the other values will be discarded.
+     *
+     * @param other the other instance
+     * @return a merged documentation.
+     */
     public Documentation mergeWith(final Documentation other) {
         return new Documentation(
                 description.isEmpty() ? other.description : description,
+                detailedDescription.isEmpty() ? other.detailedDescription : detailedDescription,
                 link == null ? other.getLink() : link
         );
     }
@@ -92,6 +144,8 @@ public final class Documentation {
         Documentation that = (Documentation) o;
 
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (detailedDescription != null ? !detailedDescription.equals(that.detailedDescription) : that.detailedDescription != null)
+            return false;
         if (link != null ? !link.equals(that.link) : that.link != null) return false;
 
         return true;
@@ -100,6 +154,7 @@ public final class Documentation {
     @Override
     public int hashCode() {
         int result = description != null ? description.hashCode() : 0;
+        result = 31 * result + (detailedDescription != null ? detailedDescription.hashCode() : 0);
         result = 31 * result + (link != null ? link.hashCode() : 0);
         return result;
     }
@@ -107,7 +162,8 @@ public final class Documentation {
     @Override
     public String toString() {
         return "Documentation{" +
-                "value=" + description +
+                "description=" + description +
+                ", detailedDescription='" + detailedDescription + '\'' +
                 ", link=" + link +
                 '}';
     }

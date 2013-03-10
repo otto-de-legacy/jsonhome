@@ -125,18 +125,30 @@ public class HintsConverterTest {
     }
 
     @Test
-    public void testAdditionalDescription() {
+    public void testAdditionalDescriptionForApplicationJsonHome() {
         // given
         final Hints hints = hintsBuilder()
-                .with(documentation(asList("foo", "bar"), create("http://example.org/docs")))
+                .with(documentation(asList("foo", "bar"), "<h1>Hello</h1>", create("http://example.org/docs")))
+                .build();
+        // when
+        final Map<String, ?> jsonHomeMap = toRepresentation(hints, APPLICATION_JSONHOME);
+        // then
+        assertEquals(jsonHomeMap.get("docs"), "http://example.org/docs");
+        assertNull(jsonHomeMap.get("description"));
+        assertNull(jsonHomeMap.get("detailedDescription"));
+    }
+
+    @Test
+    public void testAdditionalDescriptionForApplicationJson() {
+        // given
+        final Hints hints = hintsBuilder()
+                .with(documentation(asList("foo", "bar"), "<h1>Hello</h1>", create("http://example.org/docs")))
                 .build();
         // when
         final Map<String, ?> jsonMap = toRepresentation(hints, APPLICATION_JSON);
-        final Map<String, ?> jsonHomeMap = toRepresentation(hints, APPLICATION_JSONHOME);
         // then
         assertEquals(jsonMap.get("docs"), "http://example.org/docs");
-        assertEquals(jsonHomeMap.get("docs"), "http://example.org/docs");
         assertEquals(jsonMap.get("description"), asList("foo", "bar"));
-        assertNull(jsonHomeMap.get("description"));
+        assertEquals(jsonMap.get("detailedDescription"), "<h1>Hello</h1>");
     }
 }

@@ -18,7 +18,6 @@
 
 package de.otto.jsonhome.generator;
 
-import de.otto.jsonhome.model.Authentication;
 import de.otto.jsonhome.model.Hints;
 import org.testng.annotations.Test;
 
@@ -45,7 +44,7 @@ public class SpringHintsGeneratorTest {
     @Test
     public void testMethodWithTwoRepresentations() throws Exception {
         // given
-        final SpringHintsGenerator generator = new SpringHintsGenerator(RELATION_TYPE_BASE_URI);
+        final SpringHintsGenerator generator = new SpringHintsGenerator(RELATION_TYPE_BASE_URI, null);
         final Class<?> controller = ControllerWithDifferentProducesAndConsumes.class;
         // when
         final Hints hints = generator.hintsOf(
@@ -59,7 +58,7 @@ public class SpringHintsGeneratorTest {
     @Test
     public void shouldFindRequiredPrecondition() throws NoSuchMethodException {
         // given
-        final SpringHintsGenerator generator = new SpringHintsGenerator(RELATION_TYPE_BASE_URI);
+        final SpringHintsGenerator generator = new SpringHintsGenerator(RELATION_TYPE_BASE_URI, null);
         final Class<?> controller = ControllerWithHints.class;
         // when
         final Hints hints = generator.hintsOf(
@@ -72,7 +71,7 @@ public class SpringHintsGeneratorTest {
     @Test
     public void shouldFindRequiredAuthentication() throws NoSuchMethodException {
         // given
-        final SpringHintsGenerator generator = new SpringHintsGenerator(RELATION_TYPE_BASE_URI);
+        final SpringHintsGenerator generator = new SpringHintsGenerator(RELATION_TYPE_BASE_URI, null);
         final Class<?> controller = ControllerWithHints.class;
         // when
         final Hints hints = generator.hintsOf(

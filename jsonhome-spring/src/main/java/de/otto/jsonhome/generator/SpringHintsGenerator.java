@@ -30,10 +30,19 @@ import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
+/**
+ * A HintsGenerator that is used to generate Hints for Spring-base applications.
+ */
 public class SpringHintsGenerator extends HintsGenerator {
 
-    public SpringHintsGenerator(final URI relationTypeBaseUri) {
-        super(relationTypeBaseUri);
+    /**
+     * Creates a SpringHintsGenerator.
+     *
+     * @param relationTypeBaseUri the base URI used to create absolute relation-type URIs.
+     * @param docRootDir the root classpath directory containing Markdown documents. May be null.
+     */
+    public SpringHintsGenerator(final URI relationTypeBaseUri, final String docRootDir) {
+        super(relationTypeBaseUri, docRootDir);
     }
 
     /**

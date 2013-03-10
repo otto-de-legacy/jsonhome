@@ -6,6 +6,8 @@ import javax.ws.rs.Path;
 import java.net.URI;
 import java.util.Properties;
 
+import static java.net.URI.create;
+
 /**
  * @author Sebastian Schroeder
  * @since 09.12.2012
@@ -22,16 +24,21 @@ public final class JerseyJsonHomeGenerator extends JsonHomeGenerator {
         if (relationTypeBaseUri == null) {
             throw new IllegalStateException("relationTypeBaseUri property not set in jsonhome.properties");
         }
+        final String varTypeBaseUri = properties.getProperty("varTypeBaseUri", null);
+        final String docRootDir = properties.getProperty("docRootDir", null);
         setResourceLinkGenerator(new JerseyResourceLinkGenerator(
-                URI.create(applicationBaseUri), URI.create(relationTypeBaseUri)));
+                create(applicationBaseUri),
+                create(relationTypeBaseUri),
+                varTypeBaseUri != null ? create(varTypeBaseUri) : null,
+                docRootDir));
     }
 
-    public JerseyJsonHomeGenerator(URI applicationBaseUri, URI relationTypeBaseUri) {
-        setResourceLinkGenerator(new JerseyResourceLinkGenerator(applicationBaseUri, relationTypeBaseUri));
+    JerseyJsonHomeGenerator(URI applicationBaseUri, URI relationTypeBaseUri) {
+        setResourceLinkGenerator(new JerseyResourceLinkGenerator(applicationBaseUri, relationTypeBaseUri, null, null));
     }
 
     public JerseyJsonHomeGenerator(String applicationBaseUri, String relationTypeBaseUri) {
-        this(URI.create(applicationBaseUri), URI.create(relationTypeBaseUri));
+        this(create(applicationBaseUri), create(relationTypeBaseUri));
     }
 
     /**

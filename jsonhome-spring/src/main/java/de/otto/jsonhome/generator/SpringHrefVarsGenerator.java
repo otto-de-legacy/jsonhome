@@ -22,10 +22,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.URI;
 
+/**
+ * A HrefVarsGenerator used to generate HrefVars for Spring-based applications.
+ */
 public class SpringHrefVarsGenerator extends HrefVarsGenerator {
 
-    public SpringHrefVarsGenerator(final URI relationTypeBaseUri) {
-        super(relationTypeBaseUri);
+    /**
+     * Creates a SpringHrefVarsGenerator.
+     *
+     * @param relationTypeBaseUri the base URI used to create absolute relation-type URIs.
+     * @param docRootDir the root classpath directory containing Markdown documents. May be null.
+     */
+    public SpringHrefVarsGenerator(final URI relationTypeBaseUri, final String docRootDir) {
+        super(relationTypeBaseUri, docRootDir);
     }
 
     @Override

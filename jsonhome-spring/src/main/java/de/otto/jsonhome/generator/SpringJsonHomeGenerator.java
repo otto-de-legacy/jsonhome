@@ -28,6 +28,8 @@ import java.net.URI;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
+ * A JsonHomeGenerator used to generate JsonHome objects for Spring-based applications.
+ *
  * @author Guido Steinacker
  * @since 17.10.12
  */
@@ -37,6 +39,7 @@ public final class SpringJsonHomeGenerator extends JsonHomeGenerator {
     private URI applicationBaseUri;
     private URI relationTypeBaseUri;
     private URI varTypeBaseUri;
+    private String docRootDir;
 
     @Value("${jsonhome.applicationBaseUri}")
     public void setApplicationBaseUri(final String applicationBaseUri) {
@@ -55,9 +58,19 @@ public final class SpringJsonHomeGenerator extends JsonHomeGenerator {
         }
     }
 
+    @Value("${jsonhome.docRootDir}")
+    public void setDocRootDir(String docRootDir) {
+        this.docRootDir = docRootDir;
+    }
+
     @PostConstruct
     public void postConstruct() {
-        setResourceLinkGenerator(new SpringResourceLinkGenerator(applicationBaseUri, relationTypeBaseUri, varTypeBaseUri));
+        setResourceLinkGenerator(new SpringResourceLinkGenerator(
+                applicationBaseUri,
+                relationTypeBaseUri,
+                varTypeBaseUri,
+                docRootDir)
+        );
     }
 
     @Override

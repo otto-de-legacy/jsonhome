@@ -34,6 +34,8 @@ import static java.util.Collections.emptyList;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
+ * Abstract generator used to generate {@link Hints} for a resource.
+ *
  * @author Guido Steinacker
  * @since 18.10.12
  */
@@ -41,8 +43,14 @@ public abstract class HintsGenerator {
 
     private final DocsGenerator docsGenerator;
 
-    protected HintsGenerator(final URI relationTypeBaseUri) {
-        this.docsGenerator = new DocsGenerator(relationTypeBaseUri);
+    /**
+     * Creates a HintsGenerator.
+     *
+     * @param relationTypeBaseUri the base URI used to create absolute relation-type URIs.
+     * @param docRootDir the root classpath directory containing Markdown documents. May be null.
+     */
+    protected HintsGenerator(final URI relationTypeBaseUri, final String docRootDir) {
+        this.docsGenerator = new DocsGenerator(relationTypeBaseUri, docRootDir);
     }
 
     /**

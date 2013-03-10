@@ -98,8 +98,13 @@ public final class HintsConverter {
         if (hints.getDocs().hasLink()) {
             jsonHints.put("docs", hints.getDocs().getLink().toString());
         }
-        if (mediaType.equals(JsonHomeMediaType.APPLICATION_JSON) && hints.getDocs().hasDescription()) {
-            jsonHints.put("description", hints.getDocs().getDescription());
+        if (mediaType.equals(JsonHomeMediaType.APPLICATION_JSON)) {
+            if (hints.getDocs().hasDescription()) {
+                jsonHints.put("description", hints.getDocs().getDescription());
+            }
+            if (hints.getDocs().hasDetailedDescription()) {
+                jsonHints.put("detailedDescription", hints.getDocs().getDetailedDescription());
+            }
         }
         return jsonHints;
     }

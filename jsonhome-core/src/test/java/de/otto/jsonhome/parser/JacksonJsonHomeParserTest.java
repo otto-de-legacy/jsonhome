@@ -174,25 +174,29 @@ public class JacksonJsonHomeParserTest {
     @Test
     public void shouldParseApplicationJsonWithDescription() throws Exception {
         // given
-        final String jsonHomeDocument = "{\n" +
+        final String jsonDocument = "{\n" +
                 "  \"resources\" : {" +
                 "\"http://example.org/jsonhome-example/rel/storefront\" : {\n" +
                 "      \"href\" : \"http://example.org/jsonhome-example/storefront\",\n" +
                 "      \"hints\" : {\n" +
                 "        \"docs\" : \"http://de.wikipedia.org/wiki/Homepage\",\n" +
-                "        \"description\" : [\"a short description\"]\n" +
+                "        \"description\" : [\"a short description\"],\n" +
+                "        \"detailedDescription\" : \"<p>A detailed description.</p>\"\n" +
                 "      }\n" +
                 "    }}}";
         // when
         final JsonHome jsonHome = new JacksonJsonHomeParser()
-                .parse(new ByteArrayInputStream(jsonHomeDocument.getBytes()));
+                .parse(new ByteArrayInputStream(jsonDocument.getBytes()));
         // then
         assertEquals(jsonHome, jsonHome(
                 directLink(
                         create("http://example.org/jsonhome-example/rel/storefront"),
                         create("http://example.org/jsonhome-example/storefront"),
                         hintsBuilder()
-                                .with(documentation(asList("a short description"), create("http://de.wikipedia.org/wiki/Homepage")))
+                                .with(documentation(
+                                        asList("a short description"),
+                                        "<p>A detailed description.</p>",
+                                        create("http://de.wikipedia.org/wiki/Homepage")))
                                 .build()
                 )
         ));

@@ -15,8 +15,8 @@ import java.util.*;
  */
 public final class JerseyHintsGenerator extends HintsGenerator {
 
-    public JerseyHintsGenerator(final URI relationTypeBaseUri) {
-        super(relationTypeBaseUri);
+    public JerseyHintsGenerator(final URI relationTypeBaseUri, final String docRootDir) {
+        super(relationTypeBaseUri, docRootDir);
     }
 
     @Override

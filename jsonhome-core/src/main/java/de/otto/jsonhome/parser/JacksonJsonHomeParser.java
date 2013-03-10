@@ -109,7 +109,7 @@ public class JacksonJsonHomeParser implements JsonHomeParser {
                     builder.representedAs(iterator.next().getTextValue());
                 }
             }
-            if (hints.has("docs") || hints.has("description")) {
+            if (hints.has("docs") || hints.has("description") || hints.has("detailedDescription")) {
                 final URI docUri = hints.has("docs") ? URI.create(hints.get("docs").getTextValue()) : null;
                 final List<String> description = new ArrayList<String>();
                 final Iterator<JsonNode> elements = hints.has("description")
@@ -118,7 +118,8 @@ public class JacksonJsonHomeParser implements JsonHomeParser {
                 while (elements.hasNext()) {
                     description.add(elements.next().getTextValue());
                 }
-                builder.with(documentation(description, docUri));
+                final String detailedDescription = hints.has("detailedDescription") ? hints.get("detailedDescription").getTextValue() : null;
+                builder.with(documentation(description, detailedDescription, docUri));
             }
             if (hints.has("precondition-req")) {
                 final Iterator<JsonNode> iterator = hints.get("precondition-req").getElements();

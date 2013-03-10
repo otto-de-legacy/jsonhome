@@ -25,7 +25,7 @@ public class HrefVarsGeneratorTest {
     static class TestHrefVarsGenerator extends HrefVarsGenerator {
 
         protected TestHrefVarsGenerator() {
-            super(RELATIONTYPE_BASE_URI);
+            super(RELATIONTYPE_BASE_URI, null);
         }
 
         @Override

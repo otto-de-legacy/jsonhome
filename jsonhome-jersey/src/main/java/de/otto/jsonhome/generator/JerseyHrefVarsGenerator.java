@@ -10,8 +10,8 @@ import java.net.URI;
  */
 public final class JerseyHrefVarsGenerator extends HrefVarsGenerator {
 
-    public JerseyHrefVarsGenerator(final URI relationTypeBaseUri) {
-        super(relationTypeBaseUri);
+    public JerseyHrefVarsGenerator(final URI relationTypeBaseUri, final String docRootDir) {
+        super(relationTypeBaseUri, docRootDir);
     }
 
     /**

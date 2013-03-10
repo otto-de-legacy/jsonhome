@@ -44,6 +44,11 @@ public @interface Doc {
      */
     String[] value() default "";
 
+    /**
+     * Optional relative URI pointing to a Markdown document to include into the
+     * HTML description of the documentation.
+     */
+    String include() default "";
 
     /**
      * Optional fully qualified URI pointing to external documentation.

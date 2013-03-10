@@ -23,10 +23,14 @@
                 <td>${resource.linkRelationType}</td>
                 <td>
 <#list resource.hints.docs.description as descr>
-                    ${descr}<br/>
+                    <p>${descr}</p>
 </#list>
+<#if resource.hints.docs.detailedDescription?has_content>
+                    ${resource.hints.docs.detailedDescription}
+                    <br/>
+</#if>
 <#if resource.hints.docs.link?has_content>
-    See <a href="${resource.hints.docs.link}">${resource.hints.docs.link}</a>
+                    <p>See <a href="${resource.hints.docs.link}">${resource.hints.docs.link}</a></p>
 </#if>
                 </td>
         </tr>
@@ -51,11 +55,15 @@
                         <td>
     <#if hrefVar.docs.hasDescription()>
         <#list hrefVar.docs.description as descr>
-                            ${descr}<br/>
+                            <p>${descr}</p>
         </#list>
     </#if>
+    <#if hrefVar.docs.hasDetailedDescription()>
+                            ${hrefVar.docs.detailedDescription}
+                            <br/>
+    </#if>
     <#if hrefVar.docs.hasLink()>
-                            See <a href="${hrefVar.docs.link}">${hrefVar.docs.link}</a>
+                            <p>See <a href="${hrefVar.docs.link}">${hrefVar.docs.link}</a></p>
     </#if>
                         </td>
                     </tr>

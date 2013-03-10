@@ -25,7 +25,8 @@ public class JerseyResourceLinkGeneratorTest {
     public void testPathsWithLeadingAndTrailingSlashes() throws Exception {
         final ResourceLinkGenerator generator = new JerseyResourceLinkGenerator(
                 create("http://example.org"),
-                create("http://rel.example.org")
+                create("http://rel.example.org"),
+                null, null
         );
         final String resource = generator.resourcePathFor(
                 ResourceWithResourceAndLinkRelationType.class.getMethod("bar")
@@ -38,7 +39,8 @@ public class JerseyResourceLinkGeneratorTest {
         // given
         final JerseyResourceLinkGenerator generator = new JerseyResourceLinkGenerator(
                 create("http://example.org"),
-                create("http://rel.example.org")
+                create("http://rel.example.org"),
+                null, null
         );
         final Method method = ResourceWithTemplateLinkWithExtension.class.getMethod("getSomething");
         // when

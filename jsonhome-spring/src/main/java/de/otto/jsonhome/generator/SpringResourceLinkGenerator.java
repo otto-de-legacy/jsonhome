@@ -38,15 +38,24 @@ public class SpringResourceLinkGenerator extends ResourceLinkGenerator {
 
     private final URI applicationBaseUri;
 
+    /**
+     * Creates a SpringResourceLinkGenerator.
+     *
+     * @param applicationBaseUri the base URI used to create href and href-template URIs.
+     * @param relationTypeBaseUri the base URI used to create absolute relation-type URIs.
+     * @param varTypeBaseUri the base URI used to create var-types for href-vars. May be null.
+     * @param docRootDir the root classpath directory containing Markdown documents. May be null.
+     */
     public SpringResourceLinkGenerator(final URI applicationBaseUri,
                                        final URI relationTypeBaseUri,
-                                       final URI varTypeBaseUri) {
+                                       final URI varTypeBaseUri,
+                                       final String docRootDir) {
         super(
                 applicationBaseUri,
                 relationTypeBaseUri,
                 varTypeBaseUri,
-                new SpringHintsGenerator(relationTypeBaseUri),
-                new SpringHrefVarsGenerator(relationTypeBaseUri)
+                new SpringHintsGenerator(relationTypeBaseUri, docRootDir),
+                new SpringHrefVarsGenerator(relationTypeBaseUri, docRootDir)
         );
         this.applicationBaseUri = applicationBaseUri;
     }

@@ -50,6 +50,7 @@ import static org.springframework.http.HttpStatus.PRECONDITION_FAILED;
 @Docs({
         @Doc(value = {"The collection of products.",
                       "This is a second paragraph, describing the collection of products."},
+             include = "/rel/products.md",
              rel = "/rel/products"),
         @Doc(value = "A link to a single product.",
              rel = "/rel/product",

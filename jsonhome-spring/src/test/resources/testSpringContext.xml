@@ -12,6 +12,7 @@
         <prop key="jsonhome.applicationBaseUri">http://example.org</prop>
         <prop key="jsonhome.relationTypeBaseUri">http://specs.example.org</prop>
         <prop key="jsonhome.varTypeBaseUri" />
+        <prop key="jsonhome.docRootDir" />
     </util:properties>
 
     <context:property-placeholder properties-ref="testProps" />

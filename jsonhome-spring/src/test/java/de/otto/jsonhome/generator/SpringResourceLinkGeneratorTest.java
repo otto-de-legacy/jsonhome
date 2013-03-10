@@ -51,7 +51,7 @@ public class SpringResourceLinkGeneratorTest {
     public void shouldUseHrefUriFromSpringAnnotations() throws Exception {
 
         // given
-        final SpringResourceLinkGenerator generator = new SpringResourceLinkGenerator(BASE_URI, BASE_URI, null);
+        final SpringResourceLinkGenerator generator = new SpringResourceLinkGenerator(BASE_URI, BASE_URI, null, null);
         final Method method = ControllerWithDirectResourceLink.class.getMethod("getSomething");
         // when
         final boolean isCandidateForAnalysis = generator.isCandidateForAnalysis(method);
@@ -71,7 +71,7 @@ public class SpringResourceLinkGeneratorTest {
     @Test
     public void shouldOverrideHrefUriUsingHrefAnnotation() throws Exception {
         // given
-        final SpringResourceLinkGenerator generator = new SpringResourceLinkGenerator(BASE_URI, BASE_URI, null);
+        final SpringResourceLinkGenerator generator = new SpringResourceLinkGenerator(BASE_URI, BASE_URI, null, null);
         final Method method = ControllerWithOverriddenFullyQualifiedResourceLink.class.getMethod("getSomething");
         // when
         final boolean isCandidateForAnalysis = generator.isCandidateForAnalysis(method);
@@ -91,7 +91,7 @@ public class SpringResourceLinkGeneratorTest {
     @Test
     public void shouldOverrideHrefUriUsingRelativeHrefAnnotation() throws Exception {
         // given
-        final SpringResourceLinkGenerator generator = new SpringResourceLinkGenerator(BASE_URI, BASE_URI.normalize(), null);
+        final SpringResourceLinkGenerator generator = new SpringResourceLinkGenerator(BASE_URI, BASE_URI.normalize(), null, null);
         final Method method = ControllerWithOverriddenFullyQualifiedResourceLink.class.getMethod("getSomethingElse");
         // when
         final boolean isCandidateForAnalysis = generator.isCandidateForAnalysis(method);
@@ -111,7 +111,7 @@ public class SpringResourceLinkGeneratorTest {
     @Test
     public void shouldOverrideHrefTemplateUsingHrefTemplateAnnotation() throws Exception {
         // given
-        final SpringResourceLinkGenerator generator = new SpringResourceLinkGenerator(BASE_URI, BASE_URI, null);
+        final SpringResourceLinkGenerator generator = new SpringResourceLinkGenerator(BASE_URI, BASE_URI, null, null);
         final Method method = ControllerWithOverriddenRelativeTemplatedResourceLink.class.getMethod("getSomething");
         // when
         final boolean isCandidateForAnalysis = generator.isCandidateForAnalysis(method);

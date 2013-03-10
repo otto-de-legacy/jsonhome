@@ -31,12 +31,23 @@ import static de.otto.jsonhome.model.HrefVar.hrefVar;
 import static java.net.URI.create;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
+/**
+ * Abstract generator used to generate {@link de.otto.jsonhome.model.HrefVar}s for a templated resource.
+ *
+ * @author Guido Steinacker
+ */
 public abstract class HrefVarsGenerator {
 
     private final DocsGenerator docsGenerator;
 
-    protected HrefVarsGenerator(final URI relationTypeBaseUri) {
-        docsGenerator = new DocsGenerator(relationTypeBaseUri);
+    /**
+     * Creates a HrefVarsGenerator.
+     *
+     * @param relationTypeBaseUri the base URI used to create absolute relation-type URIs.
+     * @param docRootDir the root classpath directory containing Markdown documents. May be null.
+     */
+    protected HrefVarsGenerator(final URI relationTypeBaseUri, final String docRootDir) {
+        docsGenerator = new DocsGenerator(relationTypeBaseUri, docRootDir);
     }
 
     /**

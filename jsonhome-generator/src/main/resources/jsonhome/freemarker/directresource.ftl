@@ -24,11 +24,15 @@
                 <td>
 <#if resource.hints.docs.hasDescription()>
     <#list resource.hints.docs.description as doc>
-                    ${doc}<br/>
+                    <p>${doc}</p>
     </#list>
 </#if>
+<#if resource.hints.docs.hasDetailedDescription()>
+                    ${hrefVar.docs.detailedDescription}
+                    <br/>
+</#if>
 <#if resource.hints.docs.hasLink()>
-                    See <a href="${resource.hints.docs.link}">${resource.hints.docs.link}</a>
+                    <p>See <a href="${resource.hints.docs.link}">${resource.hints.docs.link}</a></p>
 </#if>
                 </td>
         </tr>
