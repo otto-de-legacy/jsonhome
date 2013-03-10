@@ -276,4 +276,4 @@ In order to contribute source code:
 * **Link-Relation Types**:
 [http://tools.ietf.org/html/rfc5988](http://tools.ietf.org/html/rfc5988)
 
-Please also have a look at the project's [wiki pages](https://github.com/otto-de/jsonhome/wiki).
+**Please also have a look at the project's [wiki pages](https://github.com/otto-de/jsonhome/wiki).**
