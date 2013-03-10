@@ -17,13 +17,9 @@ package de.otto.jsonhome.example.helloworld;
 
 import de.otto.jsonhome.annotation.Doc;
 import de.otto.jsonhome.annotation.Rel;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import static org.springframework.http.MediaType.ALL_VALUE;
-import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
 
 /**
@@ -39,10 +35,15 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 )
 public class HelloController {
 
-    @RequestMapping(value = "/", produces = {"text/plain", "*/*"})
+    @RequestMapping(value = "/", produces = {"text/html", "*/*"})
     @ResponseBody
     public String getHelloWorld() {
-        return "Hello World!";
+        return "<h1>Hello World!</h1><p>Open <a href=\"json-home\">json-home</a></p>";
     }
 
+    @RequestMapping(value = "/", produces = "text/plain")
+    @ResponseBody
+    public String getHelloWorldAsPlainText() {
+        return "Hello World!";
+    }
 }
