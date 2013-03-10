@@ -121,6 +121,24 @@ public class JacksonJsonHomeParser implements JsonHomeParser {
                 final String detailedDescription = hints.has("detailedDescription") ? hints.get("detailedDescription").getTextValue() : null;
                 builder.with(documentation(description, detailedDescription, docUri));
             }
+            if (hints.has("accept-ranges")) {
+                final Iterator<JsonNode> iterator = hints.get("accept-ranges").getElements();
+                while (iterator.hasNext()) {
+                    final String textValue = iterator.next().getTextValue();
+                    if (!textValue.isEmpty()) {
+                        builder.acceptingRanges(textValue);
+                    }
+                }
+            }
+            if (hints.has("prefer")) {
+                final Iterator<JsonNode> iterator = hints.get("prefer").getElements();
+                while (iterator.hasNext()) {
+                    final String textValue = iterator.next().getTextValue();
+                    if (!textValue.isEmpty()) {
+                        builder.preferring(textValue);
+                    }
+                }
+            }
             if (hints.has("precondition-req")) {
                 final Iterator<JsonNode> iterator = hints.get("precondition-req").getElements();
                 while (iterator.hasNext()) {

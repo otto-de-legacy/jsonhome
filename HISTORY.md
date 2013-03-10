@@ -7,6 +7,8 @@
 * Feature: New DocController with Markdown support. This may be used to serve documentation of vendor-specific
   media-types, link-relation types, and so on. The DocController is currently available in the jsonhome-spring module
   and can also be used in combination with the jsonhome-registry.
+* Feature: The accept-ranges hint is now supported.
+* Feature: The prefer hint is now supported.
 
 ### 0.3.1 Known Incompatibilities to 0.3.0
 

@@ -70,6 +70,8 @@ public abstract class HintsGenerator {
         final HintsBuilder hintsBuilder = hintsBuilder()
                 .allowing(allows)
                 .with(docsGenerator.documentationFrom(relationType, method.getDeclaringClass()))
+                .acceptingRanges(acceptedRangesFrom(method))
+                .preferring(preferencesFrom(method))
                 .requiring(preconditionsFrom(method))
                 .withAuthRequired(requiredAuthenticationFrom(method))
                 .withStatus(statusFrom(method));
@@ -98,6 +100,42 @@ public abstract class HintsGenerator {
             hintsBuilder.representedAs(join(produced, consumed));
         }
         return hintsBuilder.build();
+    }
+
+    /**
+     * Analyses the method and returns the list of accepted ranges supported by the method.
+     * <p/>
+     * This implementation is using the {@link de.otto.jsonhome.annotation.Hints} annotation to determine the
+     * accepted ranges.
+     *
+     * @param method Method responsible for handling an HTTP request.
+     * @return List of Strings, or an empty list.
+     */
+    protected List<String> acceptedRangesFrom(final Method method) {
+        final de.otto.jsonhome.annotation.Hints annotation = findAnnotation(method, de.otto.jsonhome.annotation.Hints.class);
+        if (annotation != null && annotation.acceptRanges() != null) {
+            return asList(annotation.acceptRanges());
+        } else {
+            return emptyList();
+        }
+    }
+
+    /**
+     * Analyses the method and returns the list of preferences of the method.
+     * <p/>
+     * This implementation is using the {@link de.otto.jsonhome.annotation.Hints} annotation to determine the
+     * preferences.
+     *
+     * @param method Method responsible for handling an HTTP request.
+     * @return List of Strings, or an empty list.
+     */
+    protected List<String> preferencesFrom(final Method method) {
+        final de.otto.jsonhome.annotation.Hints annotation = findAnnotation(method, de.otto.jsonhome.annotation.Hints.class);
+        if (annotation != null && annotation.prefer() != null) {
+            return asList(annotation.prefer());
+        } else {
+            return emptyList();
+        }
     }
 
     /**

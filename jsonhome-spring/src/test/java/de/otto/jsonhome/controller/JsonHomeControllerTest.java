@@ -143,6 +143,42 @@ public class JsonHomeControllerTest {
     }
 
     @Test
+    public void shouldContainPreferHint() {
+        // given
+        final JsonHomeController controller = jsonHomeController(
+                ControllerWithHints.class,
+                "http://example.org",
+                "http://otto.de");
+        // when
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        final Map<String, ?> resourcesMap = controller.getAsApplicationJsonHome(response);
+        // then
+        @SuppressWarnings("unchecked")
+        final Map<String, Map<String, ?>> resources = (Map<String, Map<String, ?>>) resourcesMap.get("resources");
+        final Map<String, ?> relFoo = resources.get("http://otto.de/rel/preferHint");
+        assertNotNull(relFoo);
+        assertEquals(asMap(relFoo.get("hints")).get("prefer"), asList("return-representation=application/json", "return-asynch"));
+    }
+
+    @Test
+    public void shouldContainAcceptRangesHint() {
+        // given
+        final JsonHomeController controller = jsonHomeController(
+                ControllerWithHints.class,
+                "http://example.org",
+                "http://otto.de");
+        // when
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        final Map<String, ?> resourcesMap = controller.getAsApplicationJsonHome(response);
+        // then
+        @SuppressWarnings("unchecked")
+        final Map<String, Map<String, ?>> resources = (Map<String, Map<String, ?>>) resourcesMap.get("resources");
+        final Map<String, ?> relFoo = resources.get("http://otto.de/rel/acceptRangesHint");
+        assertNotNull(relFoo);
+        assertEquals(asMap(relFoo.get("hints")).get("accept-ranges"), asList("bytes"));
+    }
+
+    @Test
     public void shouldContainPreconditionReqEtag() {
         // given
         final JsonHomeController controller = jsonHomeController(

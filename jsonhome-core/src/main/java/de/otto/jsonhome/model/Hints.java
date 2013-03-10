@@ -50,6 +50,8 @@ public final class Hints {
     private final List<String> acceptPut;
     private final List<String> acceptPost;
     private final List<String> acceptPatch;
+    private final List<String> acceptRanges;
+    private final List<String> preferences;
     private final List<Precondition> preconditionReq;
     private final List<Authentication> authReq;
     private final Status status;
@@ -80,6 +82,8 @@ public final class Hints {
                 Collections.<String>emptyList(),
                 Collections.<String>emptyList(),
                 Collections.<String>emptyList(),
+                Collections.<String>emptyList(),
+                Collections.<String>emptyList(),
                 Collections.<Precondition>emptyList(),
                 Collections.<Authentication>emptyList(),
                 Status.OK,
@@ -91,6 +95,8 @@ public final class Hints {
                               final List<String> acceptPut,
                               final List<String> acceptPost,
                               final List<String> acceptPatch,
+                              final List<String> acceptRanges,
+                              final List<String> preferences,
                               final List<Precondition> preconditionReq,
                               final List<Authentication> authReq,
                               final Status status,
@@ -98,6 +104,8 @@ public final class Hints {
         return new Hints(
                 allows,
                 representations, acceptPut, acceptPost, acceptPatch,
+                acceptRanges,
+                preferences,
                 preconditionReq,
                 authReq,
                 status,
@@ -109,6 +117,8 @@ public final class Hints {
                   final List<String> acceptPut,
                   final List<String> acceptPost,
                   final List<String> acceptPatch,
+                  final List<String> acceptRanges,
+                  final List<String> preferences,
                   final List<Precondition> preconditionReq,
                   final List<Authentication> authReq,
                   final Status status,
@@ -127,6 +137,8 @@ public final class Hints {
         this.acceptPut = acceptPut;
         this.acceptPost = acceptPost;
         this.acceptPatch = acceptPatch;
+        this.acceptRanges = unmodifiableList(acceptRanges);
+        this.preferences = unmodifiableList(preferences);
         this.preconditionReq = unmodifiableList(new ArrayList<Precondition>(preconditionReq));
         this.authReq = unmodifiableList(new ArrayList<Authentication>(authReq));
         this.status = status != null ? status : Status.OK;
@@ -168,6 +180,20 @@ public final class Hints {
      */
     public List<String> getAcceptPatch() {
         return acceptPatch;
+    }
+
+    /**
+     * @return the accept-ranges hint, declaring the accepted range requests .
+     */
+    public List<String> getAcceptRanges() {
+        return acceptRanges;
+    }
+
+    /**
+     * @return the preferences supported by the hinted resource.
+     */
+    public List<String> getPreferences() {
+        return preferences;
     }
 
     /**
@@ -217,6 +243,10 @@ public final class Hints {
         acceptPost.addAll(other.getAcceptPost());
         final Set<String> acceptPatch = new LinkedHashSet<String>(this.acceptPatch);
         acceptPatch.addAll(other.getAcceptPatch());
+        final Set<String> acceptRanges = new LinkedHashSet<String>(this.acceptRanges);
+        acceptRanges.addAll(other.getAcceptRanges());
+        final Set<String> preferences = new LinkedHashSet<String>(this.preferences);
+        preferences.addAll(other.getPreferences());
         final Set<Precondition> preconditionReq = new LinkedHashSet<Precondition>(this.preconditionReq);
         preconditionReq.addAll(other.getPreconditionReq());
         final List<Authentication> mergedAuth = mergeAuthReq(other.getAuthReq());
@@ -226,6 +256,8 @@ public final class Hints {
                 new ArrayList<String>(acceptPut),
                 new ArrayList<String>(acceptPost),
                 new ArrayList<String>(acceptPatch),
+                new ArrayList<String>(acceptRanges),
+                new ArrayList<String>(preferences),
                 new ArrayList<Precondition>(preconditionReq),
                 mergedAuth,
                 status.mergeWith(other.getStatus()),
@@ -262,11 +294,13 @@ public final class Hints {
         if (acceptPatch != null ? !acceptPatch.equals(hints.acceptPatch) : hints.acceptPatch != null) return false;
         if (acceptPost != null ? !acceptPost.equals(hints.acceptPost) : hints.acceptPost != null) return false;
         if (acceptPut != null ? !acceptPut.equals(hints.acceptPut) : hints.acceptPut != null) return false;
+        if (acceptRanges != null ? !acceptRanges.equals(hints.acceptRanges) : hints.acceptRanges != null) return false;
         if (allows != null ? !allows.equals(hints.allows) : hints.allows != null) return false;
         if (authReq != null ? !authReq.equals(hints.authReq) : hints.authReq != null) return false;
         if (docs != null ? !docs.equals(hints.docs) : hints.docs != null) return false;
         if (preconditionReq != null ? !preconditionReq.equals(hints.preconditionReq) : hints.preconditionReq != null)
             return false;
+        if (preferences != null ? !preferences.equals(hints.preferences) : hints.preferences != null) return false;
         if (representations != null ? !representations.equals(hints.representations) : hints.representations != null)
             return false;
         if (status != hints.status) return false;
@@ -281,6 +315,8 @@ public final class Hints {
         result = 31 * result + (acceptPut != null ? acceptPut.hashCode() : 0);
         result = 31 * result + (acceptPost != null ? acceptPost.hashCode() : 0);
         result = 31 * result + (acceptPatch != null ? acceptPatch.hashCode() : 0);
+        result = 31 * result + (acceptRanges != null ? acceptRanges.hashCode() : 0);
+        result = 31 * result + (preferences != null ? preferences.hashCode() : 0);
         result = 31 * result + (preconditionReq != null ? preconditionReq.hashCode() : 0);
         result = 31 * result + (authReq != null ? authReq.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
@@ -296,6 +332,8 @@ public final class Hints {
                 ", acceptPut=" + acceptPut +
                 ", acceptPost=" + acceptPost +
                 ", acceptPatch=" + acceptPatch +
+                ", acceptRanges=" + acceptRanges +
+                ", preferences=" + preferences +
                 ", preconditionReq=" + preconditionReq +
                 ", authReq=" + authReq +
                 ", status=" + status +

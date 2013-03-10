@@ -16,7 +16,6 @@
 package de.otto.jsonhome.fixtures;
 
 import de.otto.jsonhome.annotation.*;
-import de.otto.jsonhome.model.Precondition;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +24,6 @@ import java.util.List;
 import static de.otto.jsonhome.model.Precondition.ETAG;
 import static de.otto.jsonhome.model.Precondition.LAST_MODIFIED;
 import static de.otto.jsonhome.model.Status.DEPRECATED;
-import static java.util.Arrays.asList;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -165,6 +163,16 @@ static class TestAuth {
         @RequestMapping("/pre")
         @Hints(preconditionReq = {ETAG, LAST_MODIFIED})
         public void methodWithPreconditionsRequired() {}
+
+        @Rel("/rel/preferHint")
+        @RequestMapping("/prefer")
+        @Hints(prefer = {"return-representation=application/json", "return-asynch"})
+        public void methodWithPreferHint() {}
+
+        @Rel("/rel/acceptRangesHint")
+        @RequestMapping("/acceptRanges")
+        @Hints(acceptRanges = {"bytes"})
+        public void methodWithAcceptRangesHint() {}
 
         @Rel("/rel/foobar")
         @RequestMapping("/auth")

@@ -209,9 +209,9 @@ There are some more features like:
 
 ## 4. Project Status
 
-As of draft-nottingham-json-home-02, only two things are still missing:
-* accept-patch is not supported for Spring. We have to update to Spring 3.2 to implement this.
-* accept-ranges is not yet implemented.
+As of draft-nottingham-json-home-02, only the accept-patch hint is not fully supported. Spring is supporting
+HTTP PATCH with release 3.2. Because we are currently using Spring 3.1.*, accept-patch is only available with
+jsonhome-jersey.
 
 Draft-nottingham-json-home-03 should be published in a few days or weeks. This will open more 'to be implemented' features.
 

@@ -92,6 +92,8 @@ public class DirectLinkTest {
                         Collections.<String>emptyList(),
                         Collections.<String>emptyList(),
                         Collections.<String>emptyList(),
+                        Collections.<String>emptyList(),
+                        Collections.<String>emptyList(),
                         asList(ETAG),
                         Collections.<Authentication>emptyList(),
                         Status.OK,

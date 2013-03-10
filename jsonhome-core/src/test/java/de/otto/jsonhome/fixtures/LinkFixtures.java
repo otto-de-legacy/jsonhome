@@ -52,6 +52,8 @@ public class LinkFixtures {
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
+                    Collections.<String>emptyList(),
+                    Collections.<String>emptyList(),
                     Collections.<Precondition>emptyList(),
                     Collections.<Authentication>emptyList(),
                     Status.OK,
@@ -64,6 +66,8 @@ public class LinkFixtures {
             hints(
                     of(GET),
                     asList("text/html", "application/json"),
+                    Collections.<String>emptyList(),
+                    Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
@@ -88,6 +92,8 @@ public class LinkFixtures {
             hints(
                     of(GET),
                     asList("text/html"),
+                    Collections.<String>emptyList(),
+                    Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),
                     Collections.<String>emptyList(),

@@ -144,6 +144,58 @@ public class JacksonJsonHomeParserTest {
     }
 
     @Test
+    public void shouldParseMultiplePreferences() throws Exception {
+        // given
+        final String jsonHomeDocument = "{\n" +
+                "  \"resources\" : {" +
+                "\"http://example.org/jsonhome-example/rel/storefront\" : {\n" +
+                "      \"href\" : \"http://example.org/jsonhome-example/storefront\",\n" +
+                "      \"hints\" : {\n" +
+                "        \"prefer\" : [\"return-representation=application/json\", \"return-asynch\"]\n" +
+                "      }\n" +
+                "    }}}";
+        // when
+        final JsonHome jsonHome = new JacksonJsonHomeParser()
+                .parse(new ByteArrayInputStream(jsonHomeDocument.getBytes()));
+        // then
+        assertEquals(jsonHome, jsonHome(
+                directLink(
+                        create("http://example.org/jsonhome-example/rel/storefront"),
+                        create("http://example.org/jsonhome-example/storefront"),
+                        hintsBuilder()
+                                .preferring("return-representation=application/json", "return-asynch")
+                                .build()
+                )
+        ));
+    }
+
+    @Test
+    public void shouldParseAcceptedRanges() throws Exception {
+        // given
+        final String jsonHomeDocument = "{\n" +
+                "  \"resources\" : {" +
+                "\"http://example.org/jsonhome-example/rel/storefront\" : {\n" +
+                "      \"href\" : \"http://example.org/jsonhome-example/storefront\",\n" +
+                "      \"hints\" : {\n" +
+                "        \"accept-ranges\" : [\"bytes\"]\n" +
+                "      }\n" +
+                "    }}}";
+        // when
+        final JsonHome jsonHome = new JacksonJsonHomeParser()
+                .parse(new ByteArrayInputStream(jsonHomeDocument.getBytes()));
+        // then
+        assertEquals(jsonHome, jsonHome(
+                directLink(
+                        create("http://example.org/jsonhome-example/rel/storefront"),
+                        create("http://example.org/jsonhome-example/storefront"),
+                        hintsBuilder()
+                                .acceptingRanges("bytes")
+                                .build()
+                )
+        ));
+    }
+
+    @Test
     public void shouldParseMultipleRequiredAuth() throws Exception {
         // given
         final String jsonHomeDocument = "{\n" +

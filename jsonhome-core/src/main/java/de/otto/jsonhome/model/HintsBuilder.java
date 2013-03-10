@@ -34,6 +34,8 @@ public class HintsBuilder {
     private final Set<String> acceptPost = new LinkedHashSet<String>();
     private final Set<String> acceptPut = new LinkedHashSet<String>();
     private final Set<String> acceptPatch = new LinkedHashSet<String>();
+    private final Set<String> acceptRanges = new LinkedHashSet<String>();
+    private final Set<String> preferences = new LinkedHashSet<String>();
     private final List<Precondition> preconditionReq = new ArrayList<Precondition>();
     private final List<Authentication> authReq = new ArrayList<Authentication>();
     private Documentation docs = emptyDocs();
@@ -96,6 +98,26 @@ public class HintsBuilder {
         return this;
     }
 
+    public HintsBuilder acceptingRanges(final String... ranges) {
+        this.acceptRanges.addAll(asList(ranges));
+        return this;
+    }
+
+    public HintsBuilder acceptingRanges(final List<String> ranges) {
+        this.acceptRanges.addAll(ranges);
+        return this;
+    }
+
+    public HintsBuilder preferring(final String... preferences) {
+        this.preferences.addAll(asList(preferences));
+        return this;
+    }
+
+    public HintsBuilder preferring(final List<String> preferences) {
+        this.preferences.addAll(preferences);
+        return this;
+    }
+
     public HintsBuilder with(Documentation docs) {
         this.docs = docs;
         return this;
@@ -128,6 +150,8 @@ public class HintsBuilder {
                 new ArrayList<String>(acceptPut),
                 new ArrayList<String>(acceptPost),
                 new ArrayList<String>(acceptPatch),
+                new ArrayList<String>(acceptRanges),
+                new ArrayList<String>(preferences),
                 preconditionReq,
                 authReq,
                 status,

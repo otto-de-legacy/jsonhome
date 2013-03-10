@@ -19,7 +19,6 @@ package de.otto.jsonhome.converter;
 
 import de.otto.jsonhome.model.Allow;
 import de.otto.jsonhome.model.Hints;
-import de.otto.jsonhome.model.Precondition;
 import de.otto.jsonhome.model.Status;
 import org.testng.annotations.Test;
 
@@ -60,6 +59,8 @@ public class HintsConverterTest {
                 .representedAs(representations)
                 .acceptingForPut(acceptPut)
                 .acceptingForPost(acceptPost)
+                .acceptingRanges("bytes")
+                .preferring("return-representation=application/json", "return-asynch")
                 .with(emptyDocs())
                 .requiring(asList(ETAG, LAST_MODIFIED))
                 .withStatus(Status.DEPRECATED)
@@ -67,11 +68,13 @@ public class HintsConverterTest {
         // when
         final Map<String, ?> map = toJsonHomeRepresentation(hints);
         // then
-        assertEquals(map.keySet().size(), 6);
+        assertEquals(map.keySet().size(), 8);
         assertEquals(map.get("allow"), allows);
         assertEquals(map.get("representations"), representations);
         assertEquals(map.get("accept-put"), acceptPut);
         assertEquals(map.get("accept-post"), acceptPost);
+        assertEquals(map.get("accept-ranges"), asList("bytes"));
+        assertEquals(map.get("prefer"), asList("return-representation=application/json", "return-asynch"));
         assertEquals(map.get("precondition-req"), asList("etag", "last-modified"));
         assertEquals(map.get("status"), "deprecated");
     }

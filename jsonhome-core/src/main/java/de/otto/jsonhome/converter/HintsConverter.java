@@ -69,6 +69,20 @@ public final class HintsConverter {
         if (!hints.getAcceptPatch().isEmpty()) {
             jsonHints.put("accept-patch", hints.getAcceptPatch());
         }
+        if (!hints.getAcceptRanges().isEmpty()) {
+            final List<String> strings = new ArrayList<String>();
+            for (final String acceptedRange : hints.getAcceptRanges()) {
+                strings.add(acceptedRange);
+            }
+            jsonHints.put("accept-ranges", strings);
+        }
+        if (!hints.getPreferences().isEmpty()) {
+            final List<String> strings = new ArrayList<String>();
+            for (final String prefer : hints.getPreferences()) {
+                strings.add(prefer);
+            }
+            jsonHints.put("prefer", strings);
+        }
         if (!hints.getPreconditionReq().isEmpty()) {
             final List<String> strings = new ArrayList<String>();
             for (final Precondition precondition : hints.getPreconditionReq()) {

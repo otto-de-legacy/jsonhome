@@ -35,6 +35,35 @@ public @interface Hints {
 
     /**
      * From the draft json-home spec:
+     * "Hints the range-specifiers available to the client for this resource;
+     * equivalent to the Accept-Ranges HTTP response header
+     * [I-D.ietf-httpbis-p5-range].
+     *
+     * Content MUST be an array of strings, containing HTTP range-
+     * specifiers."
+     *
+     * @return String[] the accepted ranges
+     * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#section-5.6">json-home spec</a>
+     * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#ref-I-D.ietf-httpbis-p5-range">I-D.ietf-httpbis-p5-range</a>
+     */
+    String[] acceptRanges() default {};
+
+    /**
+     * From the draft json-home spec:
+     * "Hints the preferences [I-D.snell-http-prefer] supported by the
+     * resource.  Note that, as per that specifications, a preference can be
+     * ignored by the server.
+     *
+     * Content MUST be an array of strings, contain preferences."
+     *
+     * @return String[] the accepted ranges
+     * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#section-5.6">json-home spec</a>
+     * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#ref-I-D.snell-http-prefer">I-D.snell-http-prefer</a>
+     */
+    String[] prefer() default {};
+
+    /**
+     * From the draft json-home spec:
      * "Hints that the resource requires state-changing requests (e.g., PUT,
      * PATCH) to include a precondition, as per
      * [I-D.ietf-httpbis-p4-conditional], to avoid conflicts due to
