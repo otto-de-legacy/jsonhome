@@ -36,7 +36,7 @@ import static org.testng.Assert.assertEquals;
  */
 public class SpringHintsGeneratorTest {
 
-    public static final URI RELATION_TYPE_BASE_URI = create("http://example.org");
+    public static final URI RELATION_TYPE_BASE_URI = create("http://example.org/");
 
     @Test
     public void testMethodWithTwoRepresentations() throws Exception {

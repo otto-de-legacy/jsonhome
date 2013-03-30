@@ -40,7 +40,7 @@ import static org.testng.Assert.*;
  */
 public class SpringJsonHomeGeneratorTest {
 
-    public static final URI ROOT_URI = create("http://example.org");
+    public static final URI ROOT_URI = create("http://example.org/");
 
     @Test
     public void controllerWithoutResourceMappingShouldNotHaveResourceLinks() throws Exception {
@@ -303,15 +303,15 @@ public class SpringJsonHomeGeneratorTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ControllerWithTemplatedResourceLink.class).generate();
         // when
-        final TemplatedLink templatedLink = jsonHome.getResourceFor(create(ROOT_URI + "/rel/foo")).asTemplatedLink();
+        final TemplatedLink templatedLink = jsonHome.getResourceFor(create(ROOT_URI + "rel/foo")).asTemplatedLink();
         // then
-        assertEquals(templatedLink.getHrefTemplate(), ROOT_URI + "/{bar}{?query}");
+        assertEquals(templatedLink.getHrefTemplate(), ROOT_URI + "{bar}{?query}");
         assertEquals(templatedLink.getHrefVars().size(), 2);
         assertEquals(templatedLink.getHrefVars().get(0), hrefVar(
-                "bar", create(ROOT_URI + "/rel/foo#bar"))
+                "bar", create(ROOT_URI + "rel/foo#bar"))
         );
         assertEquals(templatedLink.getHrefVars().get(1),
-                hrefVar("query", create(ROOT_URI + "/rel/foo#query"))
+                hrefVar("query", create(ROOT_URI + "rel/foo#query"))
         );
     }
 
@@ -320,21 +320,21 @@ public class SpringJsonHomeGeneratorTest {
         // given
         final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ControllerWithTemplatedResourceLink.class).generate();
         // when
-        final TemplatedLink templatedLink = jsonHome.getResourceFor(create(ROOT_URI + "/rel/foobar")).asTemplatedLink();
+        final TemplatedLink templatedLink = jsonHome.getResourceFor(create(ROOT_URI + "rel/foobar")).asTemplatedLink();
         // then
-        assertEquals(templatedLink.getHrefTemplate(), ROOT_URI + "/{bar}/{foobar}{?query,page}");
+        assertEquals(templatedLink.getHrefTemplate(), ROOT_URI + "{bar}/{foobar}{?query,page}");
         assertEquals(templatedLink.getHrefVars().size(), 4);
         assertEquals(templatedLink.getHrefVars().get(0),
-                hrefVar("bar", create(ROOT_URI + "/rel/foobar#bar"))
+                hrefVar("bar", create(ROOT_URI + "rel/foobar#bar"))
         );
         assertEquals(templatedLink.getHrefVars().get(1),
-                hrefVar("foobar", create(ROOT_URI + "/rel/foobar#foobar"))
+                hrefVar("foobar", create(ROOT_URI + "rel/foobar#foobar"))
         );
         assertEquals(templatedLink.getHrefVars().get(2),
-                hrefVar("query", create(ROOT_URI + "/rel/foobar#query"))
+                hrefVar("query", create(ROOT_URI + "rel/foobar#query"))
         );
         assertEquals(templatedLink.getHrefVars().get(3),
-                hrefVar("page", create(ROOT_URI + "/rel/foobar#page"))
+                hrefVar("page", create(ROOT_URI + "rel/foobar#page"))
         );
     }
 
@@ -342,7 +342,7 @@ public class SpringJsonHomeGeneratorTest {
     public void shouldFindDocumentationAndOverrideDocFromController() {
         // given
         final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ControllerWithDocumentation.class).generate();
-        final URI relationTypeURI = create(ROOT_URI.toString() + "/rel/bar");
+        final URI relationTypeURI = create(ROOT_URI.toString() + "rel/bar");
         // when
         final ResourceLink resourceLink = jsonHome.getResourceFor(relationTypeURI);
         // then
@@ -358,7 +358,7 @@ public class SpringJsonHomeGeneratorTest {
     public void shouldFindDocumentationAndInheritDocFromController() {
         // given
         final JsonHome jsonHome = jsonHomeFor(ROOT_URI).with(ControllerWithDocumentation.class).generate();
-        final URI relationTypeURI = create(ROOT_URI.toString() + "/rel/foo");
+        final URI relationTypeURI = create(ROOT_URI.toString() + "rel/foo");
         // when
         final ResourceLink resourceLink = jsonHome.getResourceFor(relationTypeURI);
         // then

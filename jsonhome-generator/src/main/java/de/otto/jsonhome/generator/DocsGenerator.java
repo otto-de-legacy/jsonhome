@@ -31,6 +31,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.otto.jsonhome.generator.UriBuilder.normalized;
 import static de.otto.jsonhome.model.Documentation.documentation;
 import static de.otto.jsonhome.model.Documentation.emptyDocs;
 import static java.net.URI.create;
@@ -57,7 +58,7 @@ public class DocsGenerator {
      */
     public DocsGenerator(final URI relationTypeBaseUri, final String docRootDir) {
         this.rootDir = docRootDir != null ? new ClassPathResource(docRootDir) : null;
-        this.relationTypeBaseUri = relationTypeBaseUri;
+        this.relationTypeBaseUri = normalized(relationTypeBaseUri).toUri();
     }
 
     /**

@@ -56,7 +56,7 @@ public class HtmlControllerTest {
     private HtmlController relController(final Class<?> controllerType) {
         final HtmlController controller = new HtmlController();
         controller.setJsonHomeSource(getJsonHomeSource(controllerType));
-        controller.setRelationTypeBaseUri("http://rel.example.org");
+        controller.setRelationTypeBaseUri("http://rel.example.org/");
         return controller;
     }
 

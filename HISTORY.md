@@ -1,5 +1,9 @@
 # Version History
 
+## Release 0.3.3
+
+* Bugfix: Solved problems with duplicate slashes in different URIs
+
 ## Release 0.3.1
 
 ### 0.3.1 Features

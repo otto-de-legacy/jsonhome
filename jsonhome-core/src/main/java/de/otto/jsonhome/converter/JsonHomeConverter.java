@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.otto.jsonhome.converter.JsonHomeMediaType.APPLICATION_JSONHOME;
+import static de.otto.jsonhome.converter.ResourceLinkConverter.toRepresentation;
 import static java.util.Collections.singletonMap;
 
 /**

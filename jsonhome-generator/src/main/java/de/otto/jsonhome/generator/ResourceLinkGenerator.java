@@ -27,6 +27,7 @@ import java.net.URI;
 import java.util.List;
 
 import static de.otto.jsonhome.generator.MethodHelper.getParameterInfos;
+import static de.otto.jsonhome.generator.UriBuilder.normalized;
 import static de.otto.jsonhome.model.DirectLink.directLink;
 import static de.otto.jsonhome.model.TemplatedLink.templatedLink;
 import static java.net.URI.create;
@@ -60,9 +61,9 @@ public abstract class ResourceLinkGenerator {
                                     final URI varTypeBaseUri,
                                     final HintsGenerator hintsGenerator,
                                     final HrefVarsGenerator hrefVarsGenerator) {
-        this.applicationBaseUri = applicationBaseUri;
-        this.relationTypeBaseUri = relationTypeBaseUri;
-        this.varTypeBaseUri = varTypeBaseUri;
+        this.applicationBaseUri = normalized(applicationBaseUri).toUri();
+        this.relationTypeBaseUri = normalized(relationTypeBaseUri).toUri();
+        this.varTypeBaseUri = varTypeBaseUri != null ? normalized(varTypeBaseUri).toUri() : null;
         this.hintsGenerator = hintsGenerator;
         this.hrefVarsGenerator = hrefVarsGenerator;
     }
@@ -115,7 +116,7 @@ public abstract class ResourceLinkGenerator {
             if (hrefTemplateAnnotation != null) {
                 return hrefTemplateAnnotation.value().startsWith("http://")
                         ? hrefTemplateAnnotation.value()
-                        : applicationBaseUri.toString() + hrefTemplateAnnotation.value();
+                        : normalized(applicationBaseUri).withPathSegment(hrefTemplateAnnotation.value()).toString();
             } else {
                 return resourcePathFor(method);
             }
@@ -166,9 +167,11 @@ public abstract class ResourceLinkGenerator {
             final String linkRelationType = methodRel != null
                     ? methodRel.value()
                     : controllerRel.value();
-            return create(linkRelationType.startsWith("http://")
-                    ? linkRelationType
-                    : relationTypeBaseUri + linkRelationType);
+            if (linkRelationType.startsWith("http://")) {
+                return create(linkRelationType);
+            } else {
+                return normalized(relationTypeBaseUri).withPathSegment(linkRelationType).toUri();
+            }
         }
     }
 

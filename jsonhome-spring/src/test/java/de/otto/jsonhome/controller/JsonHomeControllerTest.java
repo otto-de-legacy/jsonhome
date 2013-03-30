@@ -42,7 +42,7 @@ public class JsonHomeControllerTest {
         // given
         final JsonHomeController controller = jsonHomeController(
                 ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class,
-                "http://example.org");
+                "http://example.org/");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String, ?> resourcesMap = controller.getAsApplicationJsonHome(response);
@@ -64,7 +64,7 @@ public class JsonHomeControllerTest {
         // given
         final JsonHomeController controller = jsonHomeController(
                 ControllerWithInheritance.class,
-                "http://example.org");
+                "http://example.org/");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String, ?> resourcesMap = controller.getAsApplicationJson(response);
@@ -80,7 +80,7 @@ public class JsonHomeControllerTest {
         // given
         final JsonHomeController controller = jsonHomeController(
                 ControllerWithDocumentation.class,
-                "http://example.org");
+                "http://example.org/");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String, ?> resourcesMap = controller.getAsApplicationJsonHome(response);
@@ -96,7 +96,7 @@ public class JsonHomeControllerTest {
         // given
         final JsonHomeController controller = jsonHomeController(
                 ControllerWithDocumentation.class,
-                "http://example.org");
+                "http://example.org/");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String, ?> resourcesMap = controller.getAsApplicationJson(response);
@@ -114,8 +114,8 @@ public class JsonHomeControllerTest {
 
         final JsonHomeController controller = jsonHomeController(
                 ControllerWithRequestMappingAndLinkRelationTypeAtClassLevel.class,
-                "http://example.org",
-                "http://otto.de");
+                "http://example.org/",
+                "http://otto.de/");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String, ?> resourcesMap = controller.getAsApplicationJsonHome(response);
@@ -130,8 +130,8 @@ public class JsonHomeControllerTest {
         // given
         final JsonHomeController controller = jsonHomeController(
                 ControllerWithDocumentation.class,
-                "http://example.org",
-                "http://otto.de");
+                "http://example.org/",
+                "http://otto.de/");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String, ?> resourcesMap = controller.getAsApplicationJsonHome(response);
@@ -148,8 +148,8 @@ public class JsonHomeControllerTest {
         // given
         final JsonHomeController controller = jsonHomeController(
                 ControllerWithHints.class,
-                "http://example.org",
-                "http://otto.de");
+                "http://example.org/",
+                "http://otto.de/");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String, ?> resourcesMap = controller.getAsApplicationJsonHome(response);
@@ -166,8 +166,8 @@ public class JsonHomeControllerTest {
         // given
         final JsonHomeController controller = jsonHomeController(
                 ControllerWithHints.class,
-                "http://example.org",
-                "http://otto.de");
+                "http://example.org/",
+                "http://otto.de/");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String, ?> resourcesMap = controller.getAsApplicationJsonHome(response);
@@ -184,8 +184,8 @@ public class JsonHomeControllerTest {
         // given
         final JsonHomeController controller = jsonHomeController(
                 ControllerWithHints.class,
-                "http://example.org",
-                "http://otto.de");
+                "http://example.org/",
+                "http://otto.de/");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String, ?> resourcesMap = controller.getAsApplicationJsonHome(response);
@@ -203,8 +203,8 @@ public class JsonHomeControllerTest {
         // given
         final JsonHomeController controller = jsonHomeController(
                 ControllerWithHints.class,
-                "http://example.org",
-                "http://otto.de");
+                "http://example.org/",
+                "http://otto.de/");
         // when
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Map<String, ?> resourcesMap = controller.getAsApplicationJsonHome(response);

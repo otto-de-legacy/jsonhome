@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.lang.reflect.Method;
 import java.net.URI;
 
+import static de.otto.jsonhome.generator.UriBuilder.normalized;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
@@ -79,13 +80,10 @@ public class SpringResourceLinkGenerator extends ResourceLinkGenerator {
             final String resourcePathSuffix = methodRequestMapping.value().length > 0
                     ? methodRequestMapping.value()[0]
                     : "";
-            final String resourcePath;
-            if (resourcePathPrefix.endsWith("/") && resourcePathSuffix.startsWith("/")) {
-                resourcePath = resourcePathPrefix + resourcePathSuffix.substring(1);
-            } else {
-                resourcePath = resourcePathPrefix + resourcePathSuffix;
-            }
-            return applicationBaseUri + resourcePath + queryTemplateFrom(method);
+
+            return normalized(applicationBaseUri)
+                    .withPathSegments(resourcePathPrefix, resourcePathSuffix)
+                    .toString() + queryTemplateFrom(method);
         } else {
             return null;
         }

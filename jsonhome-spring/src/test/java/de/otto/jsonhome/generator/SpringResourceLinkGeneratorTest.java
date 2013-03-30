@@ -42,7 +42,7 @@ import static org.testng.Assert.assertTrue;
  */
 public class SpringResourceLinkGeneratorTest {
 
-    public static final URI BASE_URI = URI.create("http://example.org");
+    public static final URI BASE_URI = URI.create("http://example.org/");
 
     private static  @Controller class ControllerWithDirectResourceLink {
         @RequestMapping("/foo") @Rel("http://example.org/rel/bar")

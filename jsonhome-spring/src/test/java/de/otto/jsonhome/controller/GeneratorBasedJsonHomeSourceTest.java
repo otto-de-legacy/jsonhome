@@ -50,8 +50,8 @@ public class GeneratorBasedJsonHomeSourceTest {
 
     private JsonHomeGenerator getJsonHomeGenerator() {
         final SpringJsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
-        jsonHomeGenerator.setApplicationBaseUri("http://app.example.org");
-        jsonHomeGenerator.setRelationTypeBaseUri("http://rel.example.org");
+        jsonHomeGenerator.setApplicationBaseUri("http://app.example.org/");
+        jsonHomeGenerator.setRelationTypeBaseUri("http://rel.example.org/");
         jsonHomeGenerator.postConstruct();
         return jsonHomeGenerator;
     }
