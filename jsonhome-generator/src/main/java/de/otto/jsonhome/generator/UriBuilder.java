@@ -35,7 +35,14 @@ public final class UriBuilder {
     }
 
     public static UriBuilder normalized(final URI baseUri) {
+        if (baseUri == null || !baseUri.isAbsolute()) {
+            throw new IllegalArgumentException("baseUri must be an absolute URI.");
+        }
         return new UriBuilder(baseUri);
+    }
+
+    public static UriBuilder normalized(final String baseUri) {
+        return normalized(create(baseUri));
     }
 
     public UriBuilder withPathSegment(final String segment) {

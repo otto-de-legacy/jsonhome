@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.util.Map;
 
+import static de.otto.jsonhome.generator.UriBuilder.normalized;
 import static de.otto.jsonhome.registry.controller.RegistriesConverter.registriesToJson;
 import static de.otto.jsonhome.registry.controller.RegistryConverter.jsonToRegistry;
 import static de.otto.jsonhome.registry.controller.RegistryConverter.registryToJson;
@@ -96,7 +97,7 @@ public class RegistriesController {
 
     @Value("${jsonhome.applicationBaseUri}")
     public void setApplicationBaseUri(final String baseUri) {
-        this.applicationBaseUri = create(baseUri);
+        this.applicationBaseUri = normalized(baseUri).toUri();
         LOG.info("ApplicationbaseUri is {}", applicationBaseUri.toString());
     }
 
