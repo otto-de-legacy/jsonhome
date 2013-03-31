@@ -3,6 +3,7 @@
 ## Release 0.3.3
 
 * Bugfix: Solved problems with duplicate slashes in different URIs
+* Bugfix: Using request parameters instead of path variables to specify the registry. Fixed usage of default registries.
 
 ## Release 0.3.1
 
