@@ -27,7 +27,7 @@
     -->
     <bean class="de.otto.jsonhome.registry.controller.RegistryJsonHomeController"
           p:maxAgeSeconds = "3600"
-          p:jsonHomeSource-ref="registryJsonHomeSource" />
+          p:registryJsonHomeSource-ref="registryJsonHomeSource" />
 
     <!--
      The JsonHomeSource used to get the JsonHome from all registered URIs.

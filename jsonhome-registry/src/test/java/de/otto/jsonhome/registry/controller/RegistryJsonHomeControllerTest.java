@@ -57,7 +57,7 @@ public class RegistryJsonHomeControllerTest extends AbstractTestNGSpringContextT
     public void shouldReturnJsonHome() throws IOException {
         // given:
         final RegistryJsonHomeController jsonHomeController = new RegistryJsonHomeController();
-        jsonHomeController.setJsonHomeSource(getJsonHomeSource());
+        jsonHomeController.setRegistryJsonHomeSource(getJsonHomeSource());
         registriesController.putRegistry("test", registryLiveWithSingleLinkTo("foo"), new MockHttpServletResponse());
         // when:
         final Map<String, ?> json = jsonHomeController.getAsApplicationJson("test", new MockHttpServletResponse());

@@ -19,6 +19,7 @@ package de.otto.jsonhome.registry.controller;
 import de.otto.jsonhome.annotation.Doc;
 import de.otto.jsonhome.generator.JsonHomeSource;
 import de.otto.jsonhome.model.JsonHome;
+import de.otto.jsonhome.model.JsonHomeBuilder;
 import de.otto.jsonhome.model.ResourceLink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.otto.jsonhome.model.JsonHome.emptyJsonHome;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 
@@ -50,7 +52,6 @@ public class RegistryHtmlController {
     private static Logger LOG = LoggerFactory.getLogger(RegistryHtmlController.class);
 
     private RegistryJsonHomeSource registryJsonHomeSource;
-    private JsonHomeSource jsonHomeSource;
     private int maxAge = 3600;
     private String defaultRegistry = "default";
 
@@ -58,11 +59,6 @@ public class RegistryHtmlController {
     @Autowired
     public void setRegistryJsonHomeSource(final RegistryJsonHomeSource registryJsonHomeSource) {
         this.registryJsonHomeSource = registryJsonHomeSource;
-    }
-
-    @Autowired(required = false)
-    public void setJsonHomeSource(final JsonHomeSource jsonHomeSource) {
-        this.jsonHomeSource = jsonHomeSource;
     }
 
     public void setMaxAgeSeconds(int maxAge) {
@@ -80,34 +76,21 @@ public class RegistryHtmlController {
             method = RequestMethod.GET,
             produces = "text/html")
     @ResponseBody
-    public ModelAndView getHtmlHomeDocument(final HttpServletRequest request,
-                                            final HttpServletResponse response) {
-        final JsonHome jsonHome = jsonHomeSource.getJsonHome();
-        response.setHeader("Cache-Control", "max-age=" + maxAge);
-        response.setHeader("Vary", "Accept");
-        final Map<String,Object> resources = new HashMap<String, Object>();
-        resources.put("resources", jsonHome.getResources().values());
-        resources.put("contextpath", request.getContextPath());
-        return new ModelAndView("resources", resources);
-    }
-
-    @RequestMapping(
-            value = "{registry}/json-home",
-            method = RequestMethod.GET,
-            produces = "text/html")
-    @ResponseBody
-    public ModelAndView getHtmlHomeDocument(@PathVariable
+    public ModelAndView getHtmlHomeDocument(@RequestParam(required = false)
                                             @Doc(value = "The name of the json-home registry.")
                                             final String registry,
                                             final HttpServletRequest request,
                                             final HttpServletResponse response) {
-        final JsonHome jsonHome = registryJsonHomeSource.getJsonHome(registry);
+        final String selectedRegistry = registry != null ? registry : defaultRegistry;
+        final JsonHome jsonHome = registryJsonHomeSource.getJsonHome(selectedRegistry);
         response.setHeader("Cache-Control", "max-age=" + maxAge);
         response.setHeader("Vary", "Accept");
         final Map<String,Object> resources = new HashMap<String, Object>();
         resources.put("resources", jsonHome.getResources().values());
         resources.put("contextpath", request.getContextPath());
-        resources.put("relQuery", "?registry=" + registry);
+        if (registry != null) {
+            resources.put("relQuery", "?registry=" + registry);
+        }
         return new ModelAndView("resources", resources);
     }
 
@@ -122,7 +105,6 @@ public class RegistryHtmlController {
                                             final HttpServletRequest request) {
 
         final URI relationTypeURI = URI.create(request.getRequestURL().toString());
-
         final String selectedRegistry = registry != null ? registry : defaultRegistry;
         final ResourceLink resourceLink = resourceLink(relationTypeURI, selectedRegistry);
         if (resourceLink != null) {
@@ -141,16 +123,12 @@ public class RegistryHtmlController {
 
     @ResponseStatus(value = NOT_FOUND)
     @ExceptionHandler({IllegalArgumentException.class})
-    public void handleNotFound(final HttpServletResponse response) throws IOException {
-        response.sendError(404, "Unknown link-relation type.");
+    public void handleNotFound(final IllegalArgumentException e, final HttpServletResponse response) throws IOException {
+        response.sendError(404, e.getMessage());
     }
 
     private ResourceLink resourceLink(final URI relationType, final String selectedRegistry) {
-        if (jsonHomeSource != null && jsonHomeSource.getJsonHome().hasResourceFor(relationType)) {
-            return jsonHomeSource.getJsonHome().getResourceFor(relationType);
-        } else {
-            final JsonHome jsonHome = registryJsonHomeSource.getJsonHome(selectedRegistry);
-            return jsonHome.getResourceFor(relationType);
-        }
+        final JsonHome jsonHome = registryJsonHomeSource.getJsonHome(selectedRegistry);
+        return jsonHome.getResourceFor(relationType);
     }
 }

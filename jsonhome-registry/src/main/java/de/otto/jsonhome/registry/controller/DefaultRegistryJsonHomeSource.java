@@ -77,7 +77,7 @@ public class DefaultRegistryJsonHomeSource implements RegistryJsonHomeSource {
      */
     public JsonHome getJsonHome(final String registryName) {
         if (registries.get(registryName) == null) {
-            final String msg = "Links '" + registryName + "' does not exist.";
+            final String msg = "Registry '" + registryName + "' does not exist.";
             LOG.warn(msg);
             throw new IllegalArgumentException(msg);
         } else {

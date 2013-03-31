@@ -21,9 +21,11 @@ import de.otto.jsonhome.controller.JsonHomeController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -46,10 +48,11 @@ public class RegistryJsonHomeController {
 
     private RegistryJsonHomeSource jsonHomeSource;
     private int maxAge = 3600;
+    private String defaultRegistry = "default";
 
     @Autowired
-    public void setJsonHomeSource(final RegistryJsonHomeSource jsonHomeSource) {
-        this.jsonHomeSource = jsonHomeSource;
+    public void setRegistryJsonHomeSource(final RegistryJsonHomeSource registryJsonHomeSource) {
+        this.jsonHomeSource = registryJsonHomeSource;
     }
 
     public void setMaxAgeSeconds(int maxAge) {
@@ -57,11 +60,16 @@ public class RegistryJsonHomeController {
         LOG.info("MaxAge is {}", maxAge);
     }
 
+    @Value("${jsonhome.defaultRegistry}")
+    public void setDefaultRegistry(final String defaultRegistry) {
+        this.defaultRegistry = defaultRegistry;
+    }
+
     @RequestMapping(
-            value = "{registry}/json-home",
+            value = "/json-home",
             produces = {"application/json-home"})
     @ResponseBody
-    public Map<String, ?> getAsApplicationJsonHome(@PathVariable
+    public Map<String, ?> getAsApplicationJsonHome(@RequestParam(required = false)
                                                    @Doc(value = "The name of the json-home registry.")
                                                    final String registry,
                                                    final HttpServletResponse response) {
@@ -69,14 +77,15 @@ public class RegistryJsonHomeController {
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=" + maxAge);
         response.setHeader("Vary", "Accept");
-        return toRepresentation(jsonHomeSource.getJsonHome(registry), APPLICATION_JSONHOME);
+        final String selectedRegistry = registry != null ? registry : defaultRegistry;
+        return toRepresentation(jsonHomeSource.getJsonHome(selectedRegistry), APPLICATION_JSONHOME);
     }
 
     @RequestMapping(
-            value = "{registry}/json-home",
+            value = "/json-home",
             produces = {"application/json"})
     @ResponseBody
-    public Map<String, ?> getAsApplicationJson(@PathVariable
+    public Map<String, ?> getAsApplicationJson(@RequestParam(required = false)
                                                @Doc(value = "The name of the json-home registry.")
                                                final String registry,
                                                final HttpServletResponse response) {
@@ -85,7 +94,8 @@ public class RegistryJsonHomeController {
         response.setHeader("Cache-Control", "max-age=" + maxAge);
         response.setHeader("Vary", "Accept");
         try {
-            return toRepresentation(jsonHomeSource.getJsonHome(registry), APPLICATION_JSON);
+            final String selectedRegistry = registry != null ? registry : defaultRegistry;
+            return toRepresentation(jsonHomeSource.getJsonHome(selectedRegistry), APPLICATION_JSON);
         } catch (final IllegalArgumentException e) {
             try { response.sendError(SC_NOT_FOUND, e.getMessage()); } catch (IOException ignore) { }
             throw e;
