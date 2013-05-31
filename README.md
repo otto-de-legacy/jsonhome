@@ -2,6 +2,23 @@
 
 Libraries to publish and use [json-home](http://tools.ietf.org/html/draft-nottingham-json-home-02) documents.
 
+## 0. Draft 03
+
+As you have possibly noticed, Marc Nottingham published [Draft 03](http://tools.ietf.org/html/draft-nottingham-json-home-03)
+a few days ago, containing a number of incompatible changes to the application/json-home format. 
+Beside of beeing incompatible, there is one problem: the 'representations' hint is now replaced by a 'formats' hint, 
+containing 'representation hints' - but these representation hints are 
+[currently](http://tools.ietf.org/html/draft-nottingham-json-home-03#section-5) not specified ('TBD').
+
+Because of this, an implementation of draft 03 would not be an improvement compared to the 
+current implementation. 
+
+As soon as this problem is solved (possibly with draft 04?), I will implement support for the new format. 
+In order to avoid incompatibilities, the support will include feature toggles, so you can:
+* configure the desired format (draft 02, draft 03, ...)
+* publish a format containing old and new attributes
+* consume both versions on the client-side.
+
 ## 1. Json-Home?
 
 Think of an machine-readable alternative to an index.html in json format, describing the REST resources of an
