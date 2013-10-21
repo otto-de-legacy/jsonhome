@@ -1,5 +1,9 @@
 # Version History
 
+## Release 0.3.4
+* Bugfix: Small change in JacksonJsonHomeParser to be able to use jsonhome
+  with Java 6
+  
 ## Release 0.3.3
 
 * Bugfix: Solved problems with duplicate slashes in different URIs

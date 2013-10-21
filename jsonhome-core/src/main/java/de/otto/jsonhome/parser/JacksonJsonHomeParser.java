@@ -130,7 +130,7 @@ public class JacksonJsonHomeParser implements JsonHomeParser {
                 final List<String> description = new ArrayList<String>();
                 final Iterator<JsonNode> elements = hints.has("description")
                         ? hints.get("description").getElements()
-                        : Collections.<JsonNode>emptyIterator();
+                        : Collections.<JsonNode>emptyList().iterator();
                 while (elements.hasNext()) {
                     description.add(elements.next().getTextValue());
                 }
