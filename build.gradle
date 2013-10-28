@@ -11,6 +11,11 @@ subprojects {
     group = 'de.otto'
     version = '0.3.4'
 
+    ext {	
+        targetCompatibility = JavaVersion.VERSION_1_6
+        sourceCompatibility = JavaVersion.VERSION_1_6
+    }
+
     repositories {
         mavenCentral()
 
