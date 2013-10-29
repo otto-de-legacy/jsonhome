@@ -9,7 +9,7 @@ subprojects {
     apply plugin: 'signing'
 
     group = 'de.otto'
-    version = '0.3.5'
+    version = '0.3.6'
 
         targetCompatibility = "1.6"
         sourceCompatibility = "1.6"
