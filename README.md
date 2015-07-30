@@ -2,6 +2,10 @@
 
 Libraries to publish and use [json-home](http://tools.ietf.org/html/draft-nottingham-json-home-02) documents.
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.otto/jsonhome-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.otto/jsonhome-core)
+
+[![Dependency Status](https://www.versioneye.com/user/projects/55ba7bcf65376200200018c5/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55ba7bcf65376200200018c5)
+
 ## 0. Draft 03
 
 As you have possibly noticed, Marc Nottingham published [Draft 03](http://tools.ietf.org/html/draft-nottingham-json-home-03)
