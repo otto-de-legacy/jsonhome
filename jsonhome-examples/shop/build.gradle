@@ -7,13 +7,13 @@ repositories {
 }
 
 dependencies {
-    compile 'org.springframework:spring-webmvc:3.1.3.RELEASE'
-    compile 'org.codehaus.jackson:jackson-mapper-asl:1.7.1'
-    compile 'org.freemarker:freemarker:2.3.18'
-    compile 'ch.qos.logback:logback-core:1.0.6'
-    compile 'ch.qos.logback:logback-classic:1.0.6'
+    compile 'org.springframework:spring-webmvc:4.1.7.RELEASE'
+    compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
+    compile 'org.freemarker:freemarker:2.3.23'
+    compile 'ch.qos.logback:logback-core:1.1.3'
+    compile 'ch.qos.logback:logback-classic:1.1.3'
     compile project(':jsonhome-spring')
-    providedCompile 'javax.servlet:servlet-api:2.5'
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
 }
 
 jettyRun.contextPath = '/shop'

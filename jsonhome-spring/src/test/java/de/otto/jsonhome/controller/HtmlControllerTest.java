@@ -70,7 +70,7 @@ public class HtmlControllerTest {
     private JsonHomeGenerator jsonHomeGenerator() {
         final SpringJsonHomeGenerator jsonHomeGenerator = new SpringJsonHomeGenerator();
         jsonHomeGenerator.setApplicationBaseUri("http://app.example.org");
-        jsonHomeGenerator.setRelationTypeBaseUri("http://rel.example.org:80");
+        jsonHomeGenerator.setRelationTypeBaseUri("http://rel.example.org");
         jsonHomeGenerator.postConstruct();
         return jsonHomeGenerator;
     }
