@@ -32,7 +32,7 @@ public enum Status {
 
     /**
      * Merges this status with another one.
-     * <p/>
+     *
      * This is primarily used internally.
      *
      * @param other the other status.
@@ -44,7 +44,7 @@ public enum Status {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     *
      * Returns a lower-case representation of the status.
      *
      * @return ok, deprecated or gone.

@@ -25,7 +25,7 @@ import static java.util.Collections.unmodifiableList;
 
 /**
  * Documentation of a ResourceLink or HrefVar.
- * <p/>
+ *
  * This implementation is immutable.
  *
  * @author Guido Steinacker
@@ -59,7 +59,7 @@ public final class Documentation {
 
     /**
      * Returns the list of paragraphs describing the annotated link-relation type or var type of a resource.
-     * <p/>
+     *
      * This description is filled from {@link de.otto.jsonhome.annotation.Doc#value()}.
      *
      * @return list of paragraphs or empty list.
@@ -79,7 +79,7 @@ public final class Documentation {
 
     /**
      * Returns the HTML description of the annotated link-relation type or var type of a resource.
-     * <p/>
+     *
      * The detailed description is generated from a Markdown document included using
      * {@link de.otto.jsonhome.annotation.Doc#include()}.
      *
@@ -100,7 +100,7 @@ public final class Documentation {
 
     /**
      * Returns a link to an external document providing additional documentation.
-     * <p/>
+     *
      * The link is retrieved from {@link de.otto.jsonhome.annotation.Doc#link()}
      *
      * @return URI or null
@@ -120,7 +120,7 @@ public final class Documentation {
 
     /**
      * Merges this Documentation instance with another instance.
-     * <p/>
+     *
      * If both instances have values for an attribute, the other values will be discarded.
      *
      * @param other the other instance

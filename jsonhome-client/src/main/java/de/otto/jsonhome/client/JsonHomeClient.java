@@ -22,7 +22,7 @@ import java.net.URI;
 
 /**
  * Client used to retrieve JsonHome documents from different sources.
- * <p/>
+ *
  * If the json-home document is retrieved using HTTP GET, the implementation should respect the
  * HTTP cache headers returned by the server.
  *
@@ -45,7 +45,7 @@ public interface JsonHomeClient {
 
     /**
      * Gets the JsonHome document associated to the specified URI.
-     * <p/>
+     *
      * The returned instance may be returned from a cache.
      *
      * @param uri the URI of the JsonHome document.
@@ -59,7 +59,7 @@ public interface JsonHomeClient {
 
     /**
      * Shutdown the client and dispose all resources.
-     * <p/>
+     *
      * Should be called when shutting down the client.
      */
     public void shutdown();

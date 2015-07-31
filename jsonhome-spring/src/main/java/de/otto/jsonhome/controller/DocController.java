@@ -37,7 +37,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.HEAD;
 
 /**
  * Controller serving the /docs resource based on markdown documents.
- * <p/>
+ *
  * The implementation makes use of the Markdown4j library.
  *
  * @author Guido Steinacker

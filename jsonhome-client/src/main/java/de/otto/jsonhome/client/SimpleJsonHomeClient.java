@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * Implementation of the JavaHomeClient interface, serving registered JavaHome documents stored in memory.
- * <p/>
+ *
  * This implementation is thread-safe.
  *
  * @author Guido Steinacker
@@ -36,7 +36,7 @@ public class SimpleJsonHomeClient implements JsonHomeClient {
 
     /**
      * Registers a JsonHome instance using an URI, uniquely identifying the instance.
-     * <p/>
+     *
      * Registration of multiple instances using the same URI will only keep the last value.
      *
      * @param uri the URI of the JsonHome instance.
@@ -48,7 +48,7 @@ public class SimpleJsonHomeClient implements JsonHomeClient {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     *
      * This method has the same behaviour as {@link #get(java.net.URI)}. If you want to update an already
      * registered resource, use {@link #register(java.net.URI, de.otto.jsonhome.model.JsonHome)}.
      */
@@ -59,7 +59,7 @@ public class SimpleJsonHomeClient implements JsonHomeClient {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     *
      * This implementation simply returns a previously registered instance.
      */
     public JsonHome get(final URI uri) {

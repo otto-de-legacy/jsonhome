@@ -26,13 +26,13 @@ import static java.util.EnumSet.noneOf;
 /**
  * Hints are used to describe a resource: the allowed HTTP methods, the supported representations,
  * required preconditions of an operation, the current status and possibly some documentation.
- * <p/>
+ * <p>
  * All these information are optional. You should not completely rely on the information of the hints.
  * For example, only because the hints do no contain a HTTP method, this must not necessarily mean that
  * the method is not allowed for a resource.
- * <p/>
+ * <p>
  * However, the JsonHomeGenerator will fortunately always find useful and correct hints...
- * <p/>
+ * <p>
  * This implementation is immutable.
  *
  * @author Guido Steinacker
@@ -68,7 +68,7 @@ public final class Hints {
 
     /**
      * Creates hints with information about allowed HTTP methods and the supported representations of the resource.
-     * <p/>
+     * <p>
      * The status is set to Status.OK, all other fields will be empty (but not null).
      *
      * @param allows the allowed HTTP methods

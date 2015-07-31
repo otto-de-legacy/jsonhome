@@ -185,7 +185,7 @@ public abstract class ResourceLinkGenerator {
 
     /**
      * Returns the resource path for the given method.
-     * <p/>
+     *
      * If the method is able to handle multiple URIs, the implementation should select the first or
      * best URI.
      *

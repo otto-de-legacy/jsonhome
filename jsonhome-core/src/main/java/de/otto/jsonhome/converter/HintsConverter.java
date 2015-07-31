@@ -47,7 +47,7 @@ public final class HintsConverter {
 
     /**
      * Returns a representation of the hints as a map.
-     * <p/>
+     *
      * Depending on the media type, different data is included in the map.
      *
      * @param hints the hints to represent as a map.

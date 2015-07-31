@@ -59,7 +59,7 @@ public class GeneratorBasedJsonHomeSource implements JsonHomeSource {
 
     /**
      * Directly inject controller types instead of injecting the ApplicationContext.
-     * <p/>
+     *
      * Used for testing purposes.
      *
      * @param controllerTypes the list of controller classes.

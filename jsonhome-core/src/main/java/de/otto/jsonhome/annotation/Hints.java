@@ -66,7 +66,7 @@ public @interface Hints {
      * PATCH) to include a precondition, as per
      * [I-D.ietf-httpbis-p4-conditional], to avoid conflicts due to
      * concurrent updates.
-     * <p/>
+     *
      * Content MUST be an array of strings, with possible values "etag" and
      * "last-modified" indicating type of precondition expected."
      *
@@ -80,7 +80,7 @@ public @interface Hints {
      * From the draft json-home spec:
      * "Hints that the resource requires authentication using the HTTP
      * Authentication Framework [I-D.ietf-httpbis-p7-auth].
-     * <p/>
+     *
      * Content MUST be an array of objects, each with a "scheme" property
      * containing a string that corresponds to a HTTP authentication scheme,
      * and optionally a "realms" property containing an array of zero to

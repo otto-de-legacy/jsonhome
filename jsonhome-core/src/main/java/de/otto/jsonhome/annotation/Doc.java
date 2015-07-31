@@ -24,13 +24,13 @@ import static java.lang.annotation.ElementType.TYPE;
 
 /**
  * Documentation of a link-relation type (&#064;Rel) or a variable used in an uri-template.
- * <p/>
+ *
  * Link-relation types must be documented at class-level and must specify the documented
  * type using the {@link #rel()} attribute.
- * <p/>
+ *
  * If you want to document more than one link-relation type in a single controller, you must
  * use the {@link Docs} annotation to add multiple Doc instances to the class.
- * <p/>
+ *
  * In case of documenting a href-template variable, the {@code rel} attribute is ignored.
  *
  * @author Guido Steinacker
@@ -42,23 +42,29 @@ public @interface Doc {
 
     /**
      * Optional value, consisting of one or more paragraphs.
+     *
+     * @return documentation
      */
     String[] value() default "";
 
     /**
      * Optional relative URI pointing to a Markdown document to include into the
      * HTML description of the documentation.
+     *
+     * @return documentation to include
      */
     String include() default "";
 
     /**
      * Optional fully qualified URI pointing to external documentation.
+     *
+     * @return link to documentation
      */
     String link() default "";
 
     /**
      * The URI uniquely identifying the link relation type.
-     * <p/>
+     *
      * If this is a documentation of a link-relation type, this attribute must be provided. Otherwise, the
      * documentation can not be attached to the proper link-relation type.
      *

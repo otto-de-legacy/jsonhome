@@ -20,7 +20,7 @@ import java.util.Set;
 
 /**
  * A repository used to store {@link Registry}.
- * <p/>
+ * 
  * The registries are identified by their names.
  *
  * @author Guido Steinacker
@@ -30,7 +30,7 @@ public interface RegistryRepository {
 
     /**
      * Creates or updates Registry.
-     * <p/>
+     *
      * An existing Registry instance with the same name as the Registry provided as parameter will be be replaced.
      *
      * @param registry the Registry instance.

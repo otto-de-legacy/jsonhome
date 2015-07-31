@@ -19,7 +19,7 @@ import java.lang.annotation.*;
 
 /**
  * Overrides the href of a direct resource link.
- * <p/>
+ *
  * Use this annotation if you have to override the behaviour of the generator in use (like, for example,
  * the SpringJsonHomeGenerator). <strong>Generally, you should not use this annotation</strong>, because
  * if you are specifying the wrong URI, the href link in your json-home will be resolvable by your application.

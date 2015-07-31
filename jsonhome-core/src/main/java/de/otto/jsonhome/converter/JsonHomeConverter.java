@@ -28,7 +28,7 @@ import static java.util.Collections.singletonMap;
 
 /**
  * Converter used to convert JsonHome instances into a map containing the information of a representation.
- * <p/>
+ *
  * The result may easily be converted into a format like JSON.
  *
  * @author Guido Steinacker
@@ -52,6 +52,7 @@ public final class JsonHomeConverter {
      * Converts a JsonHome into the specified representation.
      *
      * @param jsonHome the JsonHome
+     * @param mediaType the media type of the representation
      * @return Map containing information and structure specified by the media type.
      */
     public static Map<String, Map<String,Object>> toRepresentation(final JsonHome jsonHome,

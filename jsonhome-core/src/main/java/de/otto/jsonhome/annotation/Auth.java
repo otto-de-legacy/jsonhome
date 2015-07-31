@@ -24,7 +24,6 @@ import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 
 /**
  * Information about the authentication scheme of a HTTP resource described in the Hints.
- * <p/>
  *
  * @author Guido Steinacker
  * @since 15.09.12
@@ -35,13 +34,17 @@ import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 public @interface Auth {
 
     /**
-     * Optional value, consisting of one or more paragraphs.
+     * The scheme used for authentication
+     *
+     * @return authenticat scheme
      */
     String scheme() default "";
 
 
     /**
-     * Optional fully qualified URI pointing to external documentation.
+     * The realms used for authentication
+     *
+     * @return authentication realms
      */
     String[] realms() default {};
 

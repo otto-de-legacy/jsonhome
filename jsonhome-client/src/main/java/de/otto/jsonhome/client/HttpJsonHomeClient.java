@@ -24,9 +24,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.cache.HttpCacheStorage;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.cache.BasicHttpCacheStorage;
-import org.apache.http.impl.client.cache.CacheConfig;
-import org.apache.http.impl.client.cache.CachingHttpClient;
+import org.apache.http.impl.client.cache.*;
 import org.apache.http.protocol.BasicHttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +35,7 @@ import java.net.URI;
 
 /**
  * A JsonHomeClient used to get json-home documents from an URI via HTTP.
- * <p/>
+ *
  * This implementation is relying on Apache's CachingHttpClient.
  *
  * @author Guido Steinacker
@@ -54,16 +52,20 @@ public class HttpJsonHomeClient implements JsonHomeClient {
      * Constructs a default HttpJsonHomeClient build on top of a CachingHttpClient with in-memory storage.
      */
     public HttpJsonHomeClient() {
-        final CacheConfig cacheConfig = new CacheConfig();
-        cacheConfig.setMaxCacheEntries(100);
-        cacheConfig.setMaxObjectSize(50000);
+        final CacheConfig cacheConfig = CacheConfig.custom()
+                .setMaxCacheEntries(100)
+                .setMaxObjectSize(50000)
+                .build();
         this.cacheStorage = new BasicHttpCacheStorage(cacheConfig);
-        this.httpClient = new CachingHttpClient(new DefaultHttpClient(), cacheStorage, cacheConfig);
+        this.httpClient = CachingHttpClientBuilder.create()
+                .setHttpCacheStorage(cacheStorage)
+                .setCacheConfig(cacheConfig)
+                .build();
     }
 
     /**
      * Constructs a HttpJsonHomeClient using a HttpClient and a CacheConfig.
-     * <p/>
+     *
      * Internally, these two are used to build a CachingHttpClient using a BasicHttpCacheStorage.
      *
      * @param httpClient non-caching HttpClient used to get resources.

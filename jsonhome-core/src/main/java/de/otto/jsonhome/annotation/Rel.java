@@ -19,7 +19,7 @@ import java.lang.annotation.*;
 
 /**
  * Specifies the link-relation type of the resource offered by the annotated controller-class or method.
- * <p/>
+ *
  * All resources with a link-relation type will be part of the generated json-home document. Resources
  * without a link-relation type will NOT be added to the json-home.
  *

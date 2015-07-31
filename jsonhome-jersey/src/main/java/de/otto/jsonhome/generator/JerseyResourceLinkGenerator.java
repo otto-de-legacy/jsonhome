@@ -64,7 +64,7 @@ public final class JerseyResourceLinkGenerator extends ResourceLinkGenerator {
 
     /**
      * Returns the resource paths for the given method.
-     * <p/>
+     *
      * The resource paths are the paths of the URIs the given method is responsible for.
      *
      * @param method the method of the controller, possibly handling one or more REST resources.

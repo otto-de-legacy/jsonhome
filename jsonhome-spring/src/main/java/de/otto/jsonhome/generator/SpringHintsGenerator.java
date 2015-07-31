@@ -48,7 +48,7 @@ public class SpringHintsGenerator extends HintsGenerator {
 
     /**
      * Analyses the method with a RequestMapping and returns a list of allowed http methods (GET, PUT, etc.).
-     * <p/>
+     *
      * If the RequestMapping does not specify the allowed HTTP methods, "GET" is returned in a singleton list.
      *
      * @return list of allowed HTTP methods.

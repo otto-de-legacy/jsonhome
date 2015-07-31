@@ -51,7 +51,7 @@ public abstract class JsonHomeGenerator {
 
     /**
      * Specifies a controller class, possibly providing one or more resource links.
-     * <p/>
+     *
      * The injected generator is used to find the resource links supported by the controller.
      *
      * @param controller a class that is implementing a HTTP API.
@@ -66,7 +66,7 @@ public abstract class JsonHomeGenerator {
 
     /**
      * Specifies a number of controller classes, possibly providing one or more resource links.
-     * <p/>
+     *
      * The injected generator is used to find the resource links supported by the controllers.
      *
      * @param controllers classes implementing a HTTP API.

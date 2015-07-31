@@ -63,7 +63,7 @@ public class DocsGenerator {
 
     /**
      * Returns the Documentation for a single link-relation type supported by the controller.
-     * <p/>
+     *
      * This implementation is parsing the {@link Doc} and {@link Docs} annotations of the controller.
      *
      * @param relationType URI of the link-relation type.
@@ -89,7 +89,7 @@ public class DocsGenerator {
 
     /**
      * Returns the documentation of a single href parameter.
-     * <p/>
+     *
      * This implementation is using the optional {@link Doc} annotation of the parameter to get the documentation.
      *
      * @param parameterInfo information about the href-var parameter.
@@ -124,7 +124,7 @@ public class DocsGenerator {
 
     /**
      * Constructs an absolute URI.
-     * <p/>
+     *
      * If the link is already absolute, URI.create(link) is returned. Otherwise, the {@link #relationTypeBaseUri}
      * is used to create the URI.
      * @param link absolute or relative relation-type URI.

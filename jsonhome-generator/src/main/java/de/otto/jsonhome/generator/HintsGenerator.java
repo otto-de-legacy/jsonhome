@@ -53,12 +53,14 @@ public abstract class HintsGenerator {
 
     /**
      * Analyses the method with a RequestMapping and returns the corresponding Hints.
-     * <p/>
+     *
      * If the RequestMapping does not specify the produced or consumed representations,
      * "text/html" is returned in a singleton list. In case of a POST method, the default representation
      * is "application/x-www-form-urlencoded".
-     * <p/>
      *
+     *
+     * @param relationType relation type
+     * @param method method
      * @return Hints.
      * @throws NullPointerException if method is not annotated with @RequestMapping.
      */
@@ -102,7 +104,7 @@ public abstract class HintsGenerator {
 
     /**
      * Analyses the method and returns the list of accepted ranges supported by the method.
-     * <p/>
+     *
      * This implementation is using the {@link de.otto.jsonhome.annotation.Hints} annotation to determine the
      * accepted ranges.
      *
@@ -120,7 +122,7 @@ public abstract class HintsGenerator {
 
     /**
      * Analyses the method and returns the list of preferences of the method.
-     * <p/>
+     *
      * This implementation is using the {@link de.otto.jsonhome.annotation.Hints} annotation to determine the
      * preferences.
      *
@@ -138,7 +140,7 @@ public abstract class HintsGenerator {
 
     /**
      * Analyses the method and returns the list of preconditions expected by the method.
-     * <p/>
+     *
      * This implementation is using the {@link de.otto.jsonhome.annotation.Hints} annotation to determine the
      * expected preconditions.
      *
@@ -156,7 +158,7 @@ public abstract class HintsGenerator {
 
     /**
      * Analyses the method and returns the list of required HTTP authentication methods expected by the method.
-     * <p/>
+     *
      * This implementation is using the {@link de.otto.jsonhome.annotation.Hints} annotation to determine the
      * expected authentications.
      *
@@ -207,6 +209,7 @@ public abstract class HintsGenerator {
     /**
      * Returns the Set of allowed HTTP methods of the given method.
      *
+     * @param method the method
      * @return set of allowed HTTP methods.
      * @throws NullPointerException if method is not annotated with @RequestMapping.
      */

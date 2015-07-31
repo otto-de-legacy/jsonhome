@@ -23,7 +23,7 @@ import static java.util.Collections.unmodifiableMap;
 
 /**
  * Immutable container of {@link ResourceLink resource links}, representing a json-home document.
- * <p/>
+ *
  * This implementation is immutable.
  *
  * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02">http://tools.ietf.org/html/draft-nottingham-json-home-02</a>
@@ -47,11 +47,12 @@ public final class JsonHome {
      * Creates a JsonHome document from one or more ResourceLinks. The link-relation types of the resources
      * must be unique, otherwise an IllegalArgumentException is thrown.
      *
-     * @param resources collection of resource links.
+     * @param resourceLink resource link
+     * @param resources optionally more links.
      * @return JsonHome
      */
     public static JsonHome jsonHome(final ResourceLink resourceLink, final ResourceLink... resources) {
-        final List<ResourceLink> resourceLinks = new ArrayList<ResourceLink>();
+        final List<ResourceLink> resourceLinks = new ArrayList<>();
         resourceLinks.add(resourceLink);
         resourceLinks.addAll(asList(resources));
         return jsonHome(resourceLinks);

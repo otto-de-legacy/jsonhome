@@ -113,7 +113,8 @@ public class RegistriesController {
     /**
      * Returns the registries as a list of URLs.
      *
-     * <pre><code>
+     * <pre>
+     * {@code
      *     GET /registries
      *
      *     {
@@ -123,8 +124,9 @@ public class RegistriesController {
      *              { "href" : "http://example.org/registries/test", "title" : "Testing environment" }
      *          ]
      *     }
-     * </code></pre>
-     * <p/>
+     * }
+     * </pre>
+     *
      * HTTP status codes returned by this method:
      * <ul>
      *     <li>200 OK: if the resource was successfully returned.</li>
@@ -145,7 +147,8 @@ public class RegistriesController {
     /**
      * Returns the contents of the registry in application/json format.
      *
-     * <code><pre>
+     * <pre>
+     * {@code
      *     GET /registries/live
      *
      *     {
@@ -164,10 +167,11 @@ public class RegistriesController {
      *              }
      *         ]
      *     }
-     * </pre></code>
+     * }
+     * </pre>
      *
      * The attributes 'name', 'self' and 'container' are added by the server and will be ignored during PUT operations.
-     * <p/>
+     *
      * HTTP status codes returned by this method:
      * <ul>
      *     <li>200 OK: if the resource was found.</li>
@@ -202,7 +206,8 @@ public class RegistriesController {
     /**
      * Creates or updates a registry.
      *
-     * <pre><code>
+     * <pre>
+     * {@code
      *     PUT /registries/live
      *
      *     {
@@ -218,11 +223,12 @@ public class RegistriesController {
      *              }
      *         ]
      *     }
-     * </code></pre>
+     * }
+     * </pre>
      *
      * The server will add the following attributes to the document: 'name', 'self', 'container'. These attributes
      * are overwritten, if provided by the caller.
-     * <p/>
+     *
      * HTTP status codes returned by this method:
      * <ul>
      *     <li>201 CREATED: if the resource was successfully created.</li>
@@ -252,7 +258,7 @@ public class RegistriesController {
 
     /**
      * Deletes the specified registry.
-     * <p/>
+     *
      * HTTP status codes returned by this method:
      * <ul>
      *     <li>204 NO CONTENT: if the resource was successfully deleted or did not exist.</li>

@@ -19,14 +19,15 @@ import java.lang.annotation.*;
 
 /**
  * A container annotation used to add documentation of multiple link-relation types to a single controller.
- * <p/>
+ *
  * Usage:
- * <code><pre>
+ * {@code
  *      &#064;Documentation({
  *          &#064;Doc(rel="/rel/foo-type", value="A reference to a foo"),
  *          &#064;Doc(rel="/rel/bar-type", value="A reference to a bar")
  *      })
- * </pre></code>
+ * }
+ *
  *
  * @author Guido Steinacker
  * @since 15.09.12

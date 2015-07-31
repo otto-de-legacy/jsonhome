@@ -21,17 +21,17 @@ import static java.lang.String.format;
 
 /**
  * A resource link describing a resource that is directly accessible using an URI.
- * <p/>
+ *
  * The type of the referred resource is defined by the relationType URI. Relation-type URIs should
  * be URLs, pointing to a documentation of the relationType semantics. Beside of finding documentation,
  * you can treat the relationType just like any other identifier.
- * <p/>
+ *
  * The resource itself is identified by the href attribute. The href attribute should always be an URL.
- * <p/>
+ *
  * The {@link Hints hints} of the DirectLink contain meta-information about the resource: which HTTP methods
  * are allowed, the supported representations, and so on. Because the json-home specification marks hints as optional,
  * you should not completely rely on the hints.
- * <p/>
+ *
  * This implementation is immutable.
  *
  * @see <a href="http://tools.ietf.org/html/draft-nottingham-json-home-02#section-4">http://tools.ietf.org/html/draft-nottingham-json-home-02#section-4</a>

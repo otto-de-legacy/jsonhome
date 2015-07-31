@@ -37,7 +37,7 @@ import static de.otto.jsonhome.model.JsonHome.jsonHome;
 
 /**
  * Provides access to a json-home document containing the merged json-home documents registered in the {@link de.otto.jsonhome.registry.store.RegistryRepository}.
- * <p/>
+ *
  * The service is responsible for retrieving all registered documents.
  *
  * @author Guido Steinacker
