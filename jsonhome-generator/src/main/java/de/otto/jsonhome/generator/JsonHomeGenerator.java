@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static de.otto.jsonhome.model.JsonHome.jsonHome;
 import static de.otto.jsonhome.model.ResourceLinkHelper.mergeResources;
@@ -72,11 +73,9 @@ public abstract class JsonHomeGenerator {
      * @return this
      */
     public final JsonHomeGenerator with(final Collection<Class<?>> controllers) {
-        for (final Class<?> controller : controllers) {
-            if (isCandidateForAnalysis(controller)) {
-                this.controllers.add(controller);
-            }
-        }
+        this.controllers.addAll(controllers.stream()
+                .filter(this::isCandidateForAnalysis)
+                .collect(Collectors.toList()));
         return this;
     }
 
@@ -85,7 +84,7 @@ public abstract class JsonHomeGenerator {
      * @return JsonHome instance.
      */
     public final JsonHome generate() {
-        List<? extends ResourceLink> resources = new ArrayList<ResourceLink>();
+        List<? extends ResourceLink> resources = new ArrayList<>();
         for (final Class<?> controllerClass : controllers) {
             resources = mergeResources(resources, resourceLinksFor(controllerClass));
         }

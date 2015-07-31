@@ -24,9 +24,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static de.otto.jsonhome.registry.controller.LinkConverter.jsonToLink;
 import static de.otto.jsonhome.registry.controller.LinkConverter.linkToJson;
+import static java.util.stream.Collectors.toList;
 
 /**
  * A converter used to convert Registry and Link items into maps and vice versa.
@@ -40,16 +42,15 @@ public class RegistryConverter {
 
     public static Registry jsonToRegistry(final Map<String, ?> map) {
         try {
-            final List<Link> links = new ArrayList<Link>();
             @SuppressWarnings("unchecked")
             final List<Map<String,String>> linksMap = (List<Map<String, String>>) map.get("service");
-            for (final Map<String, String> linkMap : linksMap) {
-                links.add(jsonToLink(linkMap));
-            }
             return new Registry(
                     (String) map.get("name"),
                     (String) map.get("title"),
-                    links
+                    linksMap
+                            .stream()
+                            .map(LinkConverter::jsonToLink)
+                            .collect(toList())
             );
         } catch (final NullPointerException e) {
             throw new IllegalArgumentException("Map does not contain valid links", e);
@@ -57,16 +58,15 @@ public class RegistryConverter {
     }
 
     public static Map<String, Object> registryToJson(final URI baseUri, final Registry registry) {
-        final Map<String, Object> content = new LinkedHashMap<String, Object>();
+        final Map<String, Object> content = new LinkedHashMap<>();
         content.put("name", registry.getName());
         content.put("title", registry.getTitle());
         content.put("self", baseUri + "/registries/" + registry.getName());
         content.put("container", baseUri + "/registries");
-        final List<Map<String,String>> linksList = new ArrayList<Map<String, String>>();
-        for (final Link link : registry.getAll()) {
-            linksList.add(linkToJson(link));
-        }
-        content.put("service", linksList);
+        content.put("service", registry.getAll()
+                .stream()
+                .map(LinkConverter::linkToJson)
+                .collect(toList()));
         return content;
     }
 

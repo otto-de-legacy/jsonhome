@@ -175,7 +175,7 @@ public class DocsGenerator {
     }
 
     private List<String> removeEmptyStringsAndNullValuesFrom(final List<String> list) {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         for (final String s : list) {
             if (s != null && !s.isEmpty()) {
                 result.add(s);

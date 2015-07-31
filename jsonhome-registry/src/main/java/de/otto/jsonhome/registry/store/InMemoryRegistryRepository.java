@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class InMemoryRegistryRepository implements RegistryRepository {
 
-    public final ConcurrentMap<String, Registry> registry = new ConcurrentHashMap<String, Registry>();
+    public final ConcurrentMap<String, Registry> registry = new ConcurrentHashMap<>();
 
     /**
      * {@inheritDoc}

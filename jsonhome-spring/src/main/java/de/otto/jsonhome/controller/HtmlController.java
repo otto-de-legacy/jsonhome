@@ -83,7 +83,7 @@ public class HtmlController {
         // home document should be cached:
         response.setHeader("Cache-Control", "max-age=" + maxAge);
         response.setHeader("Vary", "Accept");
-        final Map<String,Object> resources = new HashMap<String, Object>();
+        final Map<String,Object> resources = new HashMap<>();
         resources.put("resources", jsonHomeSource.getJsonHome().getResources().values());
         resources.put("contextpath", request.getContextPath());
         return new ModelAndView("resources", resources);
@@ -100,7 +100,7 @@ public class HtmlController {
         final URI relationTypeURI = URI.create(request.getRequestURL().toString());
 
 
-        final Map<String,Object> model = new HashMap<String, Object>();
+        final Map<String,Object> model = new HashMap<>();
         model.put("contextpath", request.getContextPath());
         final JsonHome jsonHome = jsonHomeSource.getJsonHome();
         if (jsonHome.hasResourceFor(relationTypeURI)) {

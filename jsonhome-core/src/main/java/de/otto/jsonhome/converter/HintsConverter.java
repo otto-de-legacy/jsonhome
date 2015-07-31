@@ -18,12 +18,12 @@ package de.otto.jsonhome.converter;
 
 import de.otto.jsonhome.model.Authentication;
 import de.otto.jsonhome.model.Hints;
-import de.otto.jsonhome.model.Precondition;
 import de.otto.jsonhome.model.Status;
 
 import java.util.*;
 
 import static de.otto.jsonhome.converter.JsonHomeMediaType.APPLICATION_JSONHOME;
+import static java.util.stream.Collectors.toList;
 
 /**
  * A converter used to convert Hints into other representations.
@@ -55,7 +55,7 @@ public final class HintsConverter {
      * @return map
      */
     public static Map<String, ?> toRepresentation(final Hints hints, final JsonHomeMediaType mediaType) {
-        final Map<String, Object> jsonHints = new LinkedHashMap<String, Object>();
+        final Map<String, Object> jsonHints = new LinkedHashMap<>();
         jsonHints.put("allow", hints.getAllows());
         jsonHints.put("representations", hints.getRepresentations());
         if (!hints.getAcceptPut().isEmpty()) {
@@ -68,37 +68,21 @@ public final class HintsConverter {
             jsonHints.put("accept-patch", hints.getAcceptPatch());
         }
         if (!hints.getAcceptRanges().isEmpty()) {
-            final List<String> strings = new ArrayList<String>();
-            for (final String acceptedRange : hints.getAcceptRanges()) {
-                strings.add(acceptedRange);
-            }
-            jsonHints.put("accept-ranges", strings);
+            jsonHints.put("accept-ranges", hints.getAcceptRanges());
         }
         if (!hints.getPreferences().isEmpty()) {
-            final List<String> strings = new ArrayList<String>();
-            for (final String prefer : hints.getPreferences()) {
-                strings.add(prefer);
-            }
-            jsonHints.put("prefer", strings);
+            jsonHints.put("prefer", hints.getPreferences());
         }
         if (!hints.getPreconditionReq().isEmpty()) {
-            final List<String> strings = new ArrayList<String>();
-            for (final Precondition precondition : hints.getPreconditionReq()) {
-                strings.add(precondition.toString());
-            }
-            jsonHints.put("precondition-req", strings);
+            jsonHints.put("precondition-req", hints.getPreconditionReq().stream().map(Objects::toString).collect(toList()));
         }
         if (!hints.getAuthReq().isEmpty()) {
-            final List<Map<String,?>> authReq = new ArrayList<Map<String, ?>>();
+            final List<Map<String,?>> authReq = new ArrayList<>();
             for (final Authentication authentication : hints.getAuthReq()) {
-                final Map<String, Object> authMap = new HashMap<String, Object>();
+                final Map<String, Object> authMap = new HashMap<>();
                 authMap.put("scheme", authentication.getScheme());
                 if (!authentication.getRealms().isEmpty()) {
-                    final List<String> realms = new ArrayList<String>();
-                    for (final String realm : authentication.getRealms()) {
-                        realms.add(realm);
-                    }
-                    authMap.put("realms", realms);
+                    authMap.put("realms", authentication.getRealms());
                 }
                 authReq.add(authMap);
             }

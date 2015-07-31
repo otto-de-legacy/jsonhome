@@ -17,9 +17,7 @@
 package de.otto.jsonhome.registry.controller;
 
 import de.otto.jsonhome.annotation.Doc;
-import de.otto.jsonhome.generator.JsonHomeSource;
 import de.otto.jsonhome.model.JsonHome;
-import de.otto.jsonhome.model.JsonHomeBuilder;
 import de.otto.jsonhome.model.ResourceLink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +34,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.otto.jsonhome.model.JsonHome.emptyJsonHome;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 
@@ -85,7 +82,7 @@ public class RegistryHtmlController {
         final JsonHome jsonHome = registryJsonHomeSource.getJsonHome(selectedRegistry);
         response.setHeader("Cache-Control", "max-age=" + maxAge);
         response.setHeader("Vary", "Accept");
-        final Map<String,Object> resources = new HashMap<String, Object>();
+        final Map<String,Object> resources = new HashMap<>();
         resources.put("resources", jsonHome.getResources().values());
         resources.put("contextpath", request.getContextPath());
         if (registry != null) {
@@ -108,7 +105,7 @@ public class RegistryHtmlController {
         final String selectedRegistry = registry != null ? registry : defaultRegistry;
         final ResourceLink resourceLink = resourceLink(relationTypeURI, selectedRegistry);
         if (resourceLink != null) {
-            final Map<String,Object> model = new HashMap<String, Object>();
+            final Map<String,Object> model = new HashMap<>();
             model.put("contextpath", request.getContextPath());
             model.put("resource", resourceLink);
             if (resourceLink.isDirectLink()) {

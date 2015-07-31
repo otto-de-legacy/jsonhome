@@ -36,7 +36,6 @@ import static de.otto.jsonhome.generator.UriBuilder.normalized;
 import static de.otto.jsonhome.registry.controller.RegistriesConverter.registriesToJson;
 import static de.otto.jsonhome.registry.controller.RegistryConverter.jsonToRegistry;
 import static de.otto.jsonhome.registry.controller.RegistryConverter.registryToJson;
-import static java.net.URI.create;
 import static javax.servlet.http.HttpServletResponse.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 

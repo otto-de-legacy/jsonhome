@@ -166,7 +166,7 @@ public abstract class HintsGenerator {
     protected List<Authentication> requiredAuthenticationFrom(final Method method) {
         final de.otto.jsonhome.annotation.Hints annotation = findAnnotation(method, de.otto.jsonhome.annotation.Hints.class);
         if (annotation != null && annotation.authReq() != null && annotation.authReq().length > 0) {
-            final List<Authentication> authReq = new ArrayList<Authentication>();
+            final List<Authentication> authReq = new ArrayList<>();
             for (final Auth auth : annotation.authReq()) {
                 authReq.add(Authentication.authReq(
                         auth.scheme(),
@@ -195,7 +195,7 @@ public abstract class HintsGenerator {
     }
 
     private List<String> join(final List<String> list, final List<String> other) {
-        final List<String> result = new ArrayList<String>(list);
+        final List<String> result = new ArrayList<>(list);
         for (final String s : other) {
             if (!result.contains(s)) {
                 result.add(s);

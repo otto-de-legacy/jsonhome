@@ -56,7 +56,7 @@ public final class JsonHomeConverter {
      */
     public static Map<String, Map<String,Object>> toRepresentation(final JsonHome jsonHome,
                                                                    final JsonHomeMediaType mediaType) {
-        final Map<String, Object> jsonResources = new HashMap<String, Object>();
+        final Map<String, Object> jsonResources = new HashMap<>();
         for (final ResourceLink resource : jsonHome.getResources().values()) {
             jsonResources.putAll(ResourceLinkConverter.toRepresentation(resource, mediaType));
         }

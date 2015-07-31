@@ -63,7 +63,7 @@ public abstract class HrefVarsGenerator {
         final List<HrefVar> hrefVars;
         final HrefTemplate hrefTemplateAnnotation = findAnnotation(method, HrefTemplate.class);
         if (hrefTemplateAnnotation != null) {
-            hrefVars = new ArrayList<HrefVar>();
+            hrefVars = new ArrayList<>();
             final String template = hrefTemplateAnnotation.value();
             for (String varName : variableNamesFrom(template)) {
                 hrefVars.add(hrefVar(varName, varTypeUriFrom(varTypeBaseUri, varName, varTypeUrisAsFragment), emptyDocs()));
@@ -72,7 +72,7 @@ public abstract class HrefVarsGenerator {
                 throw new IllegalArgumentException("no variables found");
             }
         } else {
-            hrefVars = new ArrayList<HrefVar>();
+            hrefVars = new ArrayList<>();
             for (final ParameterInfo parameterInfo : getParameterInfos(method)) {
                 final String varName = parameterInfo.getName();
                 final Documentation docs = docsGenerator.documentationFor(parameterInfo);

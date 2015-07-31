@@ -68,7 +68,7 @@ public final class TemplatedLink implements ResourceLink {
                           final Hints hints) {
         this.relationType = relationType;
         this.hrefTemplate = hrefTemplate;
-        this.hrefVars = unmodifiableList(new ArrayList<HrefVar>(hrefVars));
+        this.hrefVars = unmodifiableList(new ArrayList<>(hrefVars));
         this.hints = hints;
     }
 
@@ -128,7 +128,7 @@ public final class TemplatedLink implements ResourceLink {
     }
 
     public URI expandToUri(final Map<URI, Object> values) {
-        final Map<String, Object> varNameToValueMap = new HashMap<String, Object>();
+        final Map<String, Object> varNameToValueMap = new HashMap<>();
         for (Map.Entry<URI, Object> entry : values.entrySet()) {
             final HrefVar hrefVar = getHrefVar(entry.getKey());
             if (hrefVar == null) {
@@ -145,7 +145,7 @@ public final class TemplatedLink implements ResourceLink {
 
     public URI expandToUri(final URI hrefVarBarUri0, final Object value0,
                            final URI hrefVarBarUri1, final Object value1) {
-        final Map<URI, Object> values = new HashMap<URI, Object>();
+        final Map<URI, Object> values = new HashMap<>();
         values.put(hrefVarBarUri0, value0);
         values.put(hrefVarBarUri1, value1);
         return expandToUri(values);
@@ -154,7 +154,7 @@ public final class TemplatedLink implements ResourceLink {
     public URI expandToUri(final URI hrefVarBarUri0, final Object value0,
                            final URI hrefVarBarUri1, final Object value1,
                            final URI hrefVarBarUri2, final Object value2) {
-        final Map<URI, Object> values = new HashMap<URI, Object>();
+        final Map<URI, Object> values = new HashMap<>();
         values.put(hrefVarBarUri0, value0);
         values.put(hrefVarBarUri1, value1);
         values.put(hrefVarBarUri2, value2);
@@ -165,7 +165,7 @@ public final class TemplatedLink implements ResourceLink {
                            final URI hrefVarBarUri1, final Object value1,
                            final URI hrefVarBarUri2, final Object value2,
                            final URI hrefVarBarUri3, final Object value3) {
-        final Map<URI, Object> values = new HashMap<URI, Object>();
+        final Map<URI, Object> values = new HashMap<>();
         values.put(hrefVarBarUri0, value0);
         values.put(hrefVarBarUri1, value1);
         values.put(hrefVarBarUri2, value2);
@@ -178,7 +178,7 @@ public final class TemplatedLink implements ResourceLink {
                            final URI hrefVarBarUri2, final Object value2,
                            final URI hrefVarBarUri3, final Object value3,
                            final URI hrefVarBarUri4, final Object value4) {
-        final Map<URI, Object> values = new HashMap<URI, Object>();
+        final Map<URI, Object> values = new HashMap<>();
         values.put(hrefVarBarUri0, value0);
         values.put(hrefVarBarUri1, value1);
         values.put(hrefVarBarUri2, value2);
@@ -193,7 +193,7 @@ public final class TemplatedLink implements ResourceLink {
                            final URI hrefVarBarUri3, final Object value3,
                            final URI hrefVarBarUri4, final Object value4,
                            final URI hrefVarBarUri5, final Object value5) {
-        final Map<URI, Object> values = new HashMap<URI, Object>();
+        final Map<URI, Object> values = new HashMap<>();
         values.put(hrefVarBarUri0, value0);
         values.put(hrefVarBarUri1, value1);
         values.put(hrefVarBarUri2, value2);
@@ -210,7 +210,7 @@ public final class TemplatedLink implements ResourceLink {
                            final URI hrefVarBarUri4, final Object value4,
                            final URI hrefVarBarUri5, final Object value5,
                            final URI hrefVarBarUri6, final Object value6) {
-        final Map<URI, Object> values = new HashMap<URI, Object>();
+        final Map<URI, Object> values = new HashMap<>();
         values.put(hrefVarBarUri0, value0);
         values.put(hrefVarBarUri1, value1);
         values.put(hrefVarBarUri2, value2);
@@ -229,7 +229,7 @@ public final class TemplatedLink implements ResourceLink {
                            final URI hrefVarBarUri5, final Object value5,
                            final URI hrefVarBarUri6, final Object value6,
                            final URI hrefVarBarUri7, final Object value7) {
-        final Map<URI, Object> values = new HashMap<URI, Object>();
+        final Map<URI, Object> values = new HashMap<>();
         values.put(hrefVarBarUri0, value0);
         values.put(hrefVarBarUri1, value1);
         values.put(hrefVarBarUri2, value2);
@@ -250,7 +250,7 @@ public final class TemplatedLink implements ResourceLink {
                            final URI hrefVarBarUri6, final Object value6,
                            final URI hrefVarBarUri7, final Object value7,
                            final URI hrefVarBarUri8, final Object value8) {
-        final Map<URI, Object> values = new HashMap<URI, Object>();
+        final Map<URI, Object> values = new HashMap<>();
         values.put(hrefVarBarUri0, value0);
         values.put(hrefVarBarUri1, value1);
         values.put(hrefVarBarUri2, value2);
@@ -273,7 +273,7 @@ public final class TemplatedLink implements ResourceLink {
                            final URI hrefVarBarUri7, final Object value7,
                            final URI hrefVarBarUri8, final Object value8,
                            final URI hrefVarBarUri9, final Object value9) {
-        final Map<URI, Object> values = new HashMap<URI, Object>();
+        final Map<URI, Object> values = new HashMap<>();
         values.put(hrefVarBarUri0, value0);
         values.put(hrefVarBarUri1, value1);
         values.put(hrefVarBarUri2, value2);

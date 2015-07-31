@@ -33,7 +33,7 @@ public class UriTemplateHelper implements Serializable {
     private static final Pattern NAMES_PATTERN = Pattern.compile("\\{[\\/+#;\\.\\?&]?([^/]+?)[\\*]?\\}");
 
     public static List<String> variableNamesFrom(final String uriTemplate) {
-        final List<String> variableNames = new ArrayList<String>();
+        final List<String> variableNames = new ArrayList<>();
         Matcher m = NAMES_PATTERN.matcher(uriTemplate);
         while (m.find()) {
             String match = m.group(1);

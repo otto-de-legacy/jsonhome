@@ -44,7 +44,7 @@ public final class Registry {
         }
         this.name = name;
         this.title = title;
-        this.links = unmodifiableList(new ArrayList<Link>(links));
+        this.links = unmodifiableList(new ArrayList<>(links));
     }
 
     /**

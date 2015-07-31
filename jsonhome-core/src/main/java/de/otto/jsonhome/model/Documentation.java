@@ -39,7 +39,7 @@ public final class Documentation {
 
     private Documentation(final List<String> description, final String detailedDescription, final URI link) {
         this.description = description != null
-                ? unmodifiableList(new ArrayList<String>(description))
+                ? unmodifiableList(new ArrayList<>(description))
                 : Collections.<String>emptyList();
         this.detailedDescription = detailedDescription != null ? detailedDescription : "";
         this.link = link;

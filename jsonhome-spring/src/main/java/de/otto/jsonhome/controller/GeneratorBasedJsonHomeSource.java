@@ -27,6 +27,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toSet;
 
 /**
  * @author Guido Steinacker
@@ -50,10 +53,7 @@ public class GeneratorBasedJsonHomeSource implements JsonHomeSource {
     @Autowired
     public void setApplicationContext(final ApplicationContext applicationContext) {
         final Map<String, Object> controllerBeans = applicationContext.getBeansWithAnnotation(Controller.class);
-        controllerTypes = new HashSet<Class<?>>();
-        for (Object o : controllerBeans.values()) {
-            controllerTypes.add(o.getClass());
-        }
+        controllerTypes = controllerBeans.values().stream().map(Object::getClass).collect(toSet());
         LOG.info("Found {} controllers in application context", controllerTypes.size());
     }
 
@@ -65,7 +65,7 @@ public class GeneratorBasedJsonHomeSource implements JsonHomeSource {
      * @param controllerTypes the list of controller classes.
      */
     public void setControllerTypes(final Class<?>... controllerTypes) {
-        this.controllerTypes = new HashSet<Class<?>>(controllerTypes.length);
+        this.controllerTypes = new HashSet<>(controllerTypes.length);
         for (final Class<?> controllerType : Arrays.asList(controllerTypes)) {
             this.controllerTypes.add(controllerType);
         }

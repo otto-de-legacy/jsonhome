@@ -44,12 +44,12 @@ public final class ResourceLinkConverter {
 
     public static Map<String, Map<String, Object>> templatedLinkToJsonHome(final TemplatedLink resourceLink,
                                                                            final JsonHomeMediaType mediaType) {
-        final Map<String,String> jsonHrefVars = new LinkedHashMap<String, String>();
+        final Map<String,String> jsonHrefVars = new LinkedHashMap<>();
         for (final HrefVar hrefVar : resourceLink.getHrefVars()) {
             jsonHrefVars.put(hrefVar.getVar(), hrefVar.getVarType().toString());
         }
 
-        final Map<String, Object> map = new LinkedHashMap<String, Object>();
+        final Map<String, Object> map = new LinkedHashMap<>();
         map.put("href-template", resourceLink.getHrefTemplate());
         map.put("href-vars", jsonHrefVars);
         map.put("hints", HintsConverter.toRepresentation(resourceLink.getHints(), mediaType));
@@ -58,7 +58,7 @@ public final class ResourceLinkConverter {
 
     public static Map<String, Map<String, Object>> directLinkToJsonHome(final DirectLink resourceLink,
                                                                         final JsonHomeMediaType mediaType) {
-        final Map<String, Object> map = new LinkedHashMap<String, Object>();
+        final Map<String, Object> map = new LinkedHashMap<>();
         map.put("href", resourceLink.getHref().toString());
         map.put("hints", HintsConverter.toRepresentation(resourceLink.getHints(), mediaType));
         return Collections.singletonMap(resourceLink.getLinkRelationType().toString(), map);

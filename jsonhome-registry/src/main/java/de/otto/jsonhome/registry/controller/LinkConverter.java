@@ -18,8 +18,13 @@ package de.otto.jsonhome.registry.controller;
 
 import de.otto.jsonhome.registry.store.Link;
 
-import java.net.URI;
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.net.URI.create;
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author Guido Steinacker
@@ -30,7 +35,7 @@ public class LinkConverter {
     private LinkConverter() {}
 
     public static Map<String, String> linkToJson(final Link link) {
-        final Map<String, String> json = new LinkedHashMap<String, String>();
+        final Map<String, String> json = new LinkedHashMap<>();
         json.put("href", link.getHref().toString());
         if (!link.getTitle().isEmpty()) {
             json.put("title", link.getTitle());
@@ -40,24 +45,22 @@ public class LinkConverter {
 
     public static Link jsonToLink(final Map<String, String> json) {
         return new Link(
-                URI.create(json.get("href")),
+                create(json.get("href")),
                 json.get("title")
         );
     }
 
     public static List<Map<String,String>> linksToJson(final Collection<Link> links) {
-        final List<Map<String,String>> result = new ArrayList<Map<String, String>>();
-        for (final Link link : links) {
-            result.add(linkToJson(link));
-        }
-        return result;
+        return links
+                .stream()
+                .map(LinkConverter::linkToJson)
+                .collect(toList());
     }
 
     public static List<Link> jsonToLinks(final Collection<Map<String,String>> json) {
-        final List<Link> result = new ArrayList<Link>();
-        for (Map<String, String> stringStringMap : json) {
-            result.add(jsonToLink(stringStringMap));
-        }
-        return result;
+        return json
+                .stream()
+                .map(LinkConverter::jsonToLink)
+                .collect(toList());
     }
 }

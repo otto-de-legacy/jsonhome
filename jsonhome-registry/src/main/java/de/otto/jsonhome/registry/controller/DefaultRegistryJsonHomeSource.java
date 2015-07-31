@@ -19,7 +19,6 @@ package de.otto.jsonhome.registry.controller;
 import de.otto.jsonhome.client.HttpJsonHomeClient;
 import de.otto.jsonhome.client.JsonHomeClient;
 import de.otto.jsonhome.client.JsonHomeClientException;
-import de.otto.jsonhome.client.NotFoundException;
 import de.otto.jsonhome.model.JsonHome;
 import de.otto.jsonhome.model.ResourceLink;
 import de.otto.jsonhome.registry.store.Link;
@@ -81,7 +80,7 @@ public class DefaultRegistryJsonHomeSource implements RegistryJsonHomeSource {
             LOG.warn(msg);
             throw new IllegalArgumentException(msg);
         } else {
-            final Map<URI, ResourceLink> allResourceLinks = new HashMap<URI, ResourceLink>();
+            final Map<URI, ResourceLink> allResourceLinks = new HashMap<>();
             for (final Link link : registries.get(registryName).getAll()) {
                 try {
                     final JsonHome jsonHome = client.get(link.getHref());
@@ -89,14 +88,11 @@ public class DefaultRegistryJsonHomeSource implements RegistryJsonHomeSource {
                     for (final URI uri : resources.keySet()) {
                         if (allResourceLinks.containsKey(uri)) {
                             LOG.warn("Duplicate entries found for resource {}: entry '{}', is overridden by '{}'",
-                                    new Object[] {uri, allResourceLinks.get(uri), resources.get(uri)});
+                                    uri, allResourceLinks.get(uri), resources.get(uri));
                         }
                         allResourceLinks.put(uri, resources.get(uri));
                     }
                     allResourceLinks.putAll(resources);
-                } catch (final NotFoundException e) {
-                    LOG.warn("Unable to get json-home document {}: {}", link.getHref(), e.getMessage());
-                    // After some retries, the json-home MAY automatically be unregistered here.
                 } catch (final JsonHomeClientException e) {
                     LOG.warn("Unable to get json-home document {}: {}", link.getHref(), e.getMessage());
                     // After some retries, the json-home MAY automatically be unregistered here.

@@ -39,7 +39,7 @@ public class RegistriesConverter {
     private RegistriesConverter() {}
 
     public static Map<String, ?> registriesToJson(final URI baseUri, final RegistryRepository repository) {
-        final Map<String, Object> json = new HashMap<String, Object>();
+        final Map<String, Object> json = new HashMap<>();
         json.put("self", baseUri + "/registries");
         json.put("registries", linksToJson(
                 repositoryLinks(baseUri, repository))
@@ -48,7 +48,7 @@ public class RegistriesConverter {
     }
 
     private static List<Link> repositoryLinks(final URI baseUri, final RegistryRepository repository) {
-        final List<Link> registries = new ArrayList<Link>();
+        final List<Link> registries = new ArrayList<>();
         for (final String registryName : sortedNamesFrom(repository)) {
             registries.add(repository
                     .get(registryName)
@@ -59,7 +59,7 @@ public class RegistriesConverter {
     }
 
     private static List<String> sortedNamesFrom(final RegistryRepository repository) {
-        final List<String> registryNames = new ArrayList<String>(repository.getKnownNames());
+        final List<String> registryNames = new ArrayList<>(repository.getKnownNames());
         sort(registryNames);
         return registryNames;
     }
